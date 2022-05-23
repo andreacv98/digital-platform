@@ -1,2 +1,2 @@
-./oidc-provider/node-modules
-./oidc-rp/node-modules
+oidc-provider\node_modules
+oidc-rp\node-modules
