@@ -1,0 +1,14 @@
+{
+  "name": "oidc-provider",
+  "version": "1.0.0",
+  "description": "Simple Custom OIDC Provider for Digital Platform implementation",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "HelloFutureTeam",
+  "license": "MIT",
+  "dependencies": {
+    "oidc-provider": "^7.11.2"
+  }
+}
