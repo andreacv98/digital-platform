@@ -2,7 +2,7 @@ const sqlite = require('sqlite3');
 const bcrypt = require('bcrypt');
 
 // open the database
-const db = new sqlite.Database('../oidc.db', (err) => {
+const db = new sqlite.Database('./oidc.db', (err) => {
   if (err) throw err;
 });
 
