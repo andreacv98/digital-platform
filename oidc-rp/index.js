@@ -65,8 +65,6 @@ Issuer.discover('http://localhost:3000')
     );
   });
 
-
-
 app.get('/login',
 function (req, res, next) {
     console.log('-----------------------------');

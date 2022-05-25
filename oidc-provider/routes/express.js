@@ -99,13 +99,16 @@ module.exports = (app, provider) => {
     try {
       const { prompt: { name } } = await provider.interactionDetails(req, res);
       assert.equal(name, 'login');
-      const account = await Account.findByLogin(req.body.login);
+      const account = await Account.findByLogin(req.body.login, req.body.password);
 
+      if(account == false) {
+        throw "Username or password not correct"
+      }
       const result = {
         login: {
           accountId: account.accountId,
         },
-      };
+      };     
 
       await provider.interactionFinished(req, res, result, { mergeWithLastSubmission: false });
     } catch (err) {
