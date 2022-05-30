@@ -13,7 +13,7 @@ const configuration = require('./support/configuration');
 const routes = require('./routes/express');
 
 // Retrieve port from env variable (in the call from the terminal) or set to default values
-const { PORT = 3000, ISSUER = `http://localhost:${PORT}` } = process.env;
+const { PORT = 3000, ISSUER = `http://10.0.0.80:${PORT}` } = process.env;
 configuration.findAccount = Account.findAccount;
 
 const app = express();
@@ -45,6 +45,7 @@ let server;
 
   // If we are in production enviroment some changes need attention
   if (prod) {
+    console.log("Production ready!")
     app.enable('trust proxy');
     provider.proxy = true;
 
@@ -68,9 +69,24 @@ let server;
 
   routes(app, provider);
   app.use(provider.callback());
-  server = app.listen(PORT, () => {
+
+  var fs = require('fs');
+  var https = require('https');
+
+  const options = {
+    key: fs.readFileSync('key.pem'),
+    cert: fs.readFileSync('cert.pem')
+  };
+
+  var httpsServer = https.createServer(options, app);
+
+  httpsServer.listen(PORT);
+
+
+  /*server = app.listen(PORT, () => {
     console.log(`application is listening on port ${PORT}, check its /.well-known/openid-configuration`);
-  });
+  });*/
+  
 })().catch((err) => {
   if (server && server.listening) server.close();
   console.error(err);

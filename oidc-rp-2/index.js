@@ -41,12 +41,14 @@ passport.deserializeUser(function(user, done) {
     done(null, user);
 });
 
-Issuer.discover('http://localhost:3000') 
+
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+Issuer.discover('https://10.0.0.80:3000') 
   .then(function (oidcIssuer) {
     var client = new oidcIssuer.Client({
       client_id: 'oidcCLIENT2',
       client_secret: 'Some_super_secret',
-      redirect_uris: ["http://localhost:8081/login/callback"],
+      redirect_uris: ["https://10.0.0.202:8080/login/callback"],
       response_types: ['code'], 
       
     });
@@ -90,9 +92,17 @@ app.get ("/user",(req,res) =>{
 
 })
 
-  const httpServer = http.createServer(app)
-  //const server= https.createServer(options,app).listen(3003);
-  httpServer.listen(8081,() =>{
+const https = require('https');
+const fs = require('fs');
+
+const options = {
+  key: fs.readFileSync('key.pem'),
+  cert: fs.readFileSync('cert.pem')
+};
+
+  //const httpServer = http.createServer(app)
+  const server= https.createServer(options,app).listen(8080, "10.0.0.202");
+  /*httpServer.listen(8081,() =>{
       console.log(`Http Server Running on port 8081`)
       console.log('http://localhost:8081')
-    })
+    })*/

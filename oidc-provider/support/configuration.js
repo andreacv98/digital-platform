@@ -9,13 +9,13 @@ module.exports = {
     {
       client_id: 'oidcCLIENT',
       client_secret: 'Some_super_secret',
-      redirect_uris: ["http://localhost:8080/login/callback"],
+      redirect_uris: ["https://10.0.0.201:8080/login/callback"],
       grant_types: ['refresh_token', 'authorization_code']
     },
     {
       client_id: 'oidcCLIENT2',
       client_secret: 'Some_super_secret',
-      redirect_uris: ["http://localhost:8081/login/callback"],
+      redirect_uris: ["https://10.0.0.202:8080/login/callback"],
       grant_types: ['refresh_token', 'authorization_code']
     }
   ],
