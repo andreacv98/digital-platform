@@ -42,6 +42,9 @@ class Account {
   static async findByLogin(login, password) {
 
     const accountDAO = await dao.getAccount(login, password)
+    if(accountDAO == false) {
+        return false
+    }
     const account = new Account(accountDAO.id, accountDAO.profile)
     
     return account
