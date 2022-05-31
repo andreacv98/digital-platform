@@ -15,6 +15,10 @@ const { Issuer,Strategy } = require('openid-client');
 const path = require("path");
 const { userInfo } = require('os');
 
+const public_ip= "3.73.28.4";
+const private_ip = "172.31.34.172";
+const idp_ip = "52.57.34.126";
+
 
 const app = express();
 
@@ -52,12 +56,12 @@ passport.deserializeUser(function(user, done) {
     done(null, user);
 });
 
-Issuer.discover('https://localhost:3000') 
-  .then(function (oidcIssuer) {
+Issuer.discover("https://"+idp_ip+":3000")
+.then(function (oidcIssuer) {
     var client = new oidcIssuer.Client({
       client_id: 'digitalPlatformRP',
       client_secret: 'Some_super_secret',
-      redirect_uris: ["https://localhost:8080/login/callback"],
+      redirect_uris: ["https://"+public_ip+":8080/login/callback"],
       response_types: ['code'], 
       
     });
@@ -150,7 +154,7 @@ const options = {
 };
 
   //const httpServer = http.createServer(app)
-  const server= https.createServer(options,app).listen(8080);
+  const server= https.createServer(options,app).listen(8080, private_ip);
   /*httpServer.listen(8081,() =>{
       console.log(`Http Server Running on port 8081`)
       console.log('http://localhost:8081')

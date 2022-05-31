@@ -12,8 +12,10 @@ const Account = require('./support/account');
 const configuration = require('./support/configuration');
 const routes = require('./routes/express');
 
+const public_ip= "52.57.34.126";
+
 // Retrieve port from env variable (in the call from the terminal) or set to default values
-const { PORT = 3000, ISSUER = `http://10.0.0.80:${PORT}` } = process.env;
+const { PORT = 3000, ISSUER = `http://`+public_ip+`:${PORT}` } = process.env;
 configuration.findAccount = Account.findAccount;
 
 const app = express();
