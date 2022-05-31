@@ -10,16 +10,21 @@
 
 <body class="h-100 w-100">
 
-  <div>
-    <div id="header" class="text-center p-5">
-      <h1>Digital Platform</h1>
+  <div class="container">
+        <div class="row">
+        <div class="col"><h2>Digital Platform</h2></div>
+        <div class="col"><h2>Welcome <%= user.name %></h2></div>
     </div>
-    <div id="loginmodule" class="container p-5">
-      <div class="row align-items-center text-center">
-        <div class="col align-self-center text-center">
-          <a href='/login'><img src="https://github.com/italia/cie-graphics/blob/master/PNG/entra%20con%20cie.png?raw=true" alt="Entra Con CIE"></a> 
+
+    <div class="row">
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="https://www.inps.it/img/logocard.jpg" alt="INPS service">
+            <div class="card-body">
+                <h5 class="card-title">INPS</h5>
+                <p class="card-text">L'istituto nazionale della previdenza sociale (INPS) è il principale ente previdenziale del sistema pensionistico pubblico italiano.</p>
+                <a href="/services/inps" class="btn btn-primary">Entra nel servizio</a>
+            </div>
         </div>
-      </div>       
     </div>
   </div>
   
