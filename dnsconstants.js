@@ -1,4 +1,4 @@
-export const digitalplatform = {
+const digitalplatform = {
     dns : 'digitalplatform.ddns.net',
     url : 'https://digitalplatform.ddns.net',
     port : 443,
@@ -8,7 +8,7 @@ export const digitalplatform = {
     redirect_uris: ["https://digitalplatform.ddns.net:443/login/callback"],
 }
 
-export const inps = {
+const inps = {
     dns : 'fakeinps.ddns.net',
     url : 'https://fakeinps.ddns.net',
     port : 443,
@@ -18,7 +18,7 @@ export const inps = {
     redirect_uris: ["https://fakeinps.ddns.net:443/login/callback"],
 }
 
-export const provider = {
+const provider = {
     dns : 'cieprovider.ddns.net',
     url : 'https://cieprovider.ddns.net',
     port : 443,
