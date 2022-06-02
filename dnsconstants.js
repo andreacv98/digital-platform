@@ -25,5 +25,11 @@ const provider = {
     site : 'https://cieprovider.ddns.net:443',
 }
 
+module.exports= {
+    digitalplatform,
+    inps,
+    provider
+}
+
 
 
