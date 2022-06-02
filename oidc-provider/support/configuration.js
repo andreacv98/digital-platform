@@ -1,4 +1,4 @@
-import {digitalplatform, inps} from '../dnsconstants'
+const {digitalplatform, inps} = require('.../dnsconstants')
 
 module.exports = {
   clients: [
