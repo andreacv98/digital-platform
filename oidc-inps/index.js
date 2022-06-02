@@ -16,6 +16,9 @@ const {provider, inps} = require('../dnsconstants')
 
 const app = express();
 
+app.use(express.static(__dirname, { dotfiles: 'allow' } ));
+
+
 app.use(cookieParser());
 app.use(express.urlencoded({
   extended: true,
