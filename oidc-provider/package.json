@@ -1,0 +1,22 @@
+{
+  "name": "oidc-provider",
+  "version": "1.0.0",
+  "description": "Simple Custom OIDC Provider for Digital Platform implementation",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "HelloFutureTeam",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
+    "helmet": "^5.1.0",
+    "loadash": "^1.0.0",
+    "lodash": "^4.17.21",
+    "oidc-provider": "^7.11.2",
+    "sqlite3": "^5.0.8"
+  }
+}

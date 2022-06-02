@@ -1,2 +1,1 @@
-./oidc-provider/node-modules
-./oidc-rp/node-modules
+.vscode
