@@ -12,7 +12,7 @@ const Account = require('./support/account');
 const configuration = require('./support/configuration');
 const routes = require('./routes/express');
 
-import {provider} from '../dnsconstants'
+const {provider} = require('../dnsconstants')
 
 // Retrieve port from env variable (in the call from the terminal) or set to default values
 const { PORT = 443, ISSUER = provider.url+`:${PORT}` } = process.env;
