@@ -15,7 +15,7 @@ const { Issuer,Strategy } = require('openid-client');
 const path = require("path");
 const { userInfo } = require('os');
 
-import {provider, digitalplatform} from '../dnsconstants'
+const {provider, digitalplatform} = require('../dnsconstants')
 
 const app = express();
 
