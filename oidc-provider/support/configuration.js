@@ -1,3 +1,6 @@
+import {digitalplatform, inps} from '../dnsconstants'
+
+
 module.exports = {
   clients: [
     // {
@@ -7,15 +10,15 @@ module.exports = {
     //   redirect_uris: ['http://sso-client.dev/providers/7/open_id', 'http://sso-client.dev/providers/8/open_id'],
     // }
     {
-      client_id: 'oidcCLIENT',
-      client_secret: 'Some_super_secret',
-      redirect_uris: ["https://3.72.211.246:8080/login/callback"],
+      client_id: digitalplatform.client_id,
+      client_secret: digitalplatform.client_secret,
+      redirect_uris: digitalplatform.redirect_uris,
       grant_types: ['refresh_token', 'authorization_code']
     },
     {
-      client_id: 'digitalPlatformRP',
-      client_secret: 'Some_super_secret',
-      redirect_uris: ["https://3.73.28.4:8080/login/callback"],
+      client_id: inps.client_id,
+      client_secret: inps.client_secret,
+      redirect_uris: inps.redirect_uris,
       grant_types: ['refresh_token', 'authorization_code']
     }
   ],

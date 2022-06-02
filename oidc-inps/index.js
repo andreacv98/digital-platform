@@ -12,10 +12,7 @@ const { Issuer,Strategy } = require('openid-client');
 
 const path = require("path");
 
-const public_ip= "3.72.211.246";
-const private_ip = "172.31.45.131";
-const idp_ip = "52.57.34.126";
-
+import {provider, inps} from '../dnsconstants'
 
 const app = express();
 
@@ -49,12 +46,12 @@ passport.deserializeUser(function(user, done) {
 });
 
 process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
-Issuer.discover("https://"+idp_ip+":3000") 
+Issuer.discover(provider.site) 
   .then(function (oidcIssuer) {
     var client = new oidcIssuer.Client({
-      client_id: 'oidcCLIENT',
-      client_secret: 'Some_super_secret',
-      redirect_uris: ["https://"+public_ip+":8080/login/callback"],
+      client_id: inps.client_id,
+      client_secret: inps.client_secret,
+      redirect_uris: inps.redirect_uris,
       response_types: ['code'], 
       
     });
@@ -104,7 +101,7 @@ const options = {
 };
 
   //const httpServer = http.createServer(app)
-  const server= https.createServer(options,app).listen(8080, private_ip);
+  const server= https.createServer(options,app).listen(inps.port, inps.dns);
   /*httpServer.listen(8080,() =>{
       console.log(`Http Server Running on port 8080`)
       console.log('http://localhost:8080')
