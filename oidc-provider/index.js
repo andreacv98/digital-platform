@@ -15,7 +15,7 @@ const routes = require('./routes/express');
 const {provider} = require('../dnsconstants')
 
 // Retrieve port from env variable (in the call from the terminal) or set to default values
-const { PORT = 443, ISSUER = provider.url+`:${PORT}` } = process.env;
+const { PORT = provider.port, ISSUER = provider.url+`:${PORT}` } = process.env;
 configuration.findAccount = Account.findAccount;
 
 const app = express();
