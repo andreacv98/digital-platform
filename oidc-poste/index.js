@@ -4,11 +4,15 @@ const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const passport = require('passport');
 const http    = require("http");
+const https = require("https")
+const fs = require('fs');
+
 
 const { Issuer,Strategy } = require('openid-client');
 
 const path = require("path");
 
+const {provider, poste} = require('../dnsconstants')
 
 const app = express();
 
@@ -41,16 +45,15 @@ passport.deserializeUser(function(user, done) {
     done(null, user);
 });
 
-
 process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
-Issuer.discover('https://10.0.0.80:3000') 
+Issuer.discover(provider.site) 
   .then(function (oidcIssuer) {
     var client = new oidcIssuer.Client({
-      client_id: 'oidcCLIENT2',
-      client_secret: 'Some_super_secret',
-      redirect_uris: ["https://10.0.0.202:8080/login/callback"],
-      response_types: ['code'], 
-      
+      client_id: poste.client_id,
+      client_secret: poste.client_secret,
+      redirect_uris: poste.redirect_uris,
+      response_types: ['code'],
+      prompt : ["login"]      
     });
 
     passport.use(
@@ -92,17 +95,14 @@ app.get ("/user",(req,res) =>{
 
 })
 
-const https = require('https');
-const fs = require('fs');
-
 const options = {
   key: fs.readFileSync('key.pem'),
   cert: fs.readFileSync('cert.pem')
 };
 
   //const httpServer = http.createServer(app)
-  const server= https.createServer(options,app).listen(8080, "10.0.0.202");
-  /*httpServer.listen(8081,() =>{
-      console.log(`Http Server Running on port 8081`)
-      console.log('http://localhost:8081')
+  const server= https.createServer(options,app).listen(poste.port, poste.dns);
+  /*httpServer.listen(8080,() =>{
+      console.log(`Http Server Running on port 8080`)
+      console.log('http://localhost:8080')
     })*/

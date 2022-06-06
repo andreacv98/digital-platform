@@ -4,6 +4,9 @@ const digitalplatform_port = "443"
 const inps_dns = "fakeinps.ddns.net"
 const inps_port = "443"
 
+const poste_dns = "fakeposte.ddns.net"
+const poste_port = "443"
+
 const provider_dns = "cieprovider.ddns.net"
 const provider_port = "443"
 
@@ -29,6 +32,16 @@ const inps = {
     redirect_uris: ["https://"+inps_dns+":"+inps_port+"/login/callback"],
 }
 
+const poste = {
+    dns : poste_dns,
+    url : "https://"+poste_dns,
+    port : poste_port,
+    site : "https://"+poste_dns+":"+poste_port,
+    client_id: 'posteClient',
+    client_secret: 'Some_super_secret',
+    redirect_uris: ["https://"+poste_dns+":"+poste_port+"/login/callback"],
+}
+
 const provider = {
     dns : provider_dns,
     url : "https://"+provider_dns,
@@ -39,5 +52,6 @@ const provider = {
 module.exports= {
     digitalplatform,
     inps,
+    poste,
     provider
 }

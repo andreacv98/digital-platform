@@ -1,5 +1,5 @@
 {
-  "name": "oidc-rp-2",
+  "name": "oidc-rp",
   "version": "1.0.0",
   "description": "Simple OIDC Relaying Party to test the Digital Platform OIP",
   "main": "index.js",
@@ -13,7 +13,6 @@
     "cookie-parser": "^1.4.6",
     "express": "^4.18.1",
     "express-session": "^1.17.3",
-    "fs": "^0.0.1-security",
     "helmet": "^5.1.0",
     "https": "^1.0.0",
     "nodemon": "^2.0.16",
