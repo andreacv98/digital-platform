@@ -1,14 +1,14 @@
-const digitalplatform_dns = "digitalplatform.ddns.net"
-const digitalplatform_port = "443"
+const digitalplatform_dns = "localhost"
+const digitalplatform_port = "8080"
 
 const inps_dns = "fakeinps.ddns.net"
 const inps_port = "443"
 
-const poste_dns = "fakeposte.ddns.net"
-const poste_port = "443"
+const poste_dns = "localhost"
+const poste_port = "8081"
 
-const provider_dns = "cieprovider.ddns.net"
-const provider_port = "443"
+const provider_dns = "localhost"
+const provider_port = "3000"
 
 
 
