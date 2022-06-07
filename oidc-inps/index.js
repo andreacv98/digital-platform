@@ -21,8 +21,9 @@ app.use(express.urlencoded({
   extended: true,
 }));
 
-app.use(express.static(path.join(__dirname)));
-
+app.use(express.static(path.join(__dirname+"/views")));
+// set the view engine to ejs
+app.set('view engine', 'ejs');
 
 app.use(express.json({ limit: '15mb' }));
 app.use(session({secret: 'secret', 
@@ -93,7 +94,11 @@ app.get("/",(req,res) =>{
 })
 
 app.get ("/home", (req,res) =>{
-  res.sendFile(path.join(__dirname+'/MyInps-Bacheca.html'))
+  let userinfo = req.session.passport.user;
+  res.render(path.join(__dirname+'/views/MyInps-Bacheca'),{
+    user: userinfo
+  }
+  )
 })
 
 app.get ("/user",(req,res) =>{
