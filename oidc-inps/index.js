@@ -55,8 +55,7 @@ Issuer.discover(provider.site)
       client_id: inps.client_id,
       client_secret: inps.client_secret,
       redirect_uris: inps.redirect_uris,
-      response_types: ['code'], 
-      
+      response_types: ['code']
     });
 
     const params = {
