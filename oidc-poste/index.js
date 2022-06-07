@@ -21,6 +21,7 @@ app.use(express.urlencoded({
   extended: true,
 }));
 
+app.use(express.static(path.join(__dirname)));
 
 app.use(express.json({ limit: '15mb' }));
 app.use(session({secret: 'secret', 
@@ -80,7 +81,7 @@ passport.authenticate('oidc',{scope:"openid"}));
 
 app.get('/login/callback',(req,res,next) =>{
 
-  passport.authenticate('oidc',{ successRedirect: '/user',
+  passport.authenticate('oidc',{ successRedirect: '/home',
   failureRedirect: '/' })(req, res, next)
 }
   
@@ -89,6 +90,12 @@ app.get('/login/callback',(req,res,next) =>{
 app.get("/",(req,res) =>{
    res.send(" <a href='/login'>Log In with OAuth 2.0 Provider </a>")
 })
+
+app.get ("/home", (req,res) =>{
+  res.sendFile(path.join(__dirname+'/MyInps-Bacheca.html'))
+})
+
+
 app.get ("/user",(req,res) =>{
     res.header("Content-Type",'application/json');
     res.end(JSON.stringify({tokenset:req.session.passport.user.at_hash,userinfo:req.session.passport.user},null,2));

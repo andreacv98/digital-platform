@@ -1,0 +1,1547 @@
+.flyout-bottom-right *{
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+.imgnewicon {
+    height: 56px;
+    width: 56px;
+}
+.img_but_chat {
+   display:none;
+}
+.img_but_arr {
+  display:none;
+}
+.hrChatThem {
+    margin-top: 10px !important;
+    margin-left: 25px !important;
+    margin-right: 25px !important;
+	margin-bottom: 15px !important;
+    border: 0;
+        border-top-color: currentcolor;
+        border-top-style: none;
+        border-top-width: 0px;
+    border-top: 1px solid #cec5c5;
+    height: 1px;
+}
+.flyout-btn-bottom-right {
+    background: #005980;
+    border: 2px solid #005980 !important;
+    border-radius: 0px 0px 0px 0px;
+	-moz-border-radius: 0px 0px 0px 0px;
+	-webkit-border-radius: 0px 0px 0px 0px;
+    color: #ffffff;
+    /* cursor: pointer; */
+    display: block;
+    font-family: Trebuchet MS,Arial,Helvetica,sans-serif;
+    font-size: 19px;
+	font-weight:bold;
+    height: 35px;
+    /* line-height: 25px !important; */
+    margin: 0px auto;
+    outline:none;
+    padding: 0px 10px;
+    position: absolute;
+    text-align: left;
+    width: 100%;
+    z-index: 3;
+    top:0px;
+	left:-3px;
+	right:0px;
+}
+.flyout-bottom-right {
+    background: none;
+    border: 3px solid #005980;
+    border-radius: 0px;
+	-moz-border-radius: 0px;
+	-webkit-border-radius:0px;
+    bottom: -2px;
+    box-shadow: 0px -5px 15px 0px #ffffff;
+    color: #000000;
+    position: fixed;
+    right: 0; 
+    transition: all 0.3s ease-in-out 0s;
+    width: 99%;
+	height: 100%;
+    z-index: 9999;
+	margin: 0px;
+}
+.divContainChat {
+    display: none;
+    float: left;
+    margin: 0px 0px 15px;
+    width: 100%;
+}
+.surveyMarker .botDiv {
+    text-align: left !important;
+}
+.ChatUI .botDiv {
+    background-color: #ffffff;
+    border: 0px solid #ffffff;
+    border-radius: 0px 10px 10px;
+	-moz-border-radius: 0px 10px 10px;
+	-webkit-border-radius:0px 10px 10px;
+    clear: both;
+    display: none;
+    float: inherit;
+    margin: 0px auto;
+    padding: 10px 5px 5px 0px;
+    text-align: center;
+    width: 100%;
+}
+.ChatUI .buttonLinkSmall:hover {
+	background:#005980;
+	color: #FFFFFF;
+	border-color:#00405c;
+	cursor: pointer;
+	font-style: normal;
+}
+.ChatUI .buttonLinkSmall {
+    background: #007db3;
+    border: none;
+	border-bottom: 0px solid #006b9a;
+    border-radius: 0px;
+    color: #FFFFFF;
+    display: block;
+    font-family: Trebuchet MS,Arial,Helvetica,sans-serif;
+    font-size: 13px;
+    line-height: 25px;
+    margin: 1px auto 6px 0px;
+    width: 30%;
+	font-style: normal;
+	font-weight: bold;
+}
+.ChatUI .buttonLink:focus {
+	outline:none
+}
+.ChatUI .buttonLink:hover {
+	background:#005980;
+	color: #FFFFFF;
+	border-color:#00405c;
+	cursor: pointer;
+	font-style: normal;
+}
+.ChatUI .buttonLink {
+    background: #007db3;
+    border: none;
+	border-bottom: 0px solid #006b9a;
+    border-radius: 0px;
+    color: #FFFFFF;
+    display: block;
+    font-family: Trebuchet MS,Arial,Helvetica,sans-serif;
+    font-size: 13px;
+    line-height: 25px;
+    margin: 1px auto 6px 0px;
+    width: 95%;
+	font-style: normal;
+	font-weight: bold;
+}
+.ChatUI .hyperLink {
+    background: #ebebeb;
+    border: 1px solid #bdbdbd;
+    border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius:5px;
+    color: #949494;
+    cursor: pointer;
+    display: block;
+    font-family: Trebuchet MS,Arial,Helvetica,sans-serife;
+    font-size: 13px;
+    line-height: 25px;
+    margin: 1px auto 6px;
+    text-decoration: none;
+    width: 100%;
+}
+.ChatUI * {
+    box-sizing: border-box;
+    float: none;
+    line-height: normal;
+    margin: 0px;
+	font-size:initial;
+}
+.tablebtn tr {
+    border: 0px none !important;
+    line-height: normal;
+    margin: 0px;
+    padding: 0px;
+}
+.tablebtn td {
+    border: 0px none !important;
+    line-height: normal;
+    margin: 0px;
+    padding: 0px;
+}
+.tablebtn {
+    border: 0px none !important;
+    line-height: normal;
+    margin: 0px;
+    padding: 0px;
+    position: relative;
+    height: 35px;
+    width: 100%;
+}
+.tablebtn .copyClipBoardIcon {
+    height: 20px;
+    right: 50px;
+    position: absolute;
+	cursor: pointer;
+    top: 4px;
+    width: 20px;
+    z-index: 99999;
+}
+.ChatUI.popup {
+	position:fixed !important;
+	height: 100%;
+	left:0px;
+	top:0px;
+}
+.ChatUI {
+    background: #FFFFFF;
+    border: none;
+    border-radius: 5px;
+    display: none;
+    height: 100%;
+    line-height: normal;
+    margin: 0px;
+    padding: 0px;
+    position: fixed;
+    width: 100%;
+    z-index: 0px;
+	top:35px;
+	right:0;
+	left:0px;
+}
+#chat-flyout {
+    display: none;
+}
+.ChatUI .close {
+    background: #ffffff;
+    border: 0px solid #f3f2ef;
+    border-radius: 5px 5px 0px 0px;	
+	-moz-border-radius: 5px 5px 0px 0px;
+	-webkit-border-radius:5px 5px 0px 0px;
+    box-shadow: 0px -9px 10px -5px #ffffff inset;
+    color: #f48133;
+    cursor: pointer;
+    font-family: Arial;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 3px 4px;
+    position: absolute;
+    right: 12px;
+    top: 0px;
+	display:none;
+}
+.buttonclose {
+    background: #282f32;
+    border: 0px solid #282f32;
+    border-radius: 6px;		
+	-moz-border-radius: 6px;
+	-webkit-border-radius:6px;
+    box-shadow: 0px -9px 10px -5px #282f32 inset;
+    color: #ffffff;
+    cursor: pointer;
+    font-family: Arial;
+    font-size: 16px;
+    font-weight: normal;
+    padding: 0px;
+    position: fixed;
+    right: 12px;
+    top: 15px;
+    z-index: 9999;
+}
+/* .buttonicon { */
+    /* background: #282f32; */
+    /* border: 0px solid #282f32; */
+    /* border-radius: 6px;		 */
+	/* -moz-border-radius: 6px; */
+	/* -webkit-border-radius:6px; */
+    /* box-shadow: 0px -9px 10px -5px #282f32 inset; */
+    /* color: #ffffff; */
+    /* cursor: pointer; */
+    /* font-family: Arial; */
+    /* font-size: 16px; */
+    /* font-weight: normal; */
+    /* padding: 0px; */
+    /* position: absolute; */
+    /* right: 12px; */
+    /* top: 15px; */
+    /* height: 20px; */
+	/* z-index: 9999; */
+	/* display:none; */
+/* } */
+.buttonicon {
+    display:none;
+}
+.buttonicon.open {
+    background: none;
+    border: 0px solid #282f32;
+    border-radius: 6px;		
+	-moz-border-radius: 6px;
+	-webkit-border-radius:6px;
+    color: #ffffff;
+    cursor: pointer;
+	font-family: Arial;
+    font-size: 37px;
+    font-weight: bold;
+    padding: 0;
+    position: absolute;
+    right: 35px;
+    bottom: 10px;
+    z-index: 9999;
+	height:35px;
+	display:block;
+}
+.tablebtn .survey {
+    background: none;
+    border-radius: 6px;
+    bottom: 10px;
+    color: #ffffff;
+    cursor: pointer;
+    display: block;
+    font-family: "Titillium Web",​Helvetica,​Arial,​sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+    height: 30px;
+    padding: 0;
+    position: absolute;
+    right: 10px;
+    z-index: 9999;
+}
+.ChatUI .transcript .survey::before {
+    display: none !important;
+}
+.ChatUI .transcript .survey:after {
+    display: none !important;
+}
+.ChatUI .transcript .survey .name2 {
+    display: none !important;
+}
+.ChatUI .you.survey {
+    display: none !important;
+}
+.Divimage.centChat {
+	margin: 11% -4% 0% 0% !important;
+}
+.DivImage.survey {
+    display: none !important;
+}
+.ChatUI .transcript .survey {
+	padding:0px 0px 0px 5px !important;
+    background: none !important;
+    border:none !important;
+	margin: 1px 0px 2px 15px !important;
+	font-size:13px !important;	
+}
+.survey .botDiv {
+    background: none;
+	text-align: left;
+}
+.botDiv .suveRadio{
+    margin: 10px 0px 10px 5px;
+	padding-left: 5px;
+}
+.botDiv .surveLbl {
+    float: none;
+	font-style: italic;
+     margin: 7px 0 3px 10px;
+    position: absolute;
+	font-size: 13px;
+	cursor:pointer;
+}
+.ChatUI .close:hover {
+    opacity: 0.8;
+}
+.ChatUI .title {
+    color: #f57f1d;
+    display: none;
+    font-family: Trebuchet MS,Arial,Helvetica,sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0px 10px 5px;
+    text-align: left;
+}
+.ChatUI .headerdiv {
+    overflow: auto;
+    width: 100%;
+	position: relative;
+	display:none;
+}
+.ChatUI .boxChatSample {
+    display: block;
+    /* height: 68.5%; */
+    /* position: absolute;    */
+	height: 57%;
+    position: relative;
+	background: #FFF;
+    width: 100%;
+	top:0px;
+	left:0px;
+	overflow-x: hidden;			
+    /* width: 96%; */
+}
+.ChatUI .boxChatSample.full {
+	height:81% !important;
+	
+}
+.ChatUI .validationError {
+    background: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 5px 5px 0px 0px;		
+	-moz-border-radius: 5px 5px 0px 0px;
+	-webkit-border-radius:5px 5px 0px 0px;
+    display: none;
+    font-family: Verdana;
+    padding: 5px;
+}
+.ChatUI .validationError p {
+    overflow-wrap: break-word;
+    padding: 5px 10px;
+}
+.ChatUI .transcript * {
+    touch-action: none;
+}
+_:default:not(:root:root), .ChatUI .transcript a {
+    vertical-align:initial;
+	line-height:1.15;
+}
+.ChatUI .transcript {
+    background: none;
+    border: 0px solid #E6E9EE;
+    border-radius: 5px 5px 0px 0px;	
+	-moz-border-radius: 5px 5px 0px 0px;
+	-webkit-border-radius:5px 5px 0px 0px;
+    display: block;
+    padding: 8px 3px 10px 3px;
+	position: relative;
+	width: 100%;
+	height: auto;
+}
+.ChatUI .transcript p.system .name {
+    display: none;
+}
+.ChatUI .transcript p.system.bubble .name {
+    display: none;
+}								
+.ChatUI .transcript .you .name {
+    background: none;
+    border: 0px solid #f3f2f0;
+    border-radius: 0px;	
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 0px;
+    color: #656563;
+    display: none;
+    float: left;
+    font-family: "Titillium Web",​Helvetica,​Arial,​sans-serif;
+    font-size: 13px;
+    font-style: italic;
+    margin: 0px 4px 0px 0px;
+    padding: 0px;
+}
+.ChatUI .transcript .them .name {
+    background: #f3f2f0  ;
+    border-radius: 0px;
+    color: #656563;
+    display: none;
+    float: left;
+    font-family: "Titillium Web",​Helvetica,​Arial,​sans-serif;
+    font-size: 13px;
+    font-style: italic;
+    margin: 0px 4px 0px 0px;
+    padding: 0px;
+}
+.ChatUI .transcript p {
+    word-break: break-word;
+
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    hyphens: auto;
+
+    /*Internet Explorer 5.5+*/
+    word-wrap: break-word; 
+
+   /*new syntax*/
+	overflow-wrap: break-word;
+    padding: 5px 10px;
+}
+.ChatUI .transcript b{
+    font-size: 13px;
+    line-height: 1.15; 
+} 					
+.ChatUI .transcript .them .name2 {
+    background: none;
+    border: 0px solid #f3f2f0;
+    border-radius: 0px;	
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 0px;
+    bottom: -9px;
+    color: #333;
+    display: block;
+/*    float: right;  */
+    font-family: "Titillium Web",​Helvetica,​Arial,​sans-serif;
+    font-size: 12px;
+    font-style: italic;
+    margin: 0px;
+    padding: 5px 0px 0px 0px;
+    position: absolute;
+    left: 5px;
+}
+.ChatUI .transcript .you .name2 {
+    background: none;
+    border: 0px solid #f3f2f0;
+    border-radius: 0px;	
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 0px;
+    bottom: 1px;
+    color: #333;
+    display: block;
+/*    float: right;  */
+    font-family: "Titillium Web",​Helvetica,​Arial,​sans-serif;
+    font-size: 12px;
+    font-style: italic;
+    margin: 0px;
+    padding: 5px 0px 0px 0px;
+    position: initial;
+    right: 3px;
+}
+.ChatUI .isTyping {
+    background: #f48133;
+    border: 0px solid #f48133;
+    border-radius: 0px;
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 0px;
+    bottom: 0px;
+    color: #ffffff;
+    display: none;
+    float: left;
+    font-family: Trebuchet MS,Arial,Helvetica,sans-serif;
+    font-size: 13px;
+    font-style: italic;
+    font-weight: normal;
+    height: 15px;
+    margin: 0px 2%;
+    padding: 0px;
+    position: fixed;
+    text-align: left;
+	padding-left:10px;
+    width: 96%;
+}
+.popup .input {
+    width: 98% !important;
+}
+.boxChatSample.boxChatSamplePopup {
+    height: 84%;
+}
+.ChatUI .input {
+    background: #fff none repeat scroll 0 0;
+    border: 2px solid #005980;
+	border-left: none;
+    border-bottom: none;
+    border-right: none ;
+    border-radius: 0;
+    color: #979797;
+    float: left;
+    font-family: "Titillium Web",​Helvetica,​Arial,​sans-serif;
+    font-size: 16px;
+    height:100%;
+    margin: 0px;
+	/* margin:0px; */
+    overflow: hidden;
+    /* padding: 5px 51px 5px 5px; */
+    padding: 10px 80px 5px 5px;
+    resize: none;
+	line-height:17px;				 
+    width: 100%;
+	position:absolute;
+	bottom:0px;
+	outline:none;
+}
+.ChatUI .input.disabled {
+    	zoom: 1;
+	filter: alpha(opacity=50);
+	opacity: 0.5;
+}
+.ChatUI.popup .input-container{
+	height:92px;
+	/* height:14%; */
+}
+.flyout-bottom-right .input-container {
+    /* height: 90px; */
+	height:21%;
+}
+.ChatUI .input-container {
+	display: block;
+    margin: 0 ;
+    position: fixed;
+    width: 100%;
+	bottom:0px;
+	background:#fff;
+    z-index: 1;
+	height:60px; 		  
+}
+.input-container.closeDiv {
+    border-top: 3px solid #007DB3;
+}
+.input-container .sendSave {
+    background: #007db3;
+    color: #fff;
+    font-family: "Titillium Web",​Helvetica,​Arial,​sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    height: 33px;
+    margin: 2% auto;
+    width: 33%;
+	border: 0px solid #006b9a;
+	border-left:none;
+	border-right:none;
+	border-top:none;
+	cursor: pointer;
+}
+.ChatUI .input-container  .sendSave:hover {
+	background:#005980;
+	border-color:#00405c;
+}
+.input-container .sendSaveLeft {
+    background: #005980;
+    color: #fff;
+    font-family: "Titillium Web",​Helvetica,​Arial,​sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    height: 33px;
+	border: 0px solid #006b9a;
+	border-left:none;
+	border-right:none;
+	border-top:none;
+	cursor: pointer;
+    left: 0px;
+    /* margin: 2px 5px 0px 10px; */
+    margin: 2px 3% 0px 10%;
+    position: absolute;
+    top: 5px;
+	width:33%;
+}
+.ChatUI .input-container  .sendSaveLeft:hover {
+	background:#005980;
+	border-color:#00405c;
+}
+
+.input-container .closeChatBot {
+    background: #005980;
+    color: #fff;
+    font-family: "Titillium Web",​Helvetica,​Arial,​sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    height: 33px;
+    margin: 2px 10% 0px 3%;
+	border: 0px solid #006b9a;
+	border-left:none;
+	border-right:none;
+	border-top:none;
+	cursor: pointer;
+	width:140px;
+	top:5px;
+	right:0;
+	position:absolute;
+	width:33%;
+}
+.ChatUI .input-container .closeChatBot:hover {
+	background:#005980;
+	border-color:#00405c;
+}
+/* .flyout-bottom-right .send { */
+    /* bottom: 17px; */
+/* } */
+.ChatUI.popup .send{
+	bottom: 17px;
+}
+.flyout-bottom-right .sendSurvey {
+    bottom: 17px;
+}
+/* .ChatUI.popup .sendSurvey{ */
+	/* bottom: 17px; */
+/* } */
+.ChatUI.popup .input-container{
+	bottom: 11px;
+}
+.ChatUI .input-container .opac {
+    zoom: 1;
+	filter: alpha(opacity=20) !important;
+	opacity: 0.2 !important;
+    cursor: default !important;
+}
+.ChatUI .send:hover {
+	background:#005980;
+	border-color:#00405c;
+}
+.ChatUI .send {
+    background: #007db3;
+    border: 0px solid #006b9a;
+	border-left:none;
+	border-right:none;
+	border-top:none;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    white-space: nowrap;
+    padding: 6px 12px;
+    line-height: 1.4;
+    border-radius: 0;
+     bottom: 0%;
+    color: #fff;
+    cursor: pointer;
+    float: right;			
+    font-family: "Titillium Web", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: bold;
+    height: 37px;
+    margin: 0px 1px 11px 6px;
+    padding: 5px;
+    width: 70px;
+	position: absolute;
+    right: 21px;
+}
+.ChatUI .sendSurvey:hover {
+	background:#005980;
+	border-color:#00405c;
+}
+.ChatUI .sendSurvey {
+	display:none;
+    background: #007db3;
+    border: 0px solid #006b9a;
+	border-left:none;
+	border-right:none;
+	border-top:none;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    white-space: nowrap;
+    padding: 6px 12px;
+    line-height: 1.4;
+    border-radius: 0;
+    bottom: 0%;
+    color: #fff;
+    cursor: pointer;
+    float: right;			
+    font-family: "Titillium Web", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: bold;
+    height: 37px;
+    margin: 0px 1px 11px 6px;
+    padding: 5px;
+    width: 70px;
+	position: fixed;
+    right: 21px;
+}
+.ChatUI .form {
+    background: #E6E9EE;
+    border: 1px solid #E6E9EE;
+    border-radius: 5px 5px 0px 0px;
+	-moz-border-radius: 5px 5px 0px 0px;
+	-webkit-border-radius: 5px 5px 0px 0px;
+    height: 0px;
+    overflow: hidden;
+    padding: 5px;
+	height:75%;
+	display:none;
+}
+.ChatUI .advert_M {
+    font-family: "Titillium Web",​Helvetica,​Arial,​sans-serif;
+    font-size: 12px;
+	color:#49535d;
+	line-height:1.1;
+	text-align: justify;
+	height:15%;
+	padding: 12px 9px 5px 9px;
+}
+.ChatUI .advert_P a:link{
+	color: #007db3 !important;
+	font-size: 12px  !important;
+	font-weight: bold !important;
+	text-decoration: underline !important;
+	box-sizing: border-box;
+	font-family: "Titillium Web",Helvetica,Arial,sans-serif;
+	text-align: justify;
+	line-height: inherit;
+}
+.ChatUI .advert_P a:visited{
+	color: #007db3 !important;
+	font-size: 12px  !important;
+	font-weight: bold !important;
+	text-decoration: underline !important;
+	box-sizing: border-box;
+	font-family: "Titillium Web",Helvetica,Arial,sans-serif;
+	text-align: justify;
+	line-height: inherit;
+}
+.ChatUI .advert_P a:active{
+	color: #007db3 !important;
+	font-size: 12px  !important;
+	font-weight: bold !important;
+	text-decoration: underline !important;
+	box-sizing: border-box;
+	font-family: "Titillium Web",Helvetica,Arial,sans-serif;
+	text-align: justify;
+	line-height: inherit;
+}
+.ChatUI .advert_P a:hover{
+	color: #007db3 !important;
+	font-size: 12px  !important;
+	font-weight: bold !important;
+	text-decoration: underline !important;
+	box-sizing: border-box;
+	font-family: "Titillium Web",Helvetica,Arial,sans-serif;
+	text-align: justify;
+	line-height: inherit;
+}
+.ChatUI .advert_P {
+    font-family: "Titillium Web",​Helvetica,​Arial,​sans-serif;
+    font-size: 12px;
+	color:#49535d;
+	line-height:1.1;
+	text-align: left;
+	height:18%;
+}
+.ChatUI .advert_error {
+	color: red;
+	font-size: 12px;
+	font-family: "Titillium Web",​Helvetica,​Arial,​sans-serif;
+	font-weight: 700;
+	margin-left: 10px;
+}
+.ChatUI .advert_l {
+	font-size: 12px;
+	font-family: "Titillium Web",​Helvetica,​Arial,​sans-serif;
+    font-weight: 700;
+    line-height: 17px;
+    margin: 1px 0 0 7px;
+    position: relative;
+	bottom:1px;
+}
+_:-ms-fullscreen, :root .ChatUI .advert_l{
+    line-height: 1 ;
+	bottom:2px;
+}
+/*.ChatUI .advert_C {
+	border-right: #85a3bd 1px solid;
+    border-top: #85a3bd 1px solid;
+    border-left: #85a3bd 1px solid;
+    border-bottom: #85a3bd 1px solid;
+	outline: #007db3 0.2px solid;
+	margin-left: 10px;
+	box-shadow: 0px 0px 8px 1px #007db3;
+	border-radius: 1px;
+	-webkit-box-shadow: 0px 0px 8px 1px #007db3;
+}*/
+.ChatUI .advert_CF{
+	 height:13px;
+	 width:13px;
+	 -webkit-box-shadow: 0px 0px 8px 1px #007db3;
+	 -webkit-appearance:none;
+	 -moz-appearance: none ;
+	 -ms-appearance: none ; 
+     -o-appearance: none;
+     appearance: none ;	 
+	 cursor:pointer;
+	 position:relative;
+	 -webkit-transition: .15s;
+	 border-radius:0px;
+	 background-color:#ffffffff;
+	 margin-left: 10px;
+	 box-shadow: 0px 0px 8px 1px #007db3;
+	border: 1px solid #007db3;
+	left: 0;
+    top: 1px;
+    position: relative;
+	font-size:13px;	
+}
+.advert_CF:before {
+    bottom: -2px;
+    left: -1px;
+    position: absolute;
+}
+.ChatUI .advert_C{
+	border-radius: 1px;
+	-webkit-box-shadow: 0px 0px 8px 1px #007db3;
+	 -webkit-appearance:none;
+	 -moz-appearance: none ;
+	 -ms-appearance: none ; 
+     -o-appearance: none;
+     appearance: none ;
+	 height:12px;
+	 width:12px;
+	 cursor:pointer;
+	 position:relative;
+	 -webkit-transition: .15s;
+	 border-radius:0px;				
+	 background-color:#ffffffff;
+	 margin-left: 10px;
+	 box-shadow: 0px 0px 8px 1px #007db3;
+/*
+	 border:none;
+	 outline:none;
+*/
+	border: 1px solid #007db3;
+outline: 1px solid #007db3;
+    outline-offset: -1px;
+	display:none;
+}
+.ChatUI .advert_C::-ms-check {
+	 border: 1px solid #007db3;
+}
+.ChatUI .advert_C:checked {
+	 background-color:#f5f5f0;
+	}
+.ChatUI .advert_C:before{
+	 position:absolute;
+	 top: -1.5px;
+	 left: 0px;
+	 width:100%;
+	 height:auto;
+	 line-height:1;
+	 text-align:left;
+	 color:#4a4646;
+	 content: '';
+	 box-sizing:content-box;
+	}
+.ChatUI .advert_C:checked:before {
+	 content: '\2713' ;
+	 font-size: 14px;
+	 position:absolute ;
+	 top: -1.5px ;
+	 left: 0px ;
+	 width:100% ;
+	 height:auto;
+	 line-height:1;
+	 text-align:left;
+	 box-sizing:content-box ;
+	}
+.ChatUI .advert_C:hover:before {
+	 background:rgba(255,255,255,0.3);
+	}
+	.ChatUI .advert_CI{
+	 -webkit-box-shadow: 0px 0px 8px 1px #007db3;
+	 -webkit-appearance:none;
+	 -moz-appearance: none ;
+	 -ms-appearance: none ; 
+     -o-appearance: none;
+     appearance: none ;
+	 height:13px;
+	 width:13px;
+	 cursor:pointer;
+	 position:relative;
+	 -webkit-transition: .15s;
+	 border-radius:0px;
+	 background-color:#ffffffff;
+	 margin-left: 10px;
+	 box-shadow: 0px 0px 8px 1px #007db3;
+	border: 1px solid #007db3;
+	    left: 0;
+    top: 1px;
+    position: relative;
+	font-size:13px;
+	color:transparent;
+}
+.advert_CI:before {
+    bottom: -2px;
+    left: -1px;
+    position: absolute;
+}
+.ChatUI .advert_DIV {
+	border: 3px solid #f5f5ef;
+    border-left: none;
+    border-top: none;
+    border-right: none ;    
+    padding: 5px;
+	border-bottom: 1px solid #007db3;
+	background:#F5F5F0;
+}
+.formLabel{
+    color: #898989;
+    display: block;
+    font-family: Trebuchet MS,Arial,Helvetica,sans-serif;
+    font-size: 13px;
+    margin-top: 8px;
+    text-align: left;
+}
+.ChatUI .form label span {
+    display: inline-block;
+    padding-right: 5px;
+    text-align: right;
+}
+.ChatUI .form label input {
+    border: 1px solid #E6E9EE;
+    border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+    box-shadow: 3px 5px 16px -6px #E6E9EE;
+    color: #111;
+    display: inline-block;
+    font-family: Trebuchet MS,Arial,Helvetica,sans-serif;
+    font-size: 13px;
+    height: 27px;
+    margin-right: 6px;
+    padding-left: 8px;
+    width: 100%;
+}
+.ChatUI .form label input.error {
+    border-color: red;
+}
+.ChatUI .form .submit {
+    background: #f48133;
+    border: 1px solid #f48133;
+    border-radius: 5px;
+    color: #ffffff;
+    font-family: sans-serif;
+    font-size: 12px;
+    height: 30px;
+    margin-top: 11px;
+    width: 100%;
+}
+.ChatUI .end {
+    cursor: pointer;
+    height: 20px;
+    opacity: 0.3;
+    position: absolute;
+    width: 20px;
+}
+.ChatUI .end:hover {
+    opacity: 1;
+}
+.settings-group {
+    display: none;
+}
+.ChatUI .buttonFile {
+    background: #f48133 ;
+    border: 0px solid #f48133;
+    border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+    cursor: pointer;
+    /* float: left; */
+    height: 45px;
+    margin: 0px 1px 0px 5px;
+    padding: 5px;
+    width: 35px;
+	display: none;
+}
+.ChatUI .spilla {
+    height: 24px;
+    width: 24px;
+}
+.framespilla {
+    border: medium none;
+    height: 115px;
+    width: 100%;
+}
+.bubble {
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+}
+.you::after {
+    border-color: transparent #f3f2f0;
+    border-style: solid;
+    border-width: 10px 0px 10px 10px;
+    content: "";
+    display: block;
+    position: absolute;
+    right: -10px;
+    top: 6px;
+    width: 0px;
+    z-index: 1;
+}
+/* .them::after { */
+    /* border-color: transparent #f3f2f0; */
+    /* border-style: solid; */
+    /* border-width: 10px 10px 10px 0px; */
+    /* content: ""; */
+    /* display: block; */
+    /* left: -10px; */
+    /* position: absolute; */
+    /* top: 6px; */
+    /* width: 0px; */
+    /* z-index: 1; */
+/* } */
+.ChatUI .transcript .them .linkRich:link {
+    color: #007DB3 !important;
+    font-size: 13px !important;
+	font-weight: bold !important;
+	text-decoration: underline !important;
+	line-height: 1.15 !important;
+}
+.ChatUI .transcript .them .linkRich:visited {
+    color: #007DB3 !important;
+    font-size: 13px !important;
+	font-weight: bold !important;
+	text-decoration: underline !important;
+	line-height: 1.15 !important;
+}
+.ChatUI .transcript .them .linkRich:active {
+    color: #007DB3 !important;
+    font-size: 13px !important;
+	font-weight: bold !important;
+	text-decoration: underline !important;
+	line-height: 1.15 !important;
+}
+.ChatUI .transcript .them .linkRich:hover {
+    color: #007DB3 !important;
+    font-size: 13px !important;
+	font-weight: bold !important;
+	text-decoration: underline !important;
+	line-height: 1.15 !important;
+}
+.ChatUI .transcript .them a:link {
+    color: #007DB3 !important;
+    font-size: 13px !important;
+	font-weight: bold !important;
+	text-decoration: underline !important;
+	line-height: 1.15 !important;
+}
+.ChatUI .transcript .them a:visited {
+    color: #007DB3 !important;
+    font-size: 13px !important;
+	font-weight: bold !important;
+	text-decoration: underline !important;
+	line-height: 1.15 !important;
+}
+.ChatUI .transcript .them a:active {
+    color: #007DB3 !important;
+    font-size: 13px !important;
+	font-weight: bold !important;
+	text-decoration: underline !important;
+	line-height: 1.15 !important;
+}
+.ChatUI .transcript .them a:hover {
+    color: #007DB3 !important;
+    font-size: 13px !important;
+	font-weight: bold !important;
+	text-decoration: underline !important;
+	line-height: 1.15 !important;
+}
+.ChatUI .transcript .them {
+    position: relative;
+	/* width: 305px; */
+	/* height: 90px; */
+	/* padding: 0px; */
+	background: #FFFFFF;
+	/* -webkit-border-radius: 10px; */
+	/* -moz-border-radius: 10px; */
+	/* border-radius: 10px; */
+	border: #005980 solid 0px;
+    clear: both;
+    color: #373735;
+    font-family: "Titillium Web",​Helvetica,​Arial,​sans-serif;
+    font-size: 13px;
+	font-style: italic;
+    margin: 1px 0px 2px 15px;
+    min-height: 32px;
+    padding: 5px 10px 10px 5px;
+    text-align: left;
+    width: 75%;
+	line-height: 1.15;
+}
+.ChatUI .transcript .them:after
+{
+content: '';
+position: absolute;
+border-style: solid;
+border-width: 5px 4px 5px 0;
+border-color: transparent #FDFCFC;
+display: none;
+width: 0;
+z-index: 1;
+margin-top: -5px;
+left: -4px;
+top: 20px;
+}
+
+.ChatUI .transcript .them:before
+{
+content: '';
+position: absolute;
+border-style: solid;
+border-width: 6px 5px 5px 0;
+border-color: transparent #005980;
+display: none;
+width: 0;
+z-index: 0;
+margin-top: -6px;
+left: -6px;
+top: 20px;
+}
+.ChatUI .transcript .you:after
+{
+content: '';
+position: absolute;
+border-style: solid;
+border-width: 5px 0 5px 5px;
+border-color: transparent #fdfcfc;
+display: none;
+width: 0;
+z-index: 1;
+margin-top: -5px;
+right: -4px;
+top: 20px;
+}
+
+.ChatUI .transcript .you:before
+{
+content: '';
+position: absolute;
+border-style: solid;
+border-width: 6px 0 6px 6px;
+border-color: transparent #005980;
+display: none;
+width: 0;
+z-index: 0;
+margin-top: -6px;
+right: -6px;
+top: 20px;
+}
+.ChatUI .transcript .you {
+	position: relative;
+	background:#FFFFFF;
+	/* -webkit-border-radius: 10px; */
+	/* -moz-border-radius: 10px; */
+	/* border-radius: 10px; */
+	border: #8CA9C3 solid 0px;
+    clear: both;
+    color: #373735;
+	font-family: "Titillium Web",​Helvetica,​Arial,​sans-serif;
+    font-size: 13px;
+    margin: 1px 15px 2px 0px;
+    min-height: 32px;
+    padding: 5px 10px 13px 5px;
+    text-align: right;
+    width: 75%;
+}
+.ChatUI .transcript p.system {
+    background: #f3f2f0 ;
+    border: 2px solid #F3F2F0;
+    border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+    clear: both;
+    color: #222222;
+    float: inherit;
+    font-family: "Titillium Web",​Helvetica,​Arial,​sans-serif;
+    font-size: 13px;
+    margin: 7px 11px 8px;
+    padding: 5px 10px;
+    text-align: center;
+}
+.ChatUI .transcript .Divimage {
+    margin: 0px;
+    overflow: hidden;
+    padding: 5px 10px;
+}
+.divcontainer * {
+  -webkit-box-sizing: content-box;
+     -moz-box-sizing: content-box;
+          box-sizing: content-box;
+}
+.divcontainer *:before,
+.divcontainer *:after {
+  -webkit-box-sizing: content-box;
+     -moz-box-sizing: content-box;
+          box-sizing: content-box;
+}
+.divcontainer img {
+    cursor: pointer;
+}
+.iconimgOper {
+    height: 42px;
+    width: 42px;
+}
+.iconimgUser {
+    width: 42px;
+    height: 42px;
+}
+.bubblepresent {
+    background: #0199d9 ;
+    border: medium none;
+    border-radius: 5px;	
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px ;
+    bottom: 4px;
+    color: white;
+    height: 20px;
+    padding: 10px;
+    position: fixed;
+    right: 84px;
+    text-align: center;
+    width: 200px;
+    z-index: 2;
+	display:none !important;
+}
+.bubblepresent:before {
+    background: #0199d9 ;
+    border: medium none;
+    border-radius: 0px 0px 20px;
+	-moz-border-radius: 0px 0px 20px;
+	-webkit-border-radius: 0px 0px 20px;
+    bottom: 85px;
+    content: "";
+    height: 10px;
+    position: absolute;
+    right: -10px;
+    top: 0px;
+    width: 18px;
+    z-index: 1;
+}
+.flyout-bottom-right .nicescroll-cursors {
+	border: 1px solid #005980 !important;
+}
+
+.ChatUI .spinnerClassImg{
+	width:25%;
+	height:25%;
+	margin:0 38%;
+}
+.buttoniconFa.open {
+    background: #282f32;
+    color: #ffffff;
+    cursor: pointer;
+    display: block;
+    font-size: 22px;
+    height: 0;
+    padding: 0;
+    position: absolute;
+    right: 29px;
+    top: 8px;
+    z-index: 9999;
+}
+.tablebtn .surveyFa {
+    background: #282f32;
+    bottom: 0;
+    color: #ffffff;
+    cursor: pointer;
+    display: block;
+    font-size: 24px;
+    height: 0;
+    padding: 0;
+    position: absolute;
+    right: 4px;
+    z-index: 9999;
+}
+
+.tablebtn .copyClipBoardIconFa {
+    color: white;
+    cursor: pointer;
+    font-size: 26px;
+    height: 26px;
+    position: absolute;
+    right: 62px;
+    top: 7px;
+    width: 26px;
+    z-index: 99999;
+}
+_:default:not(:root:root), .tablebtn .copyClipBoardIconFa {
+	top:12px !important;
+}
+
+_:default:not(:root:root), .tablebtn .survey {
+	bottom:6px !important;
+}
+
+_:default:not(:root:root), .advert_C:checked:before{
+	font-size:12px !important;
+	top:-0.5px !important;
+	left:-1px !important;
+}	
+/* :default:not(:root:root), .ChatUI .send {								 */
+	/* position:-webkit-sticky; */
+/* } */
+:default:not(:root:root), .ChatUI .input {								
+	position:-webkit-sticky !important;
+}
+_:default:not(:root:root), .botDiv .suveRadio{
+margin-left: 0.5px;
+}
+_:default:not(:root:root), .botDiv .surveLbl {
+	margin:10px 0px 10px 5px !important;
+	position:absolute;
+}
+_:default:not(:root:root), input[type="radio"] {
+  margin-left: 0.5px;
+}
+
+
+.Divimage .bubbleClassImg {
+    bottom: -5px;
+    height: 20px;
+    position: relative;
+    width: 20px;
+}
+ .Divimage.bubbleCheat {
+    height: 55px;
+}
+
+/* OVERLAY */
+
+.modalEabOverlay{
+background-color: #000;
+ z-index: 1030;
+transition: opacity 0.15s linear 0s;
+opacity: 0.5;
+}
+
+	
+.modalEab{
+	overflow-x: hidden;
+    overflow-y: auto;
+	position: fixed;
+    top: 50% !important;
+    transform: translateY(-50%);
+	z-index: 1040;
+	opacity:1;
+	transition: opacity 0.15s linear 0s;
+	padding: 0 !important;
+    text-align: center;
+}
+	
+	
+	
+.centerGeneral{
+	bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0; 
+	}
+	
+	
+.div_modal_dialogEab {
+    transform: translate(0px, 0px);
+    transition: transform 0.3s ease-out 0s;
+    text-align: left;
+    vertical-align: middle;
+    margin: 30px auto;
+    width: 100%;
+    position: relative;
+}
+
+.modal_content_large{
+	margin-left: auto;
+    margin-right: auto;
+	max-width:650px;
+	background-clip: padding-box;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    outline: 0 none;
+    position: relative;
+	}
+	
+.modal_header {
+    border-bottom: 1px solid #e5e5e5;
+    border-left: 8px solid #005980;
+    padding: 10px;
+	text-align: left;
+}
+.modal_header .close{
+    background: transparent;
+    border: none;
+    float: right;
+    font-size: 16px;
+	bottom: 3px;
+    position: relative;
+}
+.modal_title {
+	color: #005980;
+    line-height: 1.2;
+    margin: 0;
+	font-size: 20px;
+	font-weight: 700;
+	}
+	
+.modalEab .modal_body {
+    color: #005980;
+    font-weight: 600;
+    height: 70%;
+    padding: 15px;
+    position: relative;
+    text-align: left;
+	font-size: 16px;
+    line-height:	22.4px;
+}
+.modalEab * {
+font-family: "Titillium Web",​Helvetica,​Arial,​sans-serif;
+}
+
+.modal_body i {
+    font-size: 16px;
+	font-weight: 600;
+    margin: 0 6px 0 3px;
+}
+#halfDiv{
+display:none;
+}
+.inset img {
+position:static;
+}
+.DivImage.surverySec {
+    display: none !important;
+}
+.Divimage.surverySec {
+    margin: 8px 0px 0px 0px !important;
+}
+.survey .surverySec .botDiv {
+    background: none;
+	text-align: left;
+}
+.botDiv .surverySec .suveRadio2{
+    /* margin: 10px 0px 10px 5px; */
+    margin: 10px 0px 10px 20px;
+	padding-left: 5px;
+}
+.botDiv .surverySec .surveLbl2 {
+    float: none;
+	font-style: italic;
+     margin: 5px 0 3px 10px;
+    position: absolute;
+	font-size: 13px;
+	cursor:pointer;
+}
+.surveyMarker .surverySec {
+    text-align: left !important;
+	/* margin: 0px; */
+	margin: 7px 0px 2px 7px;
+    position: relative;
+	z-index: 20;
+}
+.ChatUI .transcript .textSecP  {
+    background-color: #ffffff;
+    clear: both;
+    float: inherit;
+    text-align: left;
+    width: 100%;
+	padding:0px 0px 0px 5px !important;
+    background: none !important;
+    border:none !important;
+	margin: 7px 0px 2px 5px !important;
+	/* margin: 7px 0 2px 0px !important; */
+	font-size:13px !important;	
+	/* padding: 0; */
+}
+
+.ChatUI .transcript .hideFu {
+	display:none !important;
+}
+
+.ChatUI br {
+    line-height: 0.1;
+}
+.ChatUI br.doubleBr {
+    height: 20px;
+    line-height: 20px;
+    vertical-align:top;
+}
