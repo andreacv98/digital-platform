@@ -1,0 +1,9 @@
+﻿@media screen {
+    .no-print, .no-print * {
+    }
+}
+@media print {
+    .no-print, .no-print * {
+        display: none !important;
+    }
+}

@@ -1,0 +1,696 @@
+﻿// GB @ 13.09.2016 ->MyInps client script
+
+$(document).ready(function () {
+
+
+    $('#provincia-sede-inps').on('change', function () {
+        $("#comune-sede-inps").val("");
+        document.forms['cerca-sedi-inps'].submit();
+    });
+
+    $("#widgetForm").attr("action", window.location.href);
+
+    // Widget gestione tramite drag and drop
+    $('.sortable-group').sortable({
+        connectWith: '.sortable-group',
+        placeholder: 'placeholder'
+    });
+
+    /* Aggiunta del widget tra gli attivi tramite clic sul "+" */
+    $(".sortable-item a.add").click(function () {
+        $(this).parent().appendTo(".widget-active");
+
+        //Tiziano Giliberti 16/03/2017 -> Gestione del tabindex
+        $(this)[0].setAttribute("tabindex", "-1");
+        $(this).parent().find("a.up")[0].setAttribute("tabindex", "0");
+        $(this).parent().find("a.down")[0].setAttribute("tabindex", "0");
+        $(this).parent().find("a.remove")[0].setAttribute("tabindex", "0");
+    });
+
+    /* Rimozione del widget tra gli attivi tramite clic su "X" */
+    $(".sortable-item a.remove").click(function () {
+        $(this).parent().appendTo(".widget-available");
+
+        //Tiziano Giliberti 16/03/2017 -> Gestione del tabindex
+        $(this)[0].setAttribute("tabindex", "-1");
+        $(this).parent().find("a.up")[0].setAttribute("tabindex", "-1");
+        $(this).parent().find("a.down")[0].setAttribute("tabindex", "-1");
+        $(this).parent().find("a.add")[0].setAttribute("tabindex", "0");
+    });
+
+    /* Spostamento del widget sopra tramite clic su "freccia sù" */
+    $("ul.sortable-group li a.up").click(function () {
+        var position = $(this).parent().index();
+        if (position > 0) { var newPosition = position - 1; } else { var newPosition = 0; }
+        $(this).parent().insertBefore('ul.widget-active li:eq(' + newPosition + ')');
+    });
+
+    /* Spostamento del widget sotto tramite clic su "freccia giù" */
+    $("ul.sortable-group li a.down").click(function () {
+        var position = $(this).parent().index();
+        var maxElement = ($("ul.widget-active").children().length) - 1;
+        if (position < maxElement) { var newPosition = position + 1; } else { var newPosition = maxElement; }
+        $(this).parent().insertAfter('ul.widget-active li:eq(' + newPosition + ')');
+    });
+
+    /*  Recupera le modifiche, crea il paylod e fa postback su server */
+    $("#salva-configurazione").click(function () {
+        var activeElms = $("ul.widget-active").children();
+        var widgetsPos = new Array();
+
+        $.each(activeElms, function (key, value) {
+            widgetsPos[key] = $(value).attr("data-myinps-tipologia");
+        });
+
+        $('input[id="widgetArray"]').val(JSON.stringify(widgetsPos));
+        $("#widgetForm").submit();
+    });
+
+
+    /*  CS Gestione Interessi */
+    $("#salva-interessi").click(function () {
+        interests = {};
+
+        var dynamicInterests = $("a.item.active").not(".notWork")
+
+        for (var i = 0; i < dynamicInterests.length; i++) {
+            interests[dynamicInterests[i].id.split('-')[0]] = dynamicInterests[i].text;
+            //interests[dynamicInterests[i].getAttribute('data-interesttype') + "|" + i] = dynamicInterests[i].id.split('-')[0];
+        }
+        $('input[id="interestsArray"]').val(JSON.stringify(interests));
+        $("#interestsForm").submit();
+    });
+
+    // -------------------------------------------------------------------------------------------------|
+
+    /* CS Gestione Cambio Immagine Avatar */
+    $("#salva-caricamento").click(function () {
+        var myFile = document.getElementById('file');
+        if (myFile.files[0].type.indexOf("jpeg") == -1 && myFile.files[0].type.indexOf("png") == -1 && myFile.files[0].type.indexOf("gif") == -1) {
+            var divMsg = document.getElementById('divMessageAvatar');
+            var spanMsg = document.getElementById('spanMessageAvatar');
+            divMsg.style["display"] = "block";
+            spanMsg.innerHTML = "Formato Immagine non valido";
+        }
+        else {
+            if (myFile.files[0].size < 50000) {
+                $("#changeAvatarForm").submit();
+            }
+            else {
+                var divMsg = document.getElementById('divMessageAvatar');
+                var spanMsg = document.getElementById('spanMessageAvatar');
+                divMsg.style["display"] = "block";
+                spanMsg.innerHTML = "Dimensioni Immagine non valide - Dimensione massima 50KB";
+            }
+        }
+
+    });
+
+    // -------------------------------------------------------------------------------------------------|
+
+    /* CS @ 21.10.2016 -> Gestione Notifiche */
+
+    $("#rimuovi-notifica-myinps").click(function () {
+        modalAlertConfirm(notificaCancellazione, 'Avviso', 'notifiche-form-myinps');
+        return false;
+    });
+
+    $('#modal-notifica-myinps').on('show.bs.modal', function (event) {
+        //Se non presente aggiungo il pulsante CHIUDI
+        if (!$('#chiudi-notifica-myinps').length) {
+            var btnChiudiNotifica = $("<button id='chiudi-notifica-myinps' type='button' aria-label='Chiudi' class='btn btn-primary' data-dismiss='modal'>Chiudi</button>");
+            $("#rimuovi-notifica-myinps").after(btnChiudiNotifica);
+        }
+
+        var idNotifica = event.relatedTarget.id.substr(event.relatedTarget.id.lastIndexOf('-') + 1, event.relatedTarget.id.length);
+        var titleMitt = $('#' + idNotifica + 'notifTitleMitt-myinps').val();
+        var title = $('#' + idNotifica + 'notifTitle-myinps').val();
+        var testo = $('#' + idNotifica + 'notifTesto-myinps').val();
+        var dateNotif = $('#' + idNotifica + 'notifDate-myinps').val();
+        var urlRiferimento = $('#' + idNotifica + 'urlRiferimento-myinps').val();
+        $('#labelTitleNotif-myinps').text(titleMitt);
+        $('#h3Title-myinps').text(title);
+        $('#spanDate-myinps').text(dateNotif);
+
+        if (urlRiferimento != "") {
+            $('#pTesto-myinps').html(testo.replaceAll("\\n", "<br />") + "<br /><a href='" + urlRiferimento + "'>Clicca qui</a><br />");
+        }
+        else {
+            $('#pTesto-myinps').html(testo.replaceAll("\\n", "<br />"));
+        }
+
+
+        // Request CZ064 v.52 - INIZIO
+        // testo tasto diverso 
+        //        if ($('#' + idNotifica + 'daLeggere').val() == 'true')
+        //            $('#segna-notifica-letta').text('Segna come letto')
+        //        else
+        //            $('#segna-notifica-letta').text('Segna come da leggere')
+
+        // Visualizzo di default il pulsante "DA LEGGERE" perchè
+        // al click sulla comunicazione viene segnata come letta
+        //$('#segna-notifica-letta-myinps').text('Segna come da leggere');
+        // Request CZ064 v.52 - FINE
+
+        $('input[id="Remove-Notifiy-myinps"]').val(idNotifica);
+    });
+
+    //Tizino Giliberti 31/10/16 --> Gestione chiusura modale Widget
+    //__________________________________________________________________________________________________
+
+    $('#gestisci-widget').on('hidden.bs.modal', function (event) {
+        location.reload();
+    });
+
+    //__________________________________________________________________________________________________
+
+    // -------------------------------------------------------------------------------------------------|
+
+    /* CS @ 21.10.2016 -> Gestione Messaggi : Dettagli Modal */
+    $('#modal-messaggio').on('show.bs.modal', function (event) {
+        document.getElementById('divMessageMessaggi').style["display"] = "none";
+        var idMessaggio = event.relatedTarget.id.substr(event.relatedTarget.id.lastIndexOf('-') + 1, event.relatedTarget.id.length);
+        var titleMitt = $('#' + idMessaggio + 'messTitleMitt').val();
+        var titleMess = $('#' + idMessaggio + 'messTitle').val();
+        var testoMess = $('#' + idMessaggio + 'messTesto').val();
+        var dateMess = $('#' + idMessaggio + 'messDate').val();
+        var flagRisposta = $('#' + idMessaggio + 'responseValid').val();
+        var urlRiferimento = $('#' + idMessaggio + 'urlRiferimento').val();
+        if (flagRisposta.toLowerCase() == "false") {
+            $("#invia-messaggio").attr("style", "display:none");
+            $("#txtRispMess").attr("style", "display:none");
+        }
+        else {
+            $("#txtRispMess").removeAttr("style");
+            $("#invia-messaggio").removeAttr("style");
+        }
+
+        $('#h4TitleMitt').text(titleMitt);
+        $('#h3TitleMess').text(titleMess);
+        $('#spanDateMess').text(dateMess);
+
+        if (urlRiferimento != "") {
+            $('#pMess').html(testoMess + "<br /><a href='" + urlRiferimento + "'>Clicca qui</a><br />");
+        }
+        else {
+            $('#pMess').html(testoMess);
+        }
+
+        $('input[id="idMessaggio"]').val(idMessaggio);
+    });
+
+    /* CS @ 21.10.2016 -> Gestione Messaggi : Confirm */
+    $("#rimuovi-messaggio").click(function () {
+        modalAlertConfirm(messaggioCancellazione, 'Avviso', 'messaggi-form');
+        return false;
+    });
+
+    /* CS @ 21.10.2016 -> Gestione Messaggi : Invio Risposta */
+    $("#invia-messaggio").click(function () {
+        $('input[id="cmdOperation"]').val("invia");
+        var messageText = document.getElementById('txtRispMess');
+        if (!messageText.value) {
+            var divMsg = document.getElementById('divMessageMessaggi');
+            var spanMsg = document.getElementById('spanMessageMessaggi');
+            divMsg.style["display"] = "block";
+            spanMsg.innerHTML = "Inserire testo di risposta";
+            return false;
+        }
+    });
+
+    // -------------------------------------------------------------------------------------------------|
+
+    /* GB @ 14.10.2016 -> Calendar component : modal detail -> get text from source data- attributes */
+    $("#eventDetail-myinps").on('show.bs.modal', function (event) {
+
+        var eventId = event.relatedTarget.id;
+        var eventTitle = event.relatedTarget.dataset.eventTitle;
+        var eventDate = event.relatedTarget.dataset.eventDate;
+        var eventText = event.relatedTarget.dataset.eventText.replace("\\n", "<br />");
+        var eventAuthor = event.relatedTarget.dataset.eventAuthor;
+        var urlRiferimento = $('#' + eventId + 'urlRiferimento').val();
+
+        $("#eventTitle-myinps").text(eventTitle);
+        $("#eventDate-myinps").text(eventDate);
+
+        if (urlRiferimento != "") {
+            $('#eventText-myinps').html(eventText + "<br /><a href='" + urlRiferimento + "'>" + scadenzacliccaqui + "</a><br />");
+        }
+        else {
+            $('#eventText-myinps').html(eventText);
+        }
+        //$("#eventText").html(eventText);
+
+        $("#eventAuthor-myinps").text(eventAuthor);
+
+        // Request CZ064 v.52 - INIZIO
+        //        if ($('#' + eventId + 'daLeggere').val() == 'True' || $('#' + eventId + 'daLeggere').val() == 'true')
+        //            $('#segna-scadenza-letta').text('Segna come letta')
+        //        else
+        //            $('#segna-scadenza-letta').text('Segna come da leggere')
+
+        // Visualizzo di default il pulsante "DA LEGGERE" perchè
+        // al click sulla comunicazione viene segnata come letta
+        //$('#segna-scadenza-letta-myinps').text('Segna come da leggere')
+        // Request CZ064 v.52 - FINE
+
+        $('#rimuovi-scadenza-myinps').val(eventId);
+        $('#segna-scadenza-letta-myinps').val(eventId);
+    });
+
+
+    /* CS @ 21.10.2016 -> Gestione Modal Confirm */
+    function modalAlertConfirm(messagge, title, form) {
+        if (!title || !title.length) {
+            title = "Informazioni";
+        }
+
+        var diag = BootstrapDialog.show({
+            id: "customAlert",
+            title: title,
+            message: messagge,
+            animate: false,
+            cssClass: "custom-alert",
+            buttons: [
+            {
+                label: confermaCancellazione,
+                cssClass: "btn-primary pull-right",
+                action: function (dialog) {
+                    if (form == "messaggi-form") {
+                        $('input[id="cmdOperation"]').val("rimuovi");
+                    }
+
+                    $("#" + form).submit();
+
+                }
+            },
+            {
+                label: annullaCancellazione,
+                cssClass: "btn-primary pull-left",
+                action: function (dialog) {
+                    dialog.close();
+                    return false;
+                }
+            }
+        ]
+        });
+
+        $("body").prepend(diag.getModal());
+    }
+
+});
+
+function ShareSocialNetworkMyINPS(social, url) {
+    var leftPosition, topPosition, width, height, img;
+    width = (window.screen.width / 3) * 1.5;
+    height = (window.screen.height / 3) * 1.5;
+    leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
+    topPosition = (window.screen.height / 2) - ((height / 2) + 50);
+
+    var windowFeatures = "status=no,height=" + height + ",width=" + width + ",resizable=no,scrollbars=no,left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ",toolbar=no,menubar=no,scrollbars=no,location=no,directories=no";
+
+    if (url.indexOf('circmessstd') < 0)
+    {
+        var urlSplit = url.split('?');
+        var urlParams;
+        var url;
+
+        if (urlSplit.length > 1) {
+            urlParams = "?" + urlSplit[1];
+        }
+        else {
+            urlParams = "";
+        }
+
+        if (window.location.origin.indexOf('https') < 0) {
+            url = window.location.origin.replace("http", "https");
+        }
+        else {
+            url = window.location.origin;
+        }
+
+        url = url + "/nuovoportaleinps/default.aspx" + urlParams;
+    }
+    else {
+
+    }
+    
+
+    switch (social) {
+        case "facebook":
+            window.open('https://www.facebook.com/sharer/sharer.php?u=' + url.split('&tipologia')[0], 'Condividi su Facebook', windowFeatures);
+            break;
+        case "twitter":
+            window.open('https://twitter.com/intent/tweet?hashtags=PortaleINPS,text=' + url.split('&tipologia')[0], 'Condividi su Twitter', windowFeatures);
+            break;
+
+        case "googleplus":
+            window.open('https://plus.google.com/u/0/share?url=' + url.split('&tipologia')[0], 'Condividi su Google+', windowFeatures);
+            break;
+        case "linkedin":
+            window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + url.split('&tipologia')[0], 'Condividi su LinkedIn', windowFeatures);
+            break;
+        default:
+            window.open('https://www.facebook.com/sharer/sharer.php?u=' + url.split('&tipologia')[0], 'Condividi su Facebook', windowFeatures);
+            social = "facebook";
+            break;
+    }
+    var BaseUri = url.split('?')[0]; // C17
+    var UriParams = url.split('?')[1]; //C18
+
+    if ((BaseUri.indexOf('http') < 0)) {
+        BaseUri = window.location.origin + window.location.pathname;
+    }
+
+    var URI = encodeURIComponent(BaseUri) + encodeURIComponent('?') + encodeURIComponent(UriParams.split('&tipologia')[0]) + '&tipologia' + UriParams.split('&tipologia')[1]; //Url definitiva da loggare
+
+    //-----------------------------------------------------------------
+    var CleanedUrl = location.protocol + '//' + location.host;
+    var LogUrl = CleanedUrl + '/modelliNuovo/assets/img/icon/share-' + social + '.png?urlCanonico=' + URI;
+
+    if (window.XMLHttpRequest) {
+        xmlhttp = new XMLHttpRequest();
+    } else {
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+
+    xmlhttp.open("POST", LogUrl, true);
+    xmlhttp.send(null);
+
+}
+
+
+function getClearUrl() {
+    return location.protocol + "//" + location.host + location.pathname;
+}
+
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+        vars[key] = value;
+    });
+    return vars;
+}
+
+function getUrlParam(parameter, defaultvalue) {
+    var urlparameter = defaultvalue;
+    if (window.location.href.indexOf(parameter) > -1) {
+        urlparameter = getUrlVars()[parameter].replace('#', '');
+    }
+    return urlparameter;
+}
+
+function changeLocation(cmd, codSede) {
+    var url = getClearUrl() + '?myinps=' + getUrlParam('myinps', 1);
+    if (cmd != null)
+        url += '&cmd=' + cmd;
+    if (codSede != null)
+        url += '&iParametro=' + codSede;
+    document.location = url;
+}
+
+function divExclamation(t) {
+    return '<div class="notice-box expired"><div class="icon"><em class="fa fa-exclamation-triangle"></em></div><div class="text">' + t + '</div></div>';
+}
+
+function getObjects(obj, key, val) {
+    var objects = [];
+    for (var i in obj) {
+        if (!obj.hasOwnProperty(i)) continue;
+        if (typeof obj[i] == 'object') {
+            objects = objects.concat(getObjects(obj[i], key, val));
+        } else if (i == key && obj[key] == val) {
+            objects.push(obj);
+        }
+    }
+    return objects;
+}
+
+function htmlentities(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
+var alertManager = (function () {
+    "use strict";
+    var bsAlert = function (message, level, title) {
+        var alertClass = level ? " alert-" + level : "",
+                alert = $("<div/>", {
+                    "class": "alert" + alertClass + " fade show",
+                    html: message
+                }),
+                closeButton = $("<button/>", {
+                    "class": "close",
+                    "data-dismiss": "alert"
+                }).append("&times;"),
+                addAlertToContainer = function (alert, container) {
+                    if (container) {
+                        $(container).append(alert);
+                    } else {
+                        $('.alert-container').append(alert);
+                    }
+                },
+                setAlertToContainer = function (alert, container) {
+                    if (container) {
+                        $(container).html(alert);
+                    } else {
+                        $('.alert-container').html(alert);
+                    }
+                };
+
+        if (title) {
+            alert.prepend($("<strong>" + title + ": </strong>"));
+        }
+
+        alert.prepend(closeButton);
+
+        alert.showFixed = function (container) {
+            setAlertToContainer(this, container);
+            return this;
+        };
+
+        alert.showDocked = function (container) {
+            addAlertToContainer(this, container);
+            return this;
+        };
+
+        return alert;
+    },
+        closeAll = function (container) {
+            if (container) {
+                $(container).find(".alert").remove();
+            } else {
+                $('.alert-container .alert').remove();
+            }
+        },
+        floatingContainer = function () {
+            return $("<div/>", { "class": "alert-container floating-alert-container" });
+        };
+
+    return {
+        error: function (message) {
+            return bsAlert(message, "danger", "Errore");
+        },
+        warning: function (message) {
+            return bsAlert(message, "warning", "Attenzione");
+        },
+        success: function (message, title) {
+            return bsAlert(message, "success", title);
+        },
+        info: function (message, title) {
+            return bsAlert(message, "info", title);
+        },
+        closeAll: closeAll,
+        floatingContainer: floatingContainer
+    };
+} ());
+
+if (!Array.prototype.find) {
+    Object.defineProperty(Array.prototype, 'find', {
+        value: function (predicate) {
+            // 1. Let O be ? ToObject(this value).
+            if (this == null) {
+                throw new TypeError('"this" is null or not defined');
+            }
+
+            var o = Object(this);
+
+            // 2. Let len be ? ToLength(? Get(O, "length")).
+            var len = o.length >>> 0;
+
+            // 3. If IsCallable(predicate) is false, throw a TypeError exception.
+            if (typeof predicate !== 'function') {
+                throw new TypeError('predicate must be a function');
+            }
+
+            // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+            var thisArg = arguments[1];
+
+            // 5. Let k be 0.
+            var k = 0;
+
+            // 6. Repeat, while k < len
+            while (k < len) {
+                // a. Let Pk be ! ToString(k).
+                // b. Let kValue be ? Get(O, Pk).
+                // c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
+                // d. If testResult is true, return kValue.
+                var kValue = o[k];
+                if (predicate.call(thisArg, kValue, k, o)) {
+                    return kValue;
+                }
+                // e. Increase k by 1.
+                k++;
+            }
+
+            // 7. Return undefined.
+            return undefined;
+        }
+    });
+}
+
+if (!String.prototype.trimLeft) {
+    Object.defineProperty(String.prototype, "trimLeft", {
+        value: function (predicate) {
+            return this.replace(/^\s+/, "");
+        }
+    });
+}
+
+if (!String.prototype.trimRight) {
+    Object.defineProperty(String.prototype, "trimRight", {
+        value: function (predicate) {
+            return this.replace(/\s+$/, "");
+        }
+    });
+}
+
+function settaRichiesta(controllo) {
+    var telPref = $("#insert-InpsRisponde-TelPreferito");
+    var oraPref = $("#insert-InpsRisponde-OrarioPreferito");
+    if (telPref.val() == 0 || (telPref.val() == 1 & $("#insert-InpsRisponde-TelAbitazione").val() == "") || (telPref.val() == 3 & $("#insert-InpsRisponde-CellPersonale").val() == "")) {
+        if ($("#tmp_err_tel").length) {
+            $("#tmp_err_tel").remove();
+        }
+        if (telPref.val() == 0) {
+            $(telPref).parent().append("<div id=\"tmp_err_tel\" class=\"errore\">Selezionare il telefono preferenziale</div>");
+        } else {
+            $(telPref).parent().append("<div id=\"tmp_err_tel\" class=\"errore\">Il telefono selezionato non è presente</div>");
+        }
+        controllo.checked = false;
+    } else {
+        if ($("#tmp_err_tel").length) {
+            $("#tmp_err_tel").remove();
+        }
+    }
+    if (oraPref.val() == -1) {
+        if (!$("#tmp_err_ora").length) {
+            $(oraPref).parent().append("<div id=\"tmp_err_ora\" class=\"errore\">Selezionare l'orario preferenziale</div>");
+        }
+        controllo.checked = false;
+    } else {
+        if ($("#tmp_err_ora").length) {
+            $("#tmp_err_ora").remove();
+        }
+    }
+    if (!controllo.checked) {
+        $(controllo).parent('td').switchClass('alert-success', 'alert-warning');
+        $('#richiestaContainer').slideUp();
+        $('#tabellaRichiesta *').prop('disabled', true).off('click');
+        $('#inserimentoAllegato *').prop('disabled', true).off('click');
+        $('#divInvia *').prop('disabled', true).off('click');
+        $("#insert-InpsRisponde-TelPreferito option:not(:selected)").attr('disabled', false);
+        $("#insert-InpsRisponde-OrarioPreferito option:not(:selected)").attr('disabled', false);
+        scriviCookie('ConfermaRecapitiInpsRisponde', 'false', 10);
+    } else {
+        $(controllo).parent('td').switchClass('alert-warning', 'alert-success');
+        $('#richiestaContainer').slideDown();
+        $('#tabellaRichiesta *').prop('disabled', false).on('click');
+        $('#inserimentoAllegato *').prop('disabled', false).off('click');
+        $('#divInvia *').prop('disabled', false).off('click');
+        $("#insert-InpsRisponde-TelPreferito option:not(:selected)").attr('disabled', true);
+        $("#insert-InpsRisponde-OrarioPreferito option:not(:selected)").attr('disabled', true);
+        scriviCookie('ConfermaRecapitiInpsRisponde', 'true', 10);
+    }
+}
+
+function validURL(str) {
+    var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+    '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+    return !!pattern.test(str);
+}
+
+function callrestlogcard(iTipo, iIDElemento) {
+    //  $.get("rest/BIlog.aspx?iTipo=" & iTipo & "&iIDElemento=" & iIDElemento, function (sData) { alert(sData) });
+
+    // Se già letto non faccio nulla
+    if ($("#" + iIDElemento + "daLeggere").val() == "false")
+        return;
+
+    // Fix cache IE
+    $.ajaxSetup({ cache: false });
+
+    $.get(
+        "rest/BIlog.aspx",
+        { iTipo: iTipo, iIDElemento: iIDElemento },
+        function (data) {
+            console.log(data);
+            if (data != "") {
+                if (iTipo == 0 || iTipo == 1)
+                    var card = $("#content-id-" + iIDElemento + " .card__information .card__identity__label");
+                else if (iTipo == 2) {
+                    var card = $("a#" + iIDElemento + " .card__information .card__identity.card__identity-- .card__identity__label");
+                    var evt = $("a#" + iIDElemento);
+                    if (evt.text().substr(evt.text().length - 1) == "*")
+                        evt.text(evt.text().substring(0, evt.text().length - 1));
+                }
+                if (card.text().substr(card.text().length - 1) == "*")
+                    card.text(card.text().substring(0, card.text().length - 1));
+
+                // Setto il valore del campo nascosto "daLeggere" a false in quanto
+                // la comunicazione è stata segnata automaticamente come letta
+                $("#" + iIDElemento + "daLeggere").val("false");
+
+                // Aggiornamento badge
+                if (data.split(',')[0] == 0 && data.split(',')[2] == 0)
+                    $(".navbar__node__label:contains('Notifiche')").closest("span").next(".badge").css("display", "none");
+                else
+                    $(".navbar__node__label:contains('Notifiche')").closest("span").next(".badge").text(+(data.split(',')[0]) + +(data.split(',')[2]));
+                if (data.split(',')[1] != 0)
+                    $(".navbar__node__label:contains('Calendario')").closest("span").next(".badge").text(data.split(',')[1]);
+                else
+                    $(".navbar__node__label:contains('Calendario')").closest("span").next(".badge").css("display", "none");
+            }
+        });
+}
+
+function modalConfirm(title, message, btnOkLabel, btnCancelLabel, callbackFn) {
+    if (!title || !title.length) {
+        title = "Inps";
+    }
+
+    var diag = BootstrapDialog.confirm({
+        id: "customConfirm",
+        title: title,
+        message: message,
+        animate: false,
+        type: BootstrapDialog.TYPE_PRIMARY,
+        closable: false,
+        draggable: false,
+        btnCancelLabel: btnCancelLabel,
+        btnCancelClass: "btn-primary pull-left",
+        btnOKLabel: btnOkLabel,
+        btnOKClass: "btn-primary pull-right",
+        callback: callbackFn
+    });
+
+    $("body").prepend(diag.getModal());
+}

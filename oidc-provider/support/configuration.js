@@ -1,4 +1,4 @@
-const {digitalplatform, inps} = require('./../../dnsconstants')
+const {digitalplatform, inps, poste} = require('./../../dnsconstants')
 
 module.exports = {
   clients: [
@@ -18,6 +18,12 @@ module.exports = {
       client_id: inps.client_id,
       client_secret: inps.client_secret,
       redirect_uris: inps.redirect_uris,
+      grant_types: ['refresh_token', 'authorization_code']
+    },
+    {
+      client_id: poste.client_id,
+      client_secret: poste.client_secret,
+      redirect_uris: poste.redirect_uris,
       grant_types: ['refresh_token', 'authorization_code']
     }
   ],

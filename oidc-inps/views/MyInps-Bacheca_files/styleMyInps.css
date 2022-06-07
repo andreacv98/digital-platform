@@ -1,0 +1,152 @@
+﻿.GSBottone 
+{
+    color: #ffffff !important;
+    background-color:#007db3;
+    width:100%;
+    margin-top: 10px;
+    padding-top:10px;
+    padding-bottom: 10px;
+}
+
+.GSSelect
+{
+    width:100%;
+    padding:10px;
+}
+
+.ml-10 { margin-left: 10px; }
+.mr-10 { margin-right: 10px; }
+.mt-10 { margin-top: 10px; }
+.mb-10 { margin-bottom: 10px; }
+.pl-10 { padding-left: 10px; }
+.pr-10 { padding-right: 10px; }
+.pt-10 { padding-top: 10px; }
+.pb-10 { padding-bottom: 10px; }
+.ml-20 { margin-left: 20px; }
+.mr-20 { margin-right: 20px; }
+.mt-20 { margin-top: 20px; }
+.mb-20 { margin-bottom: 20px; }
+.pl-20 { padding-left: 20px; }
+.pr-20 { padding-right: 20px; }
+.pt-20 { padding-top: 20px; }
+.pb-20 { padding-bottom: 20px; }
+
+ table .statoPratiche { border-top: 1px solid; width: 100%; }
+ table .statoPratiche tr:first-child > td { padding-bottom: 0px !important; }
+ table .statoPratiche tr:last-child > td { padding-top: 0px !important; }
+ 
+ #modGestioneConsensi {width: 100%; height: 100%; overflow: hidden; z-index: 9999;}
+ #modGestioneConsensi::after {content: ''; width: 100%; height: 100%; background-color: gray; opacity: 0.9; position: absolute; top: 0; left: 0; z-index: -1; margin: auto; padding: auto;}
+ #modGestioneConsensiContainer { position: relative; width: 90%; height: 90%; margin: 0 auto;}
+ #modaleGestioneConsensiDivSubmit {padding:10px; text-align:center}
+ #modGestioneConsensiDivInterno {padding:20px}
+ 
+ .BlueSubmit { background-color:#007db3; border-color: #007db3; color:White}
+ 
+ #modaleGenerica {width: 100%; height: 100%; overflow: hidden; z-index: 9999;}
+ #modaleGenerica::after {content: ''; width: 100%; height: 100%; background-color: gray; opacity: 0.9; position: absolute; top: 0; left: 0; z-index: -1; margin: auto; padding: auto;}
+ 
+ #ChatOpSidenav {width: 100%; height: 100%; overflow: hidden; z-index: 9999;}
+ #ChatOpSidenav::after {content: ''; width: 100%; height: 100%; background-color: gray; opacity: 0.9; position: absolute; top: 0; left: 0; z-index: -1; margin: auto; padding: auto;}
+ .chatOpContainer {position: relative; width: 380px; height: 530px; margin: 0 auto;}
+
+ #navMenuMyInps ul ul ul li a { padding-left: 2em }
+ #navMenuMyInps ul ul ul ul li a { padding-left: 3em } 
+ #navMenuMyInps .icon.spanButton { position: absolute; right: 10px; width: 20px; height: 20px; font-size: 20px; font-weight: 400; line-height: 16px; color: #677584; display: block; text-align: center; transition: all .5s ease;} 
+ .navbar.navbar--secondary .navbar__node .badgeR {position:absolute;display:inline-block;top:.6em;border-radius:50%;font-size:.6em;color:#FFF;text-align:center;background:#9e0052;width:18px;height:18px;line-height:18px;}
+ 
+ .ui-datepicker {background-color: #fff; border: 1px solid #66AFE9; border-radius: 4px; box-shadow: 0 0 8px rgba(102, 175, 233, .6); display: none; margin-top: 4px; padding: 10px; width: 240px;}
+.ui-datepicker a, .ui-datepicker a:hover {text-decoration: none;}
+.ui-datepicker .ui-datepicker-header {margin-bottom: 4px; text-align: center; }
+.ui-datepicker .ui-datepicker-title {font-weight: 700; }
+.ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next {cursor: default; font-family: 'Glyphicons Halflings'; -webkit-font-smoothing: antialiased; font-style: normal; font-weight: normal; height: 20px; line-height: 1; margin-top: 2px; width: 30px; }
+.ui-datepicker .ui-datepicker-prev { float: left; text-align: left; }
+.ui-datepicker .ui-datepicker-next { float: right; text-align: right; }
+.ui-datepicker .ui-datepicker-prev:before { content: "\e079"; }
+.ui-datepicker .ui-datepicker-next:before { content: "\e080"; }
+.ui-datepicker .ui-icon {display: none; }
+.ui-datepicker .ui-datepicker-calendar {table-layout: fixed; width: 100%; }
+.ui-datepicker .ui-datepicker-calendar th, .ui-datepicker .ui-datepicker-calendar td {text-align: center; padding: 4px 0; }
+.ui-datepicker .ui-datepicker-calendar td {border-radius: 4px; -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out; -moz-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out; -o-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out; transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out; }
+.ui-datepicker .ui-datepicker-calendar td:hover {background-color: #eee; cursor: pointer; }
+.ui-datepicker .ui-datepicker-calendar td a {text-decoration: none; }
+.ui-datepicker .ui-datepicker-current-day {background-color: #4289cc; }
+.ui-datepicker .ui-datepicker-current-day a {color: #fff }
+.ui-datepicker .ui-datepicker-calendar .ui-datepicker-unselectable:hover {background-color: #fff; cursor: default; }
+.ui-datepicker .ui-datepicker-calendar td:hover {background-color: #c0c0c0; cursor: pointer; }
+.ui-datepicker .ui-datepicker-calendar td.ui-datepicker-selectable {background-color: lightgreen; }
+.ui-datepicker .ui-datepicker-calendar td.ui-datepicker-selectable.nondisponibile, .ui-datepicker .ui-datepicker-current-day.ui-datepicker-selectable.nondisponibile {background-color: crimson !important; color: white; }
+.ui-datepicker .ui-state-hover { background-color: transparent; border: 0px !important; border-top-color: transparent; }
+.ui-datepicker table span {display: block !important; }
+.ui-datepicker .ui-datepicker-unselectable {color: #ddd; }
+.ui-date-picker td.ui-datepicker-selectable.ui-datepicker-current-day, .ui-datepicker .ui-datepicker-current-day.ui-datepicker-selectable { color: lightgreen; background-color: #008080 !important; }
+  
+.legenda.disponibile {color: lightgreen; }
+.legenda.nondisponibile {color: crimson; }
+#datepicker { display: inline-block; margin: 0 auto; }
+button.slot {margin: 2px 4px; }
+button.slot[disabled] {background: crimson; color: whitesmoke; cursor: not-allowed; }
+.accordion-toggle:after {font-family:'FontAwesome'; content:"\f05d"; float: right; color: inherit; font-weight: normal; }
+.panel-heading {cursor: pointer; }
+.panel-default > .panel-heading.collapsed {background-color: #eee; font-weight: normal; }
+.panel-default > .panel-heading {background-color: #ddd; font-weight: bold; }
+.panel-heading.collapsed .accordion-toggle:after {content:"\f10c"; }
+
+/* Carousel fix */
+.carousel-control.left {left: -30px !important;}
+
+@media screen and (min-width: 42em) {
+    .my-inps .carousel-control .glyphicon-chevron-left {margin-left: -1.1em;}
+    .my-inps .navbar-vertical ul li a, .navbar--toolbox ul li a {padding-right: .85em;}
+    .float-right {float:right;}
+    .float-left {float:left;}
+}
+
+@media screen and (min-width: 60em) {
+    .my-inps .carousel-control .glyphicon-chevron-left {margin-left: -2em;}
+    .my-inps .navbar-vertical ul li a {padding-right: 1em;}
+    .calendar .item .event .text {padding-left: 2.5em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+}
+
+@media screen and (min-width: 72em) {
+    .my-inps .carousel-control .glyphicon-chevron-left {margin-left: -2.4em;}
+}
+/* Carousel fix */
+
+/* Fix btn mobile */
+@media (max-width: 42em) {
+    .btn {display: block; width: 100%;}
+}
+
+.font-weight-bold {font-weight: 700 !important;}
+.border-bottom  {border-bottom: 1px solid #b2bbbd !important;}
+
+/* collapser bootstrap NyInps */
+.sl-container .titleCollapser h2  span.icon {position:absolute;top:.3em;font-size:1.3em;right:.3em;width:14px;height:14px;line-height:14px;display:block;text-align:center;-ms-transform:rotate(45deg);-webkit-transform:rotate(45deg);transform:rotate(45deg);transition:all .5s ease}
+.sl-container .titleCollapser.collapsed h2 span.icon {-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);right:.4em;}
+
+/* Simbolo Euro */
+.UP_amount::before, .eur_amount::before {content: "\20AC  ";}
+
+/* Fix table span */
+span.hideColon {display: inline-block !important;}
+span.hideColon:after {content: "" !important;}
+
+/* lnk class per myinps */
+.my-inps a.lnk, .my-inps span.lnk { transition: all .5s ease; }
+.my-inps a.lnk:link, .my-inps span.lnk  {text-decoration: none;color: #49535d;border-bottom: 2px solid #007db3;background-color: transparent; }
+.my-inps a.lnk:hover, .my-inps span.lnk:hover {color: #007db3;border-bottom-color: #fff; }
+
+/* Guida Estratto Conto */
+#GuidaEstrattoConto .gec { display: none; }
+#GuidaEstrattoConto li { padding-bottom: .5em; }
+#GuidaEstrattoConto span[data-toggle="collapse"].collapsed::before {font-family: "FontAwesome";font-weight: normal;content: "\f01a";display: inline-block;padding: 0px 5px;color: #00c0c5;transition: .3s;transform: rotate(0deg); }
+#GuidaEstrattoConto span[data-toggle="collapse"]::before {font-family: "FontAwesome";font-weight: normal;content: "\f01a";display: inline-block;padding: 0px 5px;color: #007db3;transition: .3s;transform: rotate(180deg); }
+#GuidaEstrattoConto a.btn.btn-info { margin-bottom: 5px; }
+#GuidaEstrattoConto a.btn.btn-info::before {font-family: "FontAwesome";font-weight: normal;content: "\f01a";display: inline-block;margin-right: 5px;color: #FFF;transform: rotate(-90deg); }
+#GuidaEstrattoConto a.btn.btn-info[data-toggle="collapse"].collapsed::before {font-family: "FontAwesome";font-weight: normal;content: "\f01a";display: inline-block;color: #FFF;transition: .3s;transform: rotate(0deg); }
+#GuidaEstrattoConto a.btn.btn-info[data-toggle="collapse"]::before {font-family: "FontAwesome";font-weight: normal;content: "\f01a";display: inline-block;color: #FFF;transition: .3s;transform: rotate(180deg); }
+#GEC_main li div.collapse.in { margin-bottom: .8em; }
+/* Guida Estratto Conto */
+
+@media screen and (min-width: 72em) {.MyinpsModaleDesktop {width: 500px;}}

@@ -15,7 +15,7 @@ const { Issuer,Strategy } = require('openid-client');
 const path = require("path");
 const { userInfo } = require('os');
 
-const {provider, digitalplatform, inps} = require('../dnsconstants')
+const {provider, digitalplatform, inps, poste} = require('../dnsconstants')
 
 const app = express();
 
@@ -160,6 +160,15 @@ app.get ("/services/inps", loggedIn, (req,res) =>{
   res.render(path.join(__dirname+'/views/inps'), {
     user: userinfo,
     domain: inps.site
+  })
+})
+
+app.get ("/services/poste", loggedIn, (req,res) =>{
+  let tokenset = req.session.passport.user.at_hash;
+  let userinfo = req.session.passport.user;
+  res.render(path.join(__dirname+'/views/poste'), {
+    user: userinfo,
+    domain: poste.site
   })
 })
 

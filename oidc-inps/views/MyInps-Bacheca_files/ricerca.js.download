@@ -1,0 +1,999 @@
+//C1 ############
+var protocol = location.protocol;
+var ambienteINPS = protocol + "//www.inps.it/"; //C2
+var pathPortale = "";
+var pathRicerca = "../search122/";
+var urlRicerca = "ricercaNew.aspx?sTrova=";
+var urlRicercaA = "?sTrova="; //C24
+var urlCircolare = "//servizi2.inps.it/Servizi/CircMessStd/VisualizzaDoc.aspx?sVirtualUrl=";
+var urlMessaggi = urlCircolare;
+//var urlModuli = "proxy/getmoduli_ws.ashx?idmodulo=";
+var urlModuli = pathRicerca + "proxy/getmoduli_ws.ashx?codapp={CodApp}&idl={IdL}";
+//urlModuli = pathPortale + "image.aspx?iIDModulo={CodApp}&amp;tipomodulo=1&amp;idlingua={IdL}";
+var urlProxy = "proxy/getDataWrapper_newportal.ashx?";
+
+var urlSedi = "/" + pathRicerca + "strutturaTerritorio.aspx?parm=1&parm_lang=it&parm3="; //C23
+var urlSSUDR ="rest/SaveServiziUsatiDiRecente.aspx";
+var urlProxyTraduzioni = 'proxy/gettraduzioni.ashx';
+	
+
+// MC Funzione gestione doppio portale ## INIZIO
+
+// dichiaro variabili
+var hostname = window.location.href;
+var pathToCheck = window.location.pathname;
+var search122Path = "search122";
+var nuovoportalehost = "www.inps.it/nuovoportaleinps";
+var portalecorehost = "www.inps.it";
+var nuovoportaleInpsPath = "nuovoportaleinps";
+var nuovoPortaleInpsFullPath = nuovoportalehost ;
+// fine variabili
+
+// inizio funzioni
+
+//funzione di estensione x internet explorer
+
+if (!String.prototype.includes) {//To check browser supports or not
+    String.prototype.includes = function (str) {//If not supported, then define the method
+        return this.indexOf(str) !== -1;
+    }
+}
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function setCookie1(cname, cvalue, exdays, cpath) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/" + cpath;
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+
+
+
+
+
+function createCookiePortale() {
+    // if (getCookie("portalecore") == "") {
+    if (hostname.toLowerCase().includes(nuovoportalehost)) {
+
+        setCookie("portalecore", 0, 1);
+
+    }
+
+    else {
+        setCookie("portalecore", 1, 1);
+
+    }
+    //else if (window.location.pathname.toLowerCase().includes("nuovoportaleinps")) {
+
+    //    setCookie("portalecore", 0, 1);
+    //}
+    //else if (hostname.toLowerCase() == portalecorehost) {
+    //    setCookie("portalecore", 1, 1);
+
+    //}
+
+
+    //}
+}
+
+var re1 = "";
+function updateCssUrl(vhref) { }
+
+//function updateCssUrl(vhref) {
+//    console.log("Url da aggiornare: " + vhref);
+//    var re = new RegExp(nuovoportalehost, "gi");
+//    if (re1 != "") {
+
+//        re = new RegExp(re1, "gi");
+
+//    }
+//    var res = vhref.replace(re, portalecorehost);
+//    console.log("res " + res);
+//    return decodeURIComponent(res);
+
+//}
+
+function loopCheckUrl() {
+
+    var links = document.querySelectorAll("link[href*='//']");
+
+    if (links.length > 0) {
+
+        for (var i = 0; i < links.length; i++) {
+            var link = links[i];
+            var linkHref = link.href.toLowerCase();
+          //  console.log("linkHref " + linkHref);
+            if (linkHref.includes(nuovoPortaleInpsFullPath)) {
+            //    link.href = updateCssUrl(linkHref);
+         //       console.log("link href " + link.href);
+            }
+        }
+
+    }
+
+
+}
+
+function loopCheckUrlLink() {
+
+    var container = document.querySelector("#lDataFast");
+    var links = container.querySelectorAll("a.card__link[href*='//']");
+
+    if (links.length > 0) {
+
+        for (var i = 0; i < links.length; i++) {
+            var link = links[i];
+            var linkHref = link.href.toLowerCase();
+    //        console.log("linkHref " + linkHref);
+            if (linkHref.includes(nuovoPortaleInpsFullPath)) {
+                link.href = updateCssUrl(linkHref);
+     //           console.log("link href " + link.href);
+            }
+            if (linkHref.includes(nuovoportalehost)) {
+                link.href = updateCssUrl(linkHref);
+     //           console.log("link href " + link.href);
+            }
+            if (linkHref.includes(portalecorehost + "/" + nuovoportaleInpsPath)) {
+                re1 = portalecorehost + "/" + nuovoportaleInpsPath;
+                link.href = updateCssUrl(linkHref);
+     //           console.log("link href " + link.href);
+                re1 = "";
+            }
+        }
+
+    }
+
+
+}
+
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+function getToday() {
+    var today = new Date();
+    var nday = today.getDate();
+    return nday;
+
+}
+
+function updateUrl() {
+    var ptcL = pathToCheck.toLowerCase();
+
+    if (ptcL.includes(search122Path.toLowerCase())) {
+        var urlCss = '/NuovoportaleINPS/modelliNuovo/assets/css/styleAggiunto.css';
+        var newUrlCss = urlCss + '?=' + getToday();
+        var x = document.querySelector("link[href*='" + urlCss + "']");
+
+        if (x != null) {
+
+            x.href = newUrlCss;
+        }
+    }
+}
+
+function updateUrlCssUnico() {
+
+
+    var urlCss = '/NuovoPortaleInps/ModelliNuovo/assets/css/StyleUnico.css';
+    var newUrlCss = urlCss + '?=' + getToday();
+    var x = document.querySelector("link[href*='" + urlCss + "']");
+
+    if (x != null) {
+
+        x.href = newUrlCss;
+    }
+}
+function updateBtnLogin() {
+
+    var aEl = document.getElementById('btLogin');
+    aEl.href = aEl.href.replace(nuovoportalehost, portalecorehost);
+
+}
+
+function updateLogoLink() {
+
+    var aEl = document.getElementById('HM_logo');
+    aEl.href = aEl.href.replace('/NuovoportaleINPS/default.aspx', '/');
+
+}
+
+function loadStyleUnico() {
+
+    var cssId = 'styleUnico';
+    if (!document.getElementById(cssId)) {
+        var head = document.getElementsByTagName('head')[0];
+        var link = document.createElement('link');
+        link.id = cssId;
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = ambienteINPS+'/NuovoPortaleInps/ModelliNuovo/assets/css/StyleUnico.css?v=' + getToday();
+        link.media = 'all';
+        head.appendChild(link);
+    }
+
+
+}
+
+jQuery.loadScript = function (url, callback) {
+    jQuery.ajax({
+        url: url,
+        dataType: 'script',
+        success: callback,
+        async: true
+    });
+}
+
+function loadJsLeftMenuCircolari() {
+    if (typeof _functionname == 'undefined') {
+        setSelectedItem("47056"); 
+    }
+    //if (typeof _functionname == 'undefined') {
+
+    //    $.loadScript(ambienteINPS +'/js/pages/leftMenu.js', function () {
+    //        //InitLeftMenu();
+    //        $("#menunavigazioneacc").removeClass("col-md-4 col-lg-3");
+
+    //    }
+
+    //    );
+    //}
+
+
+}
+
+function loadJsLeftMenuSentenze() {
+    if (typeof _functionname == 'undefined') {
+        setSelectedItem("47055");
+    }
+    //if (typeof _functionname == 'undefined') {
+
+    //    $.loadScript(ambienteINPS +'/js/pages/leftMenu.js', function () {
+    //        //InitLeftMenu();
+    //        $("#menunavigazioneacc").removeClass("col-md-4 col-lg-3");
+    //        setSelectedItem("22334");
+    //    }
+
+    //    );
+    //}
+
+
+}
+
+
+function loadCssMenuTemplateWebIdentity() {
+
+    var customCssId = 'customCss';
+    if (!document.getElementById(customCssId)) {
+        var head = document.getElementsByTagName('head')[0];
+        var link0 = document.createElement('link');
+        link0.id = customCssId;
+        link0.rel = 'stylesheet';
+        link0.type = 'text/css';
+        link0.href =ambienteINPS +'/NuovoPortaleInps/ModelliNuovo/assets/css/custom.css?v=' + getToday();
+        link0.media = 'all';
+        head.appendChild(link0);
+    }
+
+    //var leftMenuCssId = 'leftcustomCss';
+    //if (!document.getElementById(leftMenuCssId)) {
+    //    var head = document.getElementsByTagName('head')[0];
+    //    var link1 = document.createElement('link');
+    //    link1.id = leftMenuCssId;
+    //    link1.rel = 'stylesheet';
+    //    link1.type = 'text/css';
+    //    link1.href = '/NuovoPortaleInps/asset/css/leftmenu.min.css?v=' + getToday();
+    //    link1.media = 'all';
+    //    head.appendChild(link1);
+    //}
+
+}
+
+function fixcssCircolari() {
+
+    $('[aria-label="Barra di ricerca"]').css("margin-bottom", "0px");
+
+}
+
+function loadLeftMenu() {
+
+    //loadCssMenuTemplateWebIdentity();
+  //  loadJsLeftMenu();
+
+}
+
+function checkCookiePortale() {
+    if (getCookie("portalecore") == 0 || getCookie("portalecore") == "") {
+
+        ambienteINPS = protocol + "//" + nuovoportalehost + "/";
+        ambienteINPSSVIL = protocol + "//" + nuovoportalehost + "/";
+        pathPortale = "NuovoportaleINPS/";
+    }
+    else {
+        ambienteINPS = protocol + "//" + portalecorehost + "/";
+        ambienteINPSSVIL = protocol + "//" + portalecorehost + "/";
+        pathPortale = "";
+        if (window.location.pathname.toLowerCase().includes(search122Path.toLowerCase())) {
+            //    loadStyleUnico();
+            loopCheckUrl();
+            updateBtnLogin();
+            if (window.location.pathname.toLowerCase().includes('ircolari.aspx') || window.location.pathname.toLowerCase().includes('entenze.aspx')) {
+               // loadCssMenuTemplateWebIdentity();
+
+                if (window.location.pathname.toLowerCase().includes('ircolari.aspx')) {
+                    loadJsLeftMenuCircolari();
+                    fixcssCircolari();
+                }
+
+                if (window.location.pathname.toLowerCase().includes('entenze.aspx')) {
+                    loadJsLeftMenuSentenze();
+                }
+            }
+        }
+        if (window.location.pathname.toLowerCase().includes('isualizzadoc.aspx')){
+           // loadCssMenuTemplateWebIdentity();
+            loadJsLeftMenuCircolari();
+        }
+    }
+
+}
+
+
+
+checkCookiePortale();
+
+
+// fine funzioni
+
+
+// MC Funzione gestione doppio portale ## FINE
+
+
+
+
+//C3 ############ INIZIO
+var articleTemplate =
+    '<div class="item col-md-4 col-lg-3">' +
+    '   <article class="card card--xs--format-sm card--lg--format-xs {articleClass}">' +
+    '       <a {SaveService} href="{Url}" class="card__link">' +
+    '           <div class="card__information">' +
+    '               <div class="card__identity card__identity--">' +
+    '                   <span class="card__identity__icon">' +
+    '                       <strong class="fa"></strong>' +
+    '                   </span>' +
+    '                   <span class="card__identity__label">{Label}</span>' +
+    '                   <span class="card__identity__date">{data}</span>' +
+    '               </div>' +
+    '               <header class="card__header">' +
+    '                   <h2 class="card__heading" title="{Title}">{Titolo}</h2>' +
+    '               </header>' +
+    '               <div class="card__content"></div>' +
+    '           </div>' +
+    '           <!-- card__information -->' +
+    '       </a>' +
+    '       <!-- card__metadata -->' +
+    '   </article>' +
+    '</div>';
+
+//############################## FINE
+
+
+
+
+
+var idInputField = $('#foldit');
+//C4
+var cacheSearch = new Array();  //C5
+//C6
+var divInner = $('#objInnerResult');
+var divSpotLight = $('#search-spotlight');
+var aSearchAll = $('#search-spotlight-all');
+var aSearchAllA = $('#search-spotlight-all-ang'); //C24
+
+
+//C7 ############ INIZIO
+$(idInputField).keyup(function(e) {
+    //C8
+
+    if (idInputField.val().length < 3 && "cu" != idInputField.val().toLowerCase()) {
+		divSpotLight.addClass('hidden');
+        if (e.which == 13 ) {
+            alert("Inserire almeno 3 caratteri per effettuare le ricerca");
+			return false;
+        } else {
+            divInner.html('');
+            divInner.next('.row').html('');
+        }
+    } else {
+        testo = GetTestoCode(idInputField.val());
+
+        if (cacheSearch[testo] != undefined) {//C9
+            divInner.html(cacheSearch[testo]);
+            aSearchAll.attr("href", ambienteINPS + pathRicerca + urlRicerca + testo);
+			//C24
+			searchVal = encodeURIComponent(testo.replace(/-/g, '·')).replace(/%20/g, '-'); //C25
+            aSearchAllA.attr("href", ambienteINPS + pathRicerca + urlRicerca + testo);
+			//fine C24
+			divSpotLight.removeClass('hidden');
+        } else {
+            fntSearch(testo); //C10
+        }
+    }
+});
+//############################## FINE
+
+$("#btnFoldit").click(function(e) {
+	if (idInputField.val().length < 3 && "cu" != idInputField.val().toLowerCase()){
+		alert("Inserire almeno 3 caratteri per effettuare le ricerca");
+		return false;
+	} else{
+		return true;
+	}
+	
+});
+var jsTrad = [];
+var traduzioni = [];
+
+function getLabel(nome, testo) {
+    if (getCookieLang().toLowerCase() == 'it') {
+        return testo;
+    }
+
+    //Blocco di codice disattivo per incompatibilità con IE
+
+    var keyCount = Object.keys(jsTrad).length;
+
+    if (keyCount == 0) {
+        return testo;
+    } else {
+        var el = jsTrad.find(function (t) {
+            return t.Nome.toLowerCase() === removeSpace(nome).toLowerCase();
+        });
+
+        if (el != null) {
+            return jsTrad.find(function (t) {
+                return t.Nome.toLowerCase() === removeSpace(nome).toLowerCase();
+            }).Traduzione;
+        } else {
+            return testo;
+        }
+    }
+}
+
+function readTraduzioni() {
+
+    var urlTraduzioni = ambienteINPS + pathRicerca + urlProxyTraduzioni + "?lang=" + getCookieLang();
+    $.ajaxSetup({
+        async: false
+    });
+
+    $.get(urlTraduzioni).done(function (data) {
+       // console.log(data);
+        traduzioni = data;
+    });
+
+    $.ajaxSetup({
+        async: true
+    });
+
+
+}
+// JSON.parse(jjtrad);
+
+function removeSpace(testo) {
+    var str = testo;
+    str = str.replace(/ +/g, "");
+    return str;
+}
+
+function getTraduzione(nome, testo) {
+    var result = "";
+    if (jsTrad.length == 0 && getCookieLang().toLowerCase() != 'it') {
+        readTraduzioni();
+        jsTrad = traduzioni;
+
+        return getLabel(nome, testo);
+
+
+    }
+    else {
+        return getLabel(nome, testo);
+    }
+
+}
+//C11 ########## INIZIO
+var fntSearch = function(searchTerm) {
+    var newmills = new Date().getTime();
+    searchTerm = encodeURIComponent(searchTerm);
+	
+    $.ajax({
+        type: "GET",
+        url: ambienteINPS + pathRicerca + urlProxy,
+        data: 'qs=' + searchTerm,
+		sT: searchTerm
+       // contentType: "application/json; charset=utf-8"
+       // dataType: "jsonp"
+    }).done(function (data) {
+        if (data) {
+			var sT = this.sT;
+			if (data.SEGMENTS.SEGMENT.RESULTPAGE.RESULTSET != null ){
+				var notizie = data.SEGMENTS.SEGMENT.RESULTPAGE.RESULTSET.HIT;
+
+				var html = '';
+                var lenNotizie=notizie.length;
+				if (lenNotizie== null && notizie!=null){
+					notizie=[notizie];
+				}
+				//C12
+				for (var i = 0; i < notizie.length; i++) {
+                    title = notizie[i].FIELD[6]["#text"];
+                    if (title != null) {
+                        title = title.replace(/\s+/g, ' ').trim();
+                    }
+					teaser = notizie[i].FIELD[8]["#text"];
+					
+					if (title == null && teaser != null) {
+						title = teaser;
+					}
+					
+					var htmlTitle = title;
+					
+					if (title != null && title.length > 60) {
+						title=jQuery.trim(title).substring(0, 60).split(" ").slice(0, -1).join(" ") + "...";
+					}            
+
+					var url = "";
+					var data = "";
+					var saveService = "";
+					var tipologiaM = "";
+					var label = "";
+
+					
+                    try {
+                        if (notizie[i].FIELD[25]["#text"] != null || notizie[i].FIELD[25]["#text"] !== "") {
+                            tipologia = notizie[i].FIELD[25]["#text"].trim();
+                            label = getTraduzione(tipologia, tipologia);
+
+                        }
+                        else {
+                            tipologia = null;
+                        }
+                    } catch (e) {
+                        tipologia = null;
+                    }
+					if (tipologia != null){	
+						switch (tipologia){
+                            case "Circolari":
+                                // var url = urlCircolare + '/' + tipologia + '/' + notizie[i].FIELD[16]["#text"].split('/').pop();
+                                url = notizie[i].FIELD[37]["#text"];
+                                //     console.log('url circolare: ' + url);
+                                if (notizie[i].FIELD[67]["#text"] != null && notizie[i].FIELD[67]["#text"] != "") {
+                                    data = notizie[i].FIELD[67]["#text"].substring(0, 10);
+                                    var dataDocumet = data.split('-');
+                                    dataDocumet.reverse();
+                                    data = " " + dataDocumet.join('/');
+                                }
+                                break;
+                            case "Messaggi":
+                                // var url = urlMessaggi + '/' + tipologia + '/' + notizie[i].FIELD[16]["#text"].split('/').pop();
+
+                                url = notizie[i].FIELD[37]["#text"];
+                                //    console.log('url messaggio: ' + url);
+                                if (notizie[i].FIELD[67]["#text"] != null && notizie[i].FIELD[67]["#text"] != "") {
+                                    data = notizie[i].FIELD[67]["#text"].substring(0, 10);
+                                    var dataDocumet = data.split('-');
+                                    dataDocumet.reverse();
+                                    data = " " + dataDocumet.join('/');
+                                }
+                                break;
+                            case "Circolari Enpals":
+                                // var url = urlCircolare + '/' + tipologia + '/' + notizie[i].FIELD[16]["#text"].split('/').pop();
+                                url = notizie[i].FIELD[37]["#text"];
+                                //    console.log('url circolare: ' + url);
+                                if (notizie[i].FIELD[67]["#text"] != null && notizie[i].FIELD[67]["#text"] != "") {
+                                    data = notizie[i].FIELD[67]["#text"].substring(0, 10);
+                                    var dataDocumet = data.split('-');
+                                    dataDocumet.reverse();
+                                    data = " " + dataDocumet.join('/');
+                                }
+                                break;
+                            case "Messaggi Enpals":
+                                // var url = urlMessaggi + '/' + tipologia + '/' + notizie[i].FIELD[16]["#text"].split('/').pop();
+
+                                url = notizie[i].FIELD[37]["#text"];
+                                //    console.log('url messaggio: ' + url);
+                                if (notizie[i].FIELD[67]["#text"] != null && notizie[i].FIELD[67]["#text"] != "") {
+                                    data = notizie[i].FIELD[67]["#text"].substring(0, 10);
+                                    var dataDocumet = data.split('-');
+                                    dataDocumet.reverse();
+                                    data = " " + dataDocumet.join('/');
+                                }
+                                break;
+                            case "Comun.Stampa":
+                                // var url = urlMessaggi + '/' + tipologia + '/' + notizie[i].FIELD[16]["#text"].split('/').pop();
+
+                                url = notizie[i].FIELD[37]["#text"];
+                                //     console.log('url comun stampa: ' + url);
+                                if (notizie[i].FIELD[67]["#text"] != null && notizie[i].FIELD[67]["#text"] != "") {
+                                    data = notizie[i].FIELD[67]["#text"].substring(0, 10);
+                                    var dataDocumet = data.split('-');
+                                    dataDocumet.reverse();
+                                    data = " " + dataDocumet.join('/');
+                                }
+                                break;
+							case "Sedi Inps":
+								url = urlSedi + notizie[i].FIELD[37]["#text"];
+								title = notizie[i].FIELD[48]["#text"];
+							break;		
+							case "Struttura":
+								url = notizie[i].FIELD[17]["#text"];
+							break;
+							case "Notizia":
+								url = ambienteINPS + pathPortale + notizie[i].FIELD[37]["#text"];
+								if (notizie[i].FIELD[67]["#text"] != null && notizie[i].FIELD[69]["#text"]!=""){
+									data = notizie[i].FIELD[67]["#text"].substring(0, 10);
+									var dataDocumet = data.split('-');
+									dataDocumet.reverse();
+									data = " "+ dataDocumet.join('/');
+								}
+							break;
+							case "Scheda servizio":	
+                                tipologia = "Scheda prestazione";
+                                label = getTraduzione(tipologia, tipologia);
+								url = ambienteINPS + pathPortale + notizie[i].FIELD[37]["#text"];
+							break;
+							case "Modulistica":	
+                                tipologia = "Modulo";
+                                label = getTraduzione(tipologia, tipologia);
+								//url = ambienteINPS + pathRicerca + urlModuli + notizie[i].FIELD[64]["#text"];
+								//url = ambienteINPS + pathPortale + urlModuli.replace("{CodApp}", notizie[i].FIELD[64]["#text"]).replace("{IdL}", notizie[i].FIELD[65]["#text"]);
+								var iDL = notizie[i].FIELD[65]["#text"];
+								url = ambienteINPS + urlModuli.replace("{CodApp}", notizie[i].FIELD[64]["#text"]).replace("{IdL}", iDL);
+								//htmlTitle = jQuery.trim(title) + " - " + jQuery.trim(teaser);
+								htmlTitle = jQuery.trim(teaser);
+								data = jQuery.trim(title);
+								//title = htmlTitle.substring(0, 50).split(" ").slice(0, -1).join(" ") + "...";
+								title = htmlTitle;
+								if (iDL == 1) {
+									if (title != null && title.length > 60) {
+										title=jQuery.trim(htmlTitle).substring(0, 60).split(" ").slice(0, -1).join(" ") + "...";
+									} 	
+								}
+								else {
+									if (title != null && title.length > 55) {
+										title=jQuery.trim(htmlTitle).substring(0, 55).split(" ").slice(0, -1).join(" ") + "...";
+									}
+								}
+								
+							break;
+							case "Servizio":	
+								if (notizie[i].FIELD[37]["#text"].toLowerCase().startsWith("http")) {
+									url = notizie[i].FIELD[37]["#text"];
+								}
+								else {
+									url = ambienteINPS + pathPortale + notizie[i].FIELD[37]["#text"];
+                                }
+                                if (notizie[i].FIELD[34]["#text"] != null || typeof (notizie[i].FIELD[34]["#text"]) !== 'undefined') {
+
+                                    htmlTitle = notizie[i].FIELD[34]["#text"];
+
+                                }
+                                else {
+                                    var _title = htmlTitle;
+                                    var _pre = "Accedi al servizio ";
+                                    htmlTitle = _pre + _title;
+
+                                }
+								var serviceID = notizie[i].FIELD[3]["#text"].trim().split("-")[1];
+								
+								saveService="onclick=\"SaveServiziUsatiDiRecente(\'" + serviceID + "\')\"";
+								
+                                var g1 = notizie[i].FIELD[35]["#text"];
+                                if (g1 != null) {
+                                    g1 = g1.trim();
+                                }
+								if ("1" == g1) {
+									tipologiaM = "m"; 
+								}
+							break;
+							case "Gara":
+                                var label1 = notizie[i].FIELD[49]["#text"]; 
+                                label = getTraduzione(label1, label1);
+								url = ambienteINPS + pathPortale + notizie[i].FIELD[37]["#text"];
+							break;
+							case "Avviso":				
+							case "Bando welfare":
+                                var label1 = notizie[i].FIELD[49]["#text"];
+                                label = getTraduzione(label1, label1);
+								if (notizie[i].FIELD[67]["#text"] != null && notizie[i].FIELD[67]["#text"] != "") {
+									data = formatCardDate(notizie[i].FIELD[67]["#text"]);
+								}
+								appoUrl = notizie[i].FIELD[37]["#text"];
+								if (appoUrl.startsWith('/')) {
+									appoUrl = appoUrl.substr(1);
+								}
+								url = ambienteINPS + /*pathPortale +*/ appoUrl;
+                                break;	
+                            case "Dataset":
+
+                                appoUrl = notizie[i].FIELD[37]["#text"];
+                                if (appoUrl.startsWith('/')) {
+                                    appoUrl = appoUrl.substr(1);
+                                }
+                                url = ambienteINPS + /*pathPortale +*/ appoUrl;
+                                break;
+							default:
+                                if (notizie[i].FIELD[37]["#text"] != null || typeof (notizie[i].FIELD[37]["#text"]) !== 'undefined') {
+
+                                    appoUrl = notizie[i].FIELD[37]["#text"].toLowerCase();
+
+                                }
+                                if (appoUrl.startsWith('/gss/')) {
+                                    appoUrl = appoUrl.substr(1);
+                                    url = ambienteINPS + /*pathPortale +*/ appoUrl;
+                                } else {
+
+                                    url = ambienteINPS + pathPortale + notizie[i].FIELD[37]["#text"];
+                                }//C13
+							break;
+						}
+					}                
+					
+					articleClass = "card__identity--" + (tipologia + tipologiaM).replace(" ", "-").toLowerCase();
+					articleClass =articleClass.replace("scheda-servizio","scheda-prestazione");
+					
+					html += articleTemplate.replaceAll("{Url}", url).replaceAll("{Label}", label).replaceAll("{Titolo}", title).replaceAll("{articleClass}", articleClass).replaceAll("{data}", data).replaceAll("{SaveService}", saveService).replace("{Title}",htmlTitle); 
+				}
+		}else {
+				html="";
+				
+			}
+			
+			//C20
+			if (sT.toLowerCase() == encodeURIComponent(idInputField.val()).toLowerCase()){
+
+				divInner.html(html);
+				aSearchAll.attr("href", "/" + pathRicerca + urlRicerca + sT);
+				//C24
+				searchVal = encodeURIComponent(sT.replace(/-/g, '·')).replace(/%20/g, '-'); //C25
+				aSearchAllA.attr("href", "/" + pathRicerca + urlRicercaA + searchVal);
+				//fine C24				
+				
+				if (html!="" && notizie.length >0 ) {
+					divSpotLight.removeClass('hidden');
+				}
+				else {
+					divSpotLight.addClass('hidden');
+				}
+			}
+			//fine C20
+
+            //C14
+            cacheSearch[searchTerm] = html;
+        }
+    }).fail(function (data) {
+        
+    });
+}
+//############################## FINE
+
+
+$(document).on('click', function (e) {
+    if ($(e.target).closest(divSpotLight).length === 0) {
+        divSpotLight.addClass('hidden');
+    }
+});
+
+
+$(idInputField).blur(function() {
+
+});
+$(idInputField).focus(function() {
+
+});
+
+//C15 ########## INIZIO
+function GetTestoCode(testo) {
+    try {
+        if (testo != null) {
+            //testo = testo.replace(/[^\w]/g, "");
+        }
+        else {
+            testo = "";
+        }
+    }
+    finally {
+        return testo.toLowerCase();
+    }
+}
+//############################## FINE
+
+
+//C16 ########## INIZIO
+if (typeof String.prototype.replaceAll != "function") {
+    String.prototype.replaceAll = function (find, replace) {
+        var replaceString = this;
+        var regex = new RegExp(find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"), 'g');
+
+        return replaceString.replace(regex, replace);
+    }
+}
+//############################## FINE
+
+
+
+
+
+//C17 ########## INIZIO
+
+	// C18
+	$(".card__metadata").filter(function() {
+		if($(this).find("ul li").size() == 1) {
+			$(this).find(".arrowDown").addClass("one");
+		}
+		if($(this).find("ul li").size() == 2) {
+			$(this).find(".arrowDown").addClass("two");
+		}
+	});
+
+	function ShowdivShare(id) {
+		var divShare = document.getElementById(id);
+
+		if (!$(divShare).hasClass("showed")) {
+			$(divShare).show();
+			$(divShare).addClass("showed");
+
+			var itemList = document.getElementsByClassName("showed");
+
+			for (var i = 0; i < itemList.length; i++) {
+				if (itemList[i].id != divShare.id) {
+					$(itemList[i]).hide();
+					$(itemList[i]).removeClass("showed");
+				}
+			}
+		}
+	}			
+//############################## FINE			
+
+//C19 ########## INIZIO
+	var enteSelect = $('#ddlEmanante');
+	var tipoSelect = $('#ddlTipoAtto');
+var defaultOptions = 
+	'<option value="Tutto">Tutti</option>' +
+	'';
+var inpsOptions = 
+	'<option value="circolari">Circolari</option>' +
+	'<option value="messaggi">Messaggi</option>' +
+	'';
+var inpdapOptions =
+    '<option value="delibere civ">Delibere CIV</option>';
+
+
+
+
+//############################## FINE			
+
+
+function paginatorClick(iPage) {
+    var samePage = '#';
+	
+	if (!(samePage == iPage)) {
+		
+		$('#txbPage').val(iPage);
+		$('#btnFiltra').click();
+	}
+
+
+}
+
+function SaveServiziUsatiDiRecente(ServiceID) {
+	
+    $.ajax({
+        type: "GET",
+        url: ambienteINPS + pathPortale + urlSSUDR + "?ServiceID=" + ServiceID,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async: true,
+        error: function () {
+        },
+        success: function (msg) {
+        }
+    });
+}
+
+/*C21*/
+$(document).ready(function () {  
+	try {
+		$('.card.card__identity--serviziom a, .card.card__identity--servizio a').click(function () {
+		    try {
+			    if (this.href != 'javascript:void(0)') { 
+				
+				    var btnDisabled = this;
+				    var oldHref = this.href;
+				    var oldClick = this.attributes["onclick"].nodeValue;
+				    var tmpFunc = new Function(oldClick);               
+				    tmpFunc();
+				    this.href = 'javascript:void(0)';
+				    this.removeAttribute('onclick');
+				    setTimeout(function () { btnDisabled.href = oldHref; btnDisabled.setAttribute('onclick', oldClick); }, 5000);
+				    window.location.href = oldHref;
+			    }
+		    }
+		    catch (err) {
+		    }
+		 });
+	}
+	catch (err) {
+    }
+});
+/*fine C21*/
+
+
+/*C22*/
+$(document).ready(function () { 
+	try {
+		$('#objInnerResult').on("click", ".card.card__identity--serviziom a, .card.card__identity--servizio a", function() {
+			
+			if (this.href != 'javascript:void(0)') { 
+				
+				var btnDisabled = this;
+				var oldHref = this.href;
+				var oldClick = this.attributes["onclick"].nodeValue;
+				var tmpFunc = new Function(oldClick);               
+				tmpFunc();
+				this.href = 'javascript:void(0)';
+				this.removeAttribute('onclick');
+				setTimeout(function () { btnDisabled.href = oldHref; btnDisabled.setAttribute('onclick', oldClick); }, 5000);
+				window.location.href = oldHref;
+			}
+
+		 });
+	}
+	catch (err) {
+    }
+
+    //updateUrl();
+    //  updateUrlCssUnico();
+    createCookiePortale();
+    checkCookiePortale();
+});
+/*fine C22*/
+
+function formatCardDate(dataIn) {
+	data = dataIn.substring(0, 10);
+	var dataDocumet = data.split('-');
+	dataDocumet.reverse();
+	data = "" + dataDocumet.join('/');
+	return data;
+}
