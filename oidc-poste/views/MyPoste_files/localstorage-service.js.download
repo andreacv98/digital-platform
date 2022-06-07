@@ -1,0 +1,21 @@
+
+
+
+angular.module("LocalStorage", []).service("LocalStorageService", function(){
+    this.set= function(key, val) {
+        if((val===null) || (val===undefined))return null;   
+        localStorage.setItem(key, JSON.stringify(val));
+    };
+
+    this.get= function(key) {
+        var val=localStorage.getItem(key);
+
+        if((val===null) || (val===undefined))return null;
+
+        return JSON.parse(val);
+    };
+
+    this.clear=function(){
+        localStorage.clear();
+    };  
+});

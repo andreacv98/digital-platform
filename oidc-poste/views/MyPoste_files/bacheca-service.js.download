@@ -1,0 +1,60 @@
+
+
+
+app.factory('bachecaService', ['$resource','config', function($resource,config){
+    
+    // servizio 
+    return $resource(config.bacheca_ws_url + ':action',{},
+        {
+            infoContext : {
+                params : {action:'infoContext'}, //, nocache: function(){return new Date().getTime()}
+                method : 'GET'
+            },
+            infoContextNoLoading : {
+                params : {action:'infoContext'}, //, nocache: function(){return new Date().getTime()}
+                method : 'GET',
+                timeout : 10000,
+                headers: {'X-NO-LOADING': true}
+            },
+            getCategories : {
+                params : {action:'getCategories'}, //, nocache: function(){return new Date().getTime()}
+                method : 'GET'
+            },
+            getServices : {
+                params : {action:'getServices'}, //, nocache: function(){return new Date().getTime()}
+                method : 'GET'
+            },
+            detailMessage : {
+                params : {action:'detailMessage'}, //, nocache: function(){return new Date().getTime()}
+                method : 'GET'
+            },
+            deleteMessage : {
+                params : {action: 'deleteMessage', nocache: function(){return new Date().getTime()}},
+                method : 'GET'
+            },
+            attachment : {
+                params : {action: 'attachment'}, //, nocache: function(){return new Date().getTime()}
+                method : 'GET'
+            },
+            save : {
+                params : {action: 'save'}, //, nocache: function(){return new Date().getTime()}
+                method : 'GET'
+            },
+            search : {
+                params : {action:'search'}, //, nocache: function(){return new Date().getTime()}
+                method : 'POST'
+            },
+            searchNoLoading : {
+                params : {action:'search'}, //, nocache: function(){return new Date().getTime()}
+                method : 'POST',
+                timeout : 10000,
+                headers: {'X-NO-LOADING': true}
+            },
+            deleteMessages : {
+                params : {action: 'deleteMessages', nocache: function(){return new Date().getTime()}},
+                method : 'POST'
+            },
+            
+        });
+}]);
+

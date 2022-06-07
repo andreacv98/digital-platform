@@ -1,0 +1,64 @@
+
+
+
+(function () {
+    'use strict';
+
+    angular.module('MyPoste').factory('appuntamentoService',appuntamentoService);
+
+    appuntamentoService.$inject = ['$http', 'config'];
+
+    function appuntamentoService($http, config) {
+        return {
+
+            getAppuntamenti : function(user) {
+                return $http({
+                    method : 'POST',
+                    url : config.appuntamento_url + 'getAppuntamenti',
+                    data : {
+                        'Request': {
+                            'FLAG_FULL' : true,
+                            //'CODICE_FISCALE': user.taxcode,
+                            'DATA_INIZIO_RICERCA': user.dataInizio,
+                            'DATA_FINE_RICERCA': user.dataFine,
+                        }
+                    }
+                });
+            },
+
+            rimuoviAppuntamento : function(model) {
+                var appuntamento = {
+                    'APPUNTAMENTO': {
+                        "TIPO_OPERAZIONE": "DEL",
+                        "ID_APPUNTAMENTO": model.ID_APPUNTAMENTO,
+                        "DATA_APPUNTAMENTO": model.DATA_APPUNTAMENTO,
+                        "ORA_INIZIO": model.ORA_INIZIO,
+                        "ORA_FINE": model.ORA_FINE,
+                        "CANALE_CODE": model.CANALE,
+                        "NOTE": model.NOTE,
+                        "PRODOTTO_CODE": model.PRODOTTO_CODE,
+                        "CELLULARE": model.CELLULARE,
+                        "EMAIL": model.EMAIL,
+                        "UFFICIO_POSTALE": {
+                            "FRAZIONARIO":model.UFFICIO_POSTALE.FRAZIONARIO
+                        }
+                    }
+                };
+                if (model.CONSULENTE.USERNAME && model.CONSULENTE.MATRICOLA) {
+                    appuntamento.APPUNTAMENTO['CONSULENTE'] = {
+                        "USERNAME": model.CONSULENTE.USERNAME,
+                        "MATRICOLA":model.CONSULENTE.MATRICOLA,
+                    };
+                }
+                return $http({
+                    method : 'PATCH',
+                    url : config.appuntamento_url + 'ModificaAppuntamento',
+                    data : appuntamento
+                });
+            },
+        };
+    }
+
+})();
+
+

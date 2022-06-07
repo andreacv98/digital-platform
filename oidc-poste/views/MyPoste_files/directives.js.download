@@ -1,0 +1,225 @@
+
+
+
+var promemoriaTimeList = appuntamento.directive("promemoriaTimeList",function(){
+
+    return{
+        restrict: "A",
+        templateUrl: appContext + "/pages/promemoria-time-list.html",
+        controller: ["$scope","$http","appuntamentoService",function($scope,$http,appuntamentoService){
+            var appData = appuntamentoService.getAppuntamentoData();
+            var that = $scope;
+            if($scope.timePromemoria == undefined){
+                $http.get("./data/getPromemoriaTimeList.json").success(function(data){
+
+                    that.timePromemoria = data;
+                }).error(function(data,status,error){ 
+                    $scope.errorMessages = [{"cod":status,"msg":data}];
+                });
+            }
+
+            if(appData.hasOwnProperty("smsMemoTime")){
+                $("#promemoria").find("button").text(appData.smsMemoTime);
+            }
+
+
+            $scope.setTimeSms = function($event){
+              
+                var time = $($event.currentTarget).text();
+                $($event.currentTarget).closest(".dropdown").find("button").text(time);
+
+                appData.smsMemoTime = time;
+                appuntamentoService.setAppuntamentoData(appData);
+            };
+
+        }]
+    };
+});
+var listaFasce = appuntamento.directive("listaFasceOrarie",function(){
+
+    return{
+        restrict: "A",
+        templateUrl: appContext + "/pages/lista-fasce-orarie.html",
+        controller: ["$scope","$http","appuntamentoService",function($scope,$http,appuntamentoService){
+            var appData = appuntamentoService.getAppuntamentoData();
+            var that = $scope;
+           
+
+            if(appData.hasOwnProperty("fasciaOraria")){
+             
+            	$("#dropdownMenu2").text(appData.fasciaOraria);
+
+            }
+
+
+
+            $scope.setFascia = function($event){
+               
+                var fascia = $($event.currentTarget).text();
+              
+                $("#dropdownMenu2").text(fascia);
+                appData.fasciaOraria = fascia;
+                appuntamentoService.setAppuntamentoData(appData);
+            };
+           
+           
+        }]
+    };
+  
+});
+
+
+
+var listaMotivi = appuntamento.directive("listaAppuntamento",function(){
+
+    return{
+        restrict: "A",
+        templateUrl: appContext + "/pages/lista-appuntamento.html",
+        controller: ["$scope","$http","appuntamentoService","hostService","$timeout","$rootScope",function($scope,$http,appuntamentoService,hostService,$timeout,$rootScope){
+        	var serverHost,urlValue;
+        	hostService.getHost().then(function(response) {
+    		    urlValue = response.data; // -- success logic
+    		    serverHost = urlValue["HOST_SVILUPPO"];
+            var appData = appuntamentoService.getAppuntamentoData();
+
+                $http.get(serverHost+'/motivi/motiviRichiesta',{ withCredentials: true}).success(function(data){
+
+                    $scope.motivi = data;
+                    if(appData.hasOwnProperty("motivoSelected") && appData.hasOwnProperty("codice")){
+                        //$("#dropdownMenu1").text(appData.motivoSelected);
+                    	
+                     }
+                    $("body").data("motivi-load",true);
+                }).error(function(data,status,error){ 
+                    $scope.errorMessages = [{"cod":status,"msg":data}];
+                });
+
+
+
+            $scope.setMotivo = function(){
+              
+
+            		var mot = angular.fromJson($scope.motivoSelected);
+                	appData.motivoSelected = mot.descrizione;
+                	appData.codice = mot.codice;
+                	appuntamentoService.setAppuntamentoData(appData);
+                	
+                	if($('#ama-autocomplete').val()){
+                		$scope.$broadcast('changeMotivo');
+                		//$rootScope.$broadcast('scanner-started', {idMap: 'map',frazionario: null, searchLoc:appData.indUfficio}); //, frazionario: indRad});
+                		
+                	}
+
+        
+                
+            };
+          //custom select
+            var myselect = $('select');
+            $(myselect).each(function () {
+                if ($(this).parent().is("span.select-wrapper")) {
+                    $(this).parent().find("span.holder").remove();
+                    $(this).unwrap();
+                }
+                if ($(this).is(':disabled') || $(this).is('[readonly]')) {
+                    $(this).wrap("<span class='select-wrapper form-control select-disabled'></span>");
+                } else {
+                    $(this).wrap("<span class='select-wrapper form-control'></span>");
+                }
+                $(this).after("<span class='holder'></span>");
+
+                
+                var selectedOption = $(this).find(":selected").text();
+                $(this).next(".holder").text(selectedOption);
+                
+                if(appData.hasOwnProperty("motivoSelected") && appData.hasOwnProperty("codice")){
+	                $(this).next(".holder").text(appData.motivoSelected);
+	                $('select > option:first').hide();
+	                //writeInfo("customselect partito");
+	                $(this).attr('disabled','disabled');
+	                $(this).closest( "span" ).attr("class","select-wrapper form-control select-disabled");
+                }
+
+            });
+           
+            $(myselect).not('[readonly]').off('change.custom-form-element');
+            $(myselect).not('[readonly]').on('change.custom-form-element', function () {
+                var selectedOption = $(this).find(":selected").text();
+                $(this).next(".holder").text(selectedOption);
+                writeInfo("customselect onchange");
+            }); //.trigger('change.custom-form-element');
+
+
+
+            /*check on focusout*/
+            $(myselect).focusout(function () {
+                if ($(this).parent().is("span.select-wrapper")) {
+                    $(this).parent("span.select-wrapper").removeClass("select-wrapper-focused");
+                }
+            });
+            /*check on focus*/
+            $(myselect).focus(function () {
+                if ($(this).parent().is("span.select-wrapper")) {
+                    $(this).parent("span.select-wrapper").addClass("select-wrapper-focused");
+                }
+            });
+            /*check input from keyboard*/
+            $(document).keyup(function (e) {
+                if ($(myselect).is(':focus')) {
+                    $(":focus option:selected").each(function () {
+                        writeInfo("select change value from keyboard: " + $(this).text());
+                        $(this).parent('select').next(".holder").text($(this).text());
+                    });
+                }
+            });
+        	//fine custom select
+        	});
+        }]
+    };
+});
+
+var ricercaUfficio = appuntamento.directive("ricercaUfficio",function(){
+    return{
+        restrict:"E",
+        templateUrl:appContext + "/pages/ricerca-ufficio.html",
+        controller: ["$scope","$http",function($scope,$http){
+        	 
+        	    
+            //initialize({});
+
+        }]
+    };
+
+});
+var listaMotiviDisdetta = appuntamento.directive("listaMotiviDisdetta",function(){
+
+    return{
+        restrict: "A",
+        templateUrl:appContext + "/pages/lista-appuntamento-disdetta.html",
+        controller: ["$scope","$http","appuntamentoService","hostService",function($scope,$http,appuntamentoService,hostService){
+        	var serverHost,urlValue;
+        	hostService.getHost().then(function(response) {
+    		    urlValue = response.data; // -- success logic
+    		    serverHost = urlValue["HOST_SVILUPPO"];
+        	var appData = appuntamentoService.getAppuntamentoData();
+                $http.get(serverHost+'/motivi/motiviDisdetta',{ withCredentials: true}).success(function(data){
+            	
+                    $scope.motiviDisdetta = data;
+                }).error(function(data,status,error){ 
+                    $scope.errorMessages = [{"cod":status,"msg":data}];
+                });
+          
+            $scope.setMotivo = function($event,code){
+                var motivo = $($event.currentTarget).text();
+               
+                $("#dropdownMenu1").text(motivo);
+                appData.motivoDisdettaSelected = motivo;
+                appData.codiceDisdetta = code;
+                appuntamentoService.setAppuntamentoData(appData);
+                $scope.appuntamentoData = appData;
+            };
+        	});
+        	
+        }]
+    };
+});
+

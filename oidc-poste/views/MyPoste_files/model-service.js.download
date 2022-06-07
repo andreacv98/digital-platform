@@ -1,0 +1,238 @@
+
+
+
+app.factory('modelService', function () {
+
+    return {
+
+		fullVitalStatistics: 
+		{
+			contact: 
+			{
+				phoneNumber: "",
+				mobileNumber: "33333333",
+				faxNumber: "",
+				email: "aldo.petri@asd.com"
+			},
+			addresses: 
+			[
+				{
+				  addressId: "123456789",
+				  type: "delivery",
+				  normalized: "true",
+				  nationCode: "IT",
+				  nationDescription: "Italia",
+				  provinceCode: "AL",
+				  provinceDescription: "Alessandria",
+				  townCode: "",
+				  townDescription: "RIVALTA BORMIDA",
+				  zipCode: "15010",
+				  dug: "",
+				  toponym: "GUGLIELMO OBERDAN",
+				  streetNumber: "47",
+				  toNormalize: ""
+				}
+			],
+			vitalStatistics: 
+			{
+				name: "ALDO",
+				surname: "PETRI",
+				taxcode: "PTRLDA58B02H501Q",
+				sex: "M",
+				birthDate: "1995-04-27",
+				birthNationCode: "IT",
+				birthNationDescription: "Italia",
+				birthProvinceCode: "AL",
+				birthProvinceDescription: "ROMA",
+				birthTownCode: "",
+				birthTownDescription: "ROMA",
+				nationality: "",
+				clientCertified: "Non Certificato",
+				businessPartnerId: "3930175796",
+				clientCode: "537.428.818",
+				strongIdentity: "true",
+				posteEmployee: "false",
+				foreign: "false",
+				posteClient: "true",
+				registrationDate: "2011-11-08T17:41:23+01:00",
+				bicId: "",
+				username: "aldo.petri"
+			},
+			userEducationalQualification: 
+			{
+				code: "",
+				description: ""
+			},
+			userOccupation: 
+			{
+				code: "",
+				description: ""
+			}
+		},
+
+        
+        consensi: {
+           list: [
+            { name: "CONSENSO1", selected: true }, { name: "CONSENSO2", selected: false }, { name: "CONSENSO3", selected: false }, { name: "CONSENSO4", selected: false }
+           ],
+           shortText : false
+        },
+        
+
+        responseConsensi: {
+            cached:true,
+            entityDeparted:false,
+            allRequiredConsentsAccepted:false,
+            consents:[
+            {
+                code:"PF1",
+                text:"Per comunicazioni a carattere promozionale [...] di Poste e/o delle società del Gruppo [...]",
+                type:"C",
+                value:true,
+                required:false
+            },{
+                code:"PF2",
+                text:"Per comunicazioni a carattere promozionale [...] di soggetti terzi[...]",
+                type:"C",
+                value:null,
+                required:false
+            },{
+                code:"PF3",
+                text:"Per svolgere attività di profilazione consistente nella individuazione di preferenze [...]",
+                type:"C",
+                value:null,
+                required:false
+            },{
+                code:"PF4",
+                text:"Per comunicare i dati di profilazione dell'Interessato [...]",
+                type:"C",
+                value:null,
+                required:false
+            }]
+        },
+
+        password: {
+            passwordOld: "passwordOld",
+        },
+        nations: [
+			{
+				code: "DZ",
+				description: "Algeria"
+			},
+			{
+				code: "GE",
+				"description": "Georgia"
+			},
+			{
+				code: "DE",
+				description: "Germania"
+			},
+			{
+				code: "JP",
+				description: "Giappone"
+			},
+			{
+				code: "IT",
+				description: "Italia"
+			},
+			{
+				code: "ZW",
+				description: "Zimbabwe"
+			}
+		],
+        provinces: [
+			{
+				nationCode: "IT",
+				code: "RE",
+				description: "Reggio Emilia"
+			},
+			{
+				nationCode: "IT",
+				code: "RI",
+				description: "Rieti"
+			},
+			{
+				nationCode: "IT",
+				code: "RN",
+				description: "Rimini"
+			},
+			{
+				nationCode: "IT",
+				code: "RM",
+				description: "Roma"
+			},
+			{
+				nationCode: "IT",
+				code: "RO",
+				description: "Rovigo"
+			}
+        ],
+        towns: [
+			{
+				provinceCode: "RM",
+				landCode: "H387",
+				code: "ROCCA  CANTERANO",
+				description: "ROCCA CANTERANO"
+			},
+			{
+				provinceCode: "RM",
+				landCode: "H401",
+				code: "ROCCA DI  CAVE",
+				description: "ROCCA DI CAVE"
+			},
+			{
+				provinceCode: "RM",
+				landCode: "H404",
+				code: "ROCCA DI PAPA",
+				description: "ROCCA DI PAPA"
+			},
+			{
+				provinceCode: "RM",
+				landCode: "H432",
+				code: "ROCCA PRIORA",
+				description: "ROCCA PRIORA"
+			},
+			{
+				provinceCode: "RM",
+				landCode: "H441",
+				code: "ROCCA SANTO STEFANO",
+				description: "ROCCA SANTO STEFANO"
+			},
+			{
+				provinceCode: "RM",
+				landCode: "H411",
+				code: "ROCCAGIOVINE",
+				description: "ROCCAGIOVINE"
+			}
+		],
+        securedDevices: [
+            {
+                id: "2hOg9yazYFJQTui+Bkjhk7aE0pfQsgHRY4pIX7NKJCqgrCk0MJk10VCmVCjgqqmF",
+                state: "sospeso",
+                download: "3",
+                failuresAttempts: "6",
+                name: "Android SDK built for x86 di aldo",
+                activationDate: "11/07/2016",
+                lastUseDate: "11/07/2016",
+                osName: "Android unknown Android SDK built for x86",
+                osVersion: "23",
+                expirationDate: "15/07/2016"
+            },
+            {
+                id: "EtAXEWkw64Zm8zF/3SJOl73XoVAc09IpuoX93ooiensk7+OE+w+2vxCUW+CCWsPAK+SBM6zj6B01BdqDhETWtw ==",
+                state: "attivo",
+                download: "1",
+                failuresAttempts: "0",
+                name: "iPhone",
+                activationDate: "07/07/2016",
+                lastUseDate: "07/07/2016",
+                osName: "iPhone9.3.1",
+                osVersion: "9.3.1",
+                expirationDate: ""
+            }
+        ],
+		
+    }
+
+});
+

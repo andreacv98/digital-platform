@@ -1,0 +1,54 @@
+
+
+
+(function () {
+    'use strict';
+
+    angular.module('MyPoste').factory('restService',restService);
+
+    restService.$inject = ['$http', 'config'];
+
+    function restService($http, config) {
+        return {
+
+            deleteStatoPraticaVolDigital : function(id) {
+                // build delete url
+                var deleteUrl = config.vol.url + '/delete/'+ id;
+
+                return $http({
+                    method : 'DELETE',
+                    url : deleteUrl,
+                });
+            },
+
+            /**
+             * 
+             * @param {*} keyword what to search
+             * @returns http get promise
+             */
+            search : function(keyword) {
+                // build search url
+                var searchUrl = config.vol.url + '/search';
+                searchUrl = keyword ? searchUrl+'/'+keyword : searchUrl;
+
+                // prepare headers
+                var searchHeaders = {};
+                if (keyword==='ar-proposal-data') {
+                    searchHeaders = {
+                        'cluster': 'on-prem'
+                    }
+                }
+
+                // return get promise
+                return $http({
+                    method : 'GET',
+                    url : searchUrl,
+                    headers: searchHeaders
+                });
+            },
+        };
+    }
+
+})();
+
+

@@ -1,0 +1,52 @@
+
+
+
+app.directive('statoPratica', function () {
+    return {
+        restrict: 'E',
+        scope:{
+            pratica:"=",
+            index:"@",
+            saveIdFn:"&"
+        },
+        templateUrl: '/myposte/partials/stato-pratica.html',
+        controller: function($scope, $timeout){
+
+            /*$scope.getClassBox = function(stato) {
+                var classeBox = '';
+                switch(stato){
+                    case 'IN_ACTIVATION':
+                        classeBox = 'main-messages-info';
+                        break;
+                    default:
+                        classeBox = 'main-messages-warning';
+                        break;
+                }
+                return classeBox;
+            }*/
+            $scope.getClassBox = function(tipo) {
+                var classeBox = '';
+                switch(tipo.toUpperCase()){
+                    case 'INFO':
+                        classeBox = 'main-messages-info';
+                        /*info = blu*/
+                        break;
+                    case 'WARNING':
+                        classeBox = 'main-messages-warning';
+                        break;
+                    case 'SUCCESS':
+                        classeBox = 'main-messages-success';
+                        break;
+                    case 'ERROR':
+                        classeBox = 'main-messages-error';
+                        break;
+                    default:
+                        classeBox = 'main-messages-warning';
+                        break;
+                }
+                return classeBox;
+            };
+        }
+    };
+});
+

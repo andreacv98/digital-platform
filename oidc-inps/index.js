@@ -105,7 +105,16 @@ app.get("/",(req,res) =>{
    res.send(" <a href='/login'>Log In with OAuth 2.0 Provider </a>")
 })
 
-app.get ("/home", (req,res) =>{
+
+function loggedIn(req, res, next) {
+  if (req.user) {
+      next();
+  } else {
+      res.redirect('/');
+  }
+}
+
+app.get ("/home", loggedIn, (req,res) =>{
   let userinfo = req.session.passport.user;
   res.render(path.join(__dirname+'/views/MyInps-Bacheca'),{
     user: userinfo
@@ -113,7 +122,7 @@ app.get ("/home", (req,res) =>{
   )
 })
 
-app.get ("/user",(req,res) =>{
+app.get ("/user",loggedIn, (req,res) =>{
     res.header("Content-Type",'application/json');
     res.end(JSON.stringify({tokenset:req.session.passport.user.at_hash,userinfo:req.session.passport.user},null,2));
 

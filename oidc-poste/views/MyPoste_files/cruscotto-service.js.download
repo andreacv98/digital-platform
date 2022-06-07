@@ -1,0 +1,22 @@
+
+
+
+app.factory('cruscottoService', function ($http, $q, $resource, config) {
+
+	return $resource(config.sites_ws_url, {},
+	    {
+	        preferiti: {
+	            params: { pagename: 'PreferitoTemplate', nocache: function(){return new Date().getTime()} },
+	            method: 'GET'
+	        },
+	        possesso: {
+	            params: { pagename: 'PossessoProdotti', nocache: function(){return new Date().getTime()} },
+	            method: 'GET'
+	        },
+	        prodotti: {
+	            params: { pagename: 'ProdottoAttivabile', nocache: function(){return new Date().getTime()} },
+	            method: 'GET'
+	        },
+	    }
+	);
+});
