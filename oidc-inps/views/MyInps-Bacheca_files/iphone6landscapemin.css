@@ -1,0 +1,15 @@
+.flyout-btn-bottom-right{
+  z-index : 0 !important;
+}
+
+.tablebtn {
+	display:none !important;
+}
+
+.ChatUI .input {
+  z-index : 990 !important;
+}
+
+.ChatUI .send {
+	z-index : 999 !important;
+}

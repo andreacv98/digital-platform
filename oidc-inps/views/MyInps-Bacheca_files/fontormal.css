@@ -1,0 +1,117 @@
+/* latin-ext */
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Titillium Web'), local('TitilliumWeb-Regular'), url('https://servizi2.inps.it/ServiziCCM/VirtualAgent2/SGWeb/fonts/7XUFZ5tgS-tD6QamInJTcSo_WB_cotcEMUw1LsIE8mM.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Titillium Web'), local('TitilliumWeb-Regular'), url('https://servizi2.inps.it/ServiziCCM/VirtualAgent2/SGWeb/fonts/7XUFZ5tgS-tD6QamInJTcZSnX671uNZIV63UdXh3Mg0.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Titillium WebBold'), local('TitilliumWeb-Bold'), url('https://servizi2.inps.it/ServiziCCM/VirtualAgent2/SGWeb/fonts/anMUvcNT0H1YN4FII8wpr-y7CP8YvcHYdGV61pt7QTE.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Titillium WebBold'), local('TitilliumWeb-Bold'), url('https://servizi2.inps.it/ServiziCCM/VirtualAgent2/SGWeb/fonts/anMUvcNT0H1YN4FII8wprxP6Eu1_xfSBSoi9uie1FdE.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Titillium WebItalic'), local('TitilliumWeb-Italic'), url('https://servizi2.inps.it/ServiziCCM/VirtualAgent2/SGWeb/fonts/r9OmwyQxrgzUAhaLET_KO86gOKNGPbHY3c2d_06TbvM.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Titillium WebItalic'), local('TitilliumWeb-Italic'), url('https://servizi2.inps.it/ServiziCCM/VirtualAgent2/SGWeb/fonts/r9OmwyQxrgzUAhaLET_KO6qVnG43xFTRN40gwdrG-aE.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+
+
+/* [GB @ 04.07.2016] -> Webfonts per altri SO */
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Titillium Web'), local('TitilliumWeb-Regular'), url('https://servizi2.inps.it/ServiziCCM/VirtualAgent2/SGWeb/fonts/7XUFZ5tgS-tD6QamInJTcV7rzNbpW6Nj2hg-a3CqQCw.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Titillium WebBold'), local('TitilliumWeb-Bold'), url('https://servizi2.inps.it/ServiziCCM/VirtualAgent2/SGWeb/fonts/anMUvcNT0H1YN4FII8wpr2-3NvDdcn-JtPTQTxuKc-Y.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Titillium WebItalic'), local('TitilliumWeb-Italic'), url('https://servizi2.inps.it/ServiziCCM/VirtualAgent2/SGWeb/fonts/r9OmwyQxrgzUAhaLET_KO2dy4ZhfOZt47YmLMQ3xefY.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: italic;
+  font-weight: 700;
+  src: local('Titillium WebBold Italic'), local('TitilliumWeb-BoldItalic'), url('https://servizi2.inps.it/ServiziCCM/VirtualAgent2/SGWeb/fonts/RZunN20OBmkvrU7sA4GPPjzBPOuQoL1-yP9RwTd4ByA.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: normal;
+  font-weight: 400;
+  src: url('https://servizi2.inps.it/ServiziCCM/VirtualAgent2/SGWeb/fonts/7XUFZ5tgS-tD6QamInJTcWi9iifjlWsnEH9eXnGAVKQ.woff') format('woff');
+}
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: normal;
+  font-weight: 700;
+  src: url('https://servizi2.inps.it/ServiziCCM/VirtualAgent2/SGWeb/fonts/anMUvcNT0H1YN4FII8wprxOGIrroDOJmj4-1FUuJfIc.woff') format('woff');
+}
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: italic;
+  font-weight: 400;
+  src: url('https://servizi2.inps.it/ServiziCCM/VirtualAgent2/SGWeb/fonts/r9OmwyQxrgzUAhaLET_KOztlElAwnA64IigsDVpOhSU.woff') format('woff');
+}
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: italic;
+  font-weight: 700;
+  src: url('https://servizi2.inps.it/ServiziCCM/VirtualAgent2/SGWeb/fonts/RZunN20OBmkvrU7sA4GPPlTkpQJ41kZzgR7iH9Pr_8s.woff') format('woff');
+}
+.containerProgrIcon {
+	width: 200px;
+	height: 200px;
+	background-image: url("https://servizi2.inps.it/ServiziCCM/VirtualAgent2/SGWeb/image/inps_blue.svg");
+	background-repeat: no-repeat;
+	background-position: 50% 60%;
+	background-size: 75% 75%;
+	cursor: pointer;
+	bottom: 15px;
+	display: block;
+	position: fixed;
+	right: 5px;
+	border-radius: 50%;
+	height: 80px;
+	width: 80px
+}
+@font-face{font-family:'FontAwesome2';src:url('https://servizi2.inps.it/ServiziCCM/VirtualAgent2/SGWeb/fonts/fontawesome-webfont.eot?v=4.4.0');src:url('https://servizi2.inps.it/ServiziCCM/VirtualAgent2/SGWeb/fonts/fontawesome-webfont.eot?#iefix&v=4.4.0') format('embedded-opentype'),url('https://servizi2.inps.it/ServiziCCM/VirtualAgent2/SGWeb/fonts/fontawesome-webfont.woff2?v=4.4.0') format('woff2'),url('https://servizi2.inps.it/ServiziCCM/VirtualAgent2/SGWeb/fonts/fontawesome-webfont.woff?v=4.4.0') format('woff'),url('https://servizi2.inps.it/ServiziCCM/VirtualAgent2/SGWeb/fonts/fontawesome-webfont.ttf?v=4.4.0') format('truetype'),url('https://servizi2.inps.it/ServiziCCM/VirtualAgent2/SGWeb/fonts/fontawesome-webfont.svg?v=4.4.0#fontawesomeregular') format('svg');font-weight:normal;font-style:normal}

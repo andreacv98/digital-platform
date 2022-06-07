@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Digital Platform</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body class="h-100 w-100">
+
+  <div class="container">
+        <div class="row">
+        <div class="col"><h2>Digital Platform</h2></div>
+        <div class="col"><h2>Welcome <%= user.name %></h2></div>
+        <div class="col">
+            <form>
+                <input type="text" placeholder="Search.." name="search">
+                <button type="submit"><i class="bi bi-search fa-3x"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <img class="card-img-top" src="data:image/png;base64,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" alt="Poste service">
+        </div>
+        <div class="col">
+            <row><h4>Poste</h4></row>
+            <row><a href="https://www.poste.it/">https://www.poste.it/</a></row>
+            <br>
+            <row><text>Poste italiane è un'azienda italiana che si occupa di servizi postali, bancari finanziari e di telecomunicazione</text></row>
+        </div>
+        <div class="col">
+            <a href='<%= domain %>/login' class="btn btn-primary">Entra nell'area privata</a> 
+        </div>
+        </div>
+    </div>
+  </div>
+  
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>
