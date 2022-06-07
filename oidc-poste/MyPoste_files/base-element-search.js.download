@@ -1,0 +1,80 @@
+
+
+
+var gsaSuggest = new Bloodhound({
+  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  remote: {
+    url: '/suggest?q=%QUERY&max=10&site=www2_posteit&client=www2_posteit&format=rich',
+    wildcard: '%QUERY',
+    transform: function(response){
+        console.log(response);
+        return response.results.map(function(obj){
+            obj.name = obj.name.replace(/\*+$/,'');
+            return obj;
+        });
+    }
+  }
+});
+
+$(document).ready(function() {
+	$('button.btn-cta-cerca').click(function() {
+		searchbar($(this).parent().parent().find('input.input-search'));
+	});
+	$('input.input-search').keypress(function(ev) {
+		var keycode = (ev.keyCode ? ev.keyCode : ev.which);
+		if ('13' == keycode) { searchbar(this); }
+	});
+       $('input.input-search').typeahead({
+                hint: false, //suggerisci caratteri mancanti
+                highlight: true, //evidenza i caratteri digitati 
+                minLength: 3, //avvia la ricerca dopo x caratteri digitati
+            }, {
+                name: 'mydataset',
+                source: gsaSuggest,
+                display: 'name'
+       });
+       $('input.input-search').bind('typeahead:select', function(ev, suggestion) {
+           searchbar($(this));
+       });
+       if($('.form-control.input-search').length>1){
+	var intFocus = setInterval(function(){
+		if(!$('.pageLoader:visible').length){
+			$('.form-control.input-search').eq(0).focus();
+			clearInterval(intFocus);
+		}
+	},1000);
+       }
+	function searchbar (element) {
+		var input = $(element).val();
+		if (input) {
+			var host = 'https://www.poste.it';
+			if(window.location.host.match('.test.')){
+				host = 'https://www.test.poste.it';
+			}
+			if(window.location.host.match('.sv.')){
+				host = 'http://wcsmgt.sv.poste.it';
+			}
+			$.ajax({
+				url : '/online/dovequando/DQ-REST/verificaricercasemplice',
+				dataType : 'json',
+				method: 'POST',
+				data: JSON.stringify({ 
+					"tipoRichiedente": "WEB",
+    				"codiceSpedizione": input
+				}),
+				contentType: "application/json; charset=utf-8"
+			}).done(function (data) {
+				var loc = host+"/cerca/index.html#/cerca/"+encodeURIComponent(input.replace("/", "%2F"));
+				var codSpedRegex = /.*[0-9].*/; // Contains at least one number.
+				console.log('Spedizione?', data && data.esito);
+				if (data && data.esito === true && codSpedRegex.test( input )) {
+					var loc = host+"/cerca/index.html#/risultati-spedizioni/"+encodeURIComponent(input.replace("/", "%2F"));
+				}
+				window.location.href = loc;
+			});
+			
+		}
+		return false;
+	}
+});

@@ -1,0 +1,81 @@
+
+
+
+app.controller('ProfiloPrivacyController',['$scope','$state','$rootScope','modelService','$timeout','dcsMultiTrackService', function ($scope, $state, $rootScope, modelService, $timeout, dcsMultiTrackService) {
+
+	var viewModelService = $scope.$parent.viewModelService;
+    var errorMessages = $scope.$parent.errorMessages;
+    var profiloService = $scope.$parent.profiloService;
+    
+    $scope.init = function(){
+    	profiloService.getprivacy({
+    		shortText: modelService.consensi.shortText
+    	},function(data){
+        	$scope.consents = data.responseObject.consents;
+            reloadRadio();
+        },function(err){
+            console.log(err);
+        });
+    };
+    
+    $scope.$on('myposte-forged', function(event, args) {
+		if(!$rootScope.myposteForged){
+			console.log('myposte-forged');
+			$scope.init();
+		}
+	});
+	
+	if($rootScope.myposteForged){
+		$scope.init();
+	}
+	
+    $scope.savePrivacy = function () {
+
+        var consents = $scope.consents;
+        for (var i = 0; i < consents.length; i++) {
+            viewModelService.Model.consents[consents[i].code] = consents[i].value;
+        }
+
+        /*mockProfiloService.savePrivacy(viewModelService.Model.consents, function (data) {
+            console.log(data);
+        });*/
+        profiloService.saveprivacy({
+        	consents : viewModelService.Model.consents
+        },function(data){
+            console.log(data);
+            if (data.errors.length > 0) {
+                $scope.errorsPrivacy = data.errors;
+                $scope.privacyError = true;
+                console.log(data);
+            }
+            else{
+            	$scope.privacyChanged = true;
+                
+                profiloService.getprivacy({
+                	shortText: false
+                },function(data){
+                	$scope.$parent.consents = data.responseObject.consents;
+                    reloadRadio();
+                });
+                
+            }
+
+            },function(err){
+                $scope.privacyError = true;
+                $scope.errorsPrivacy = [];
+                $scope.errorsPrivacy.push(errorMessages.serverError);
+                console.log(err);
+            });   
+    };
+
+    $scope.reset = function(){
+         $state.reload();
+    };
+
+    function reloadRadio(){
+        $timeout(function(){
+            customRadio();        
+        });
+    }
+
+}]);

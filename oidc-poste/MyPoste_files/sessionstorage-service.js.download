@@ -1,0 +1,26 @@
+
+
+
+angular.module("SessionStorage", []).service("SessionStorageService", function(){
+    this.set= function(key, val) {
+        if((val===null) || (val===undefined))return null;   
+        sessionStorage.setItem(key, JSON.stringify(val));
+    };
+
+    this.get= function(key) {
+        val=sessionStorage.getItem(key);
+
+        if((val===null) || (val===undefined))return null;
+
+        return JSON.parse(val);
+    };
+    
+    this.remove= function(key) {
+    	sessionStorage.removeItem(key);
+    };
+
+
+    this.clear=function(){
+        sessionStorage.clear();
+    };  
+});

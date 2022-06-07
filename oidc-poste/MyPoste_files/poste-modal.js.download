@@ -1,0 +1,72 @@
+
+
+
+/**
+Esempio di utilizzo:
+
+<poste-modal id-modal="richiestaNotificaLoginDialog">
+    <BR>
+    <BR>
+    <div style="text-align:center; text-transform:uppercase">
+        <a ng-href="{{loginPrivatiTemplateUrl}}">Accedi privati</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a ng-href="{{loginAziendeTemplateUrl}}">Accedi aziende</a>
+    </div>
+</poste-modal>
+ */
+
+
+angular.module('posteModalModule', []).directive('posteModal', function() {
+  return {
+    restrict: 'E',
+    scope:{
+        idModal:"@",
+        salvaLabel:"@", //lasciare vuoto per non mostrare il pulsante
+        salvaDisabled:"=",
+        chiudiLabel:"@",
+        moreLabel:"@",
+        simple:"=?",
+        onsave:"=",
+        onmore:"=",
+        onhide:"=",
+        onshow:"=",
+        
+    },
+    transclude:true,
+    templateUrl: '/app-resources/theme/poste-modal.html',
+    controller:function($scope){
+
+        $scope.simple = $scope.simple || false;
+    	$scope.chiudiLabel = $scope.chiudiLabel || 'Chiudi';
+        var $modal=$scope.$modal=$('#'+$scope.idModal);
+
+        $scope.save=function(){
+            if($scope.onsave) $scope.onsave();
+
+            $('#'+$scope.idModal).modal('hide');
+        };
+
+        $scope.more=function(){
+            if($scope.onmore) $scope.onmore();
+        };
+
+        $scope.hide=function(){
+            if($scope.onhide) $scope.onhide();
+        };
+        
+        $scope.show=function(){
+            if($scope.onshow) $scope.onshow();
+        };
+
+
+        $("body").on('hidden.bs.modal', '#'+$scope.idModal, function () {
+                $scope.hide();
+        });
+        
+        $("body").on('show.bs.modal', '#'+$scope.idModal, function () {
+        	$scope.show();
+        });
+    }
+  };
+});
+

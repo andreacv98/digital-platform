@@ -1,0 +1,618 @@
+
+
+
+var doAnalitycs = doAnalitycs || function(){}; 
+if(typeof(gestore_attese_config)=='undefined'){
+	gestore_attese_config = {};
+}
+var gestoreAtteseApp = angular.module('gestoreAtteseApp', ['ui.router', 'ngResource', 'ui.bootstrap', 'SessionStorage', 'LocalStorage', 'directive.loading', 'vcRecaptcha' /*, 'ngMockE2E'*/]);
+gestoreAtteseApp
+.config(function($stateProvider, $urlRouterProvider) {
+	$urlRouterProvider.otherwise("/ticket");
+	$stateProvider
+		// redirige al cerca UP perche' non ho frazionario
+		.state('/ticket', {
+	      	url: "/ticket",
+	      	templateUrl: "/gestore-attese/theme/home.html",
+	      	controller:"HomeTicketCtrl"
+	    })
+		// mostro le opzioni disponibili (mettiti in coda o prenota)
+	    .state('/ticket-frazionario', {
+	      	url: "/ticket/:frazionario/:terms",
+	      	templateUrl: "/gestore-attese/theme/home.html",
+	      	controller:"HomeTicketCtrl"
+	    })
+	    // form mettiti in coda
+	    .state('/mettiti-in-coda', {
+	      	url: "/mettiti-in-coda/:frazionario/:terms",
+	      	templateUrl: "/gestore-attese/theme/mettiti-in-coda.html",
+	      	controller:"CodaTicketCtrl"
+	    })
+	    // form prenotazione
+	    .state('/prenotazione', {
+	      	url: "/prenotazione/:frazionario/:terms",
+	      	templateUrl: "/gestore-attese/theme/ticket.html",
+	      	controller:"PrenotazioneTicketCtrl"
+	    })
+	    // esito mettiti in coda
+	    .state('/esito-mettiti-in-coda', {
+	      	url: "/esito-mettiti-in-coda",
+	      	templateUrl: "/gestore-attese/theme/esito-mettiti-in-coda.html",
+	      	controller:"EsitoCodaTicketCtrl"
+	    })
+	    // esito prenotazione
+	    .state('/esito-prenotazione', {
+	      	url: "/esito-prenotazione",
+	      	templateUrl: "/gestore-attese/theme/esito-ticket.html",
+	      	controller:"EsitoPrenotazioneTicketCtrl"
+	    })
+	    // disdetta prenotazione
+	    .state('/disdetta', {
+			url: "/disdetta",
+			templateUrl: "/gestore-attese/theme/disdetta.html",
+			controller:"DisdettaTicketCtrl"
+		})
+		// disdetta ko prenotazione
+		.state('/disdettako', {
+			url: "/disdettako",
+			templateUrl: "/gestore-attese/theme/disdettako.html",
+			controller:"DisdettaTicketCtrl"
+		})
+		;
+
+})
+.config(function($locationProvider, $sceDelegateProvider) {
+    $locationProvider.html5Mode({
+        //enabled: false,
+        requireBase: false
+    });
+
+    $sceDelegateProvider.resourceUrlWhitelist([
+      // Allow same origin resource loads.
+      'self',
+      // Allow loading from our assets domain.  Notice the difference between * and **.
+      'https://www.geocms.it/**',
+      'https://stage.geocms.it/**',
+    ]);
+})
+.provider('gaConfig', function() {
+    this.$get = function() {
+        var CONTEXT_ROOT= gestore_attese_config.context_root || "/jod-ga-up";
+        var c={
+          urls:{
+        	v2_sp_url: 		 '/posteit-retail-auth-service/sp-rest/idp-retail',
+			  v2_sp_url_new:  '/gest-attese-auth-sp/sp-rest/idp-retail',
+               //v2_sp_url_new: 'gestore-attese-app/mocks/'+'check-session.json',
+        	urlVieniInPoste: gestore_attese_config.vieni_in_poste_url || '/cerca/index.html#/vieni-in-poste?fs%5BPrenota%20Ticket%5D=Prenota%20Ticket',
+            gaproxy: gestore_attese_config.ga_proxy_url || CONTEXT_ROOT+"/webproxy/resources/pm/v3/offices/:office/:param1/:param2/:param3/:param4/:param5/:param6",
+			  gaproxyv4: gestore_attese_config.ga_proxy_url || CONTEXT_ROOT+"/webproxy/resources/pm/v4/offices/:office/:param1/:param2/:param3/:param4/:param5/:param6",
+            gaproxyupdate: gestore_attese_config.ga_proxy_update_url || CONTEXT_ROOT+"/webproxy/resources/pm/v4/updateturno/offices/:frazionario/touchpoint/:touchpoint/ticket/:ticket/dataprenotazione/:dataprenotazione/cf/:cf/trxID/:trxID",
+			  totemproxyv1: gestore_attese_config.totem_proxy_url || CONTEXT_ROOT+"/webproxy/resources/totem/v1/:param1/frazionario/:frazionario/user/:user/touchpoint/:touchpoint/:param2/:param3",
+			  // totemproxyv1: 'gestore-attese-app/mocks/'+ 'queuesfrazionario.json',
+			  totemproxyv2: gestore_attese_config.totem_proxy_url || CONTEXT_ROOT+"/webproxy/resources/totem/v2/:param1/frazionario/:frazionario/user/:user/touchpoint/:touchpoint/:param2/:param3",
+			 queuestatus: (gestore_attese_config.queue_status_url || 'https://gestionecodeup.poste.it' ) + '/api/v2/frazionario/:frazionario/touchpoint/:touchpoint?nocache=:nocache', //TODO v2 + frazionario
+			  //queuestatus: 'gestore-attese-app/mocks/' + 'frazionario.json', //TODO v2 + frazionario
+			  monitor: gestore_attese_config.monitor_url || '/gestore-attese/monitora-coda.html#/monitor/',
+			  forge: gestore_attese_config.ga_proxy_forge_url || CONTEXT_ROOT+"/webactivation",
+			  //forge: 'gestore-attese-app/mocks/'+'web-activation.json',
+            weblistticket: gestore_attese_config.ga_proxy_list_url || CONTEXT_ROOT+"/weblistticket",
+            webdelete: gestore_attese_config.ga_proxy_delete_url || CONTEXT_ROOT+"/webproxy/resources/pm/v3/cancelticket",
+            webpdf: gestore_attese_config.ga_proxy_pdf_url || CONTEXT_ROOT+"/webpdfticket",
+            satellite: gestore_attese_config.satellite_url || "/sites/Satellite",
+            crm: gestore_attese_config.crm_url || "/AppuntamentoRestModulo/rest/retrieveUser/userContacts/:bpid/:cf",
+            geocms: gestore_attese_config.geocms_url || "https://www.geocms.it/server/api/read/object/jsonp?key=geo-posteitalianespa&project=Uffici&query=%5Bfrazionario_ext%5D%3D%5B:frazionario:%5D&frontend=rest&callback=JSON_CALLBACK"
+		  },
+          context_root : CONTEXT_ROOT,
+          //applica le impostazioni per l'ambiente di sviluppo (es. disabilita il captcha)
+		  SVILUPPO: gestore_attese_config.sviluppo_mode || false,
+		  webTouchpointid: gestore_attese_config.web_touchpointid || '01'
+
+			
+        };
+
+
+        return c;
+    };
+})
+.service('gaAuthInterceptor', function ($q, $location, $rootScope, SessionStorageService, gaConfig) {  //TODO: , error_messages
+    var service = this;
+
+    service.request = function (request) {
+    	if (request.url.indexOf(gaConfig.context_root) === 0) {
+	    	$rootScope.gaServerError = false;
+	    	request.headers['X-WRKEY'] = SessionStorageService.get('ga-xauth');
+    	}
+    	return request;
+    };
+
+    service.response = function (response) {
+    	if (response.config.url.indexOf(gaConfig.context_root) === 0) {
+	   		xauth = response.headers('X-WRKEY');
+	   		if (xauth) {
+	   			SessionStorageService.set('ga-xauth', xauth);
+	   		}
+    	}
+    	return response;
+    };
+
+    service.responseError = function (response) {
+    	if (response.config.url.indexOf(gaConfig.context_root) === 0) {
+	    	if (response.status == 401) {
+//	            SessionStorageService.clear();
+//	            $rootScope.authorization();
+//	            $location.path("/profilo");
+//	            $rootScope.serverError = error_messages['sessione_scaduta'];
+	    	}
+	    	else {
+	    		if (response.config.url.indexOf("AppuntamentoRestModulo") === -1) {
+	    			$rootScope.gaServerError = true;
+	    		}
+	    	}
+    	}
+
+    	return $q.reject(response);
+	};
+})
+.config(['$httpProvider', '$resourceProvider', function ($httpProvider, $resourceProvider) {
+    $httpProvider.interceptors.push('gaAuthInterceptor');
+
+    //initialize get if not there
+    if (!$httpProvider.defaults.headers.get) {
+        $httpProvider.defaults.headers.get = {};    
+    }    
+    //disable IE ajax request caching
+    $httpProvider.defaults.headers.get['If-Modified-Since'] = 'Mon, 26 Jul 1997 05:00:00 GMT';
+    // extra
+    $httpProvider.defaults.headers.get['Cache-Control'] = 'no-cache';
+    $httpProvider.defaults.headers.get['Pragma'] = 'no-cache';
+    
+    if (!$httpProvider.defaults.headers.post) {
+        $httpProvider.defaults.headers.post = {};    
+    }    
+    //disable IE ajax request caching
+    $httpProvider.defaults.headers.post['If-Modified-Since'] = 'Mon, 26 Jul 1997 05:00:00 GMT';
+    // extra
+    $httpProvider.defaults.headers.post['Cache-Control'] = 'no-cache';
+    $httpProvider.defaults.headers.post['Pragma'] = 'no-cache';
+
+}])
+.factory('TicketService', function($resource, gaConfig, $rootScope) {
+	return {
+		service: function () {
+		    return $resource(gaConfig.urls.gaproxy, {
+		    	office:'@office',
+		    	param1:'@param1',
+		    	param2:'@param2',
+		    	param3:'@param3',
+		    	param4:'@param4',
+		    	param5:'@param5',
+		    	param6:'@param6'
+		    }, {
+		    	ticket: {
+		        	method: 'GET',
+		        	withCredentials:true,
+		        }
+		    });
+		},
+		prenotaservice: function (recaptcha, nome, cognome, cf, trxID) {
+
+			headers = {
+        		'X-RECAPTCHA': recaptcha,
+				'X-Authorization': $rootScope.access_token,
+        	};
+			
+			if(nome) headers['ngav-nome'] = nome;
+			if(cognome) headers['ngav-cogn'] = cognome;
+			if(cf) headers['ngav-codf'] = cf;
+			
+			var params = {
+				office:'@office',
+		    	param1:'@param1',
+		    	param2:'@param2',
+		    	param3:'@param3',
+		    	param4:'@param4',
+		    	param5:'@param5',
+		    	param6:'@param6',
+		    	t: 'v2',
+				nocache: new Date().getTime()
+		    };
+			
+			if(cf){
+				params.cf = cf;
+			}
+			if(trxID){
+				params.trxID = trxID;
+			}
+			
+		    return $resource(gaConfig.urls.gaproxyv4, params, {
+		    	ticket: {
+		        	method: 'GET',
+		        	headers: headers,
+		        	withCredentials:true
+		        }
+		    });
+		},
+		updateservice: function () {
+		    return $resource(gaConfig.urls.gaproxyupdate, {
+		    	frazionario:'@frazionario',
+		    	touchpoint:'@touchpoint',
+		    	ticket:'@ticket',
+		    	dataprenotazione:'@dataprenotazione',
+		    	cf:'@cf',
+		    	trxID:'@trxID'
+		    }, {
+		    	ticket: {
+		        	method: 'GET',
+		        	withCredentials:true
+		        }
+		    });
+		}, 
+	};
+})
+.factory('TotemService', function($resource, gaConfig,$rootScope) {
+	return {
+		service: function () {
+			
+			return $resource(gaConfig.urls.totemproxyv1, {
+		    	frazionario:'@frazionario',
+		    	user:'@user',
+		    	touchpoint:'@touchpoint',
+		    	param1:'@param1',
+		    	param2:'@param2',
+		    	param3:'@param3'
+		    }, {
+		    	ticket: {
+		        	method: 'GET',
+		        	withCredentials:true
+
+		        }
+		    });
+		},
+		prenotaservice: function (recaptcha, cf, trxID) {
+			headers = {
+	        	'X-RECAPTCHA': recaptcha,
+				'X-Authorization': $rootScope.access_token
+	        };
+			
+			var params = {
+		    	frazionario:'@frazionario',
+		    	user:'@user',
+		    	touchpoint:'@touchpoint',
+		    	param1:'@param1',
+		    	param2:'@param2',
+		    	param3:'@param3'
+		    };
+			
+			if(cf){
+				params.cf = cf;
+			}
+			if(trxID){
+				params.trxID = trxID;
+			}
+			
+		    return $resource(gaConfig.urls.totemproxyv2, params, {
+		    	ticket: {
+		        	method: 'GET',
+		        	headers: headers,
+		        	withCredentials:true
+		        }
+		    });
+		}
+	};
+})
+.factory('StatoCodaService', function($resource, gaConfig) {
+	return {
+		service: function () {
+		    return $resource(gaConfig.urls.queuestatus, {
+		    	frazionario:'@frazionario',
+		    	touchpoint:'@touchpoint',
+		    	nocache:'@nocache'
+		    }, {
+		    	ticket: {
+		        	method: 'GET'
+		        }
+		    });
+		}
+	};
+})
+.factory('ForgeService', function($resource, gaConfig) {
+  return $resource(gaConfig.urls.forge, {}, { forge: {
+        method: 'GET',
+        params: { nocache: function(){return new Date().getTime()}}
+    }});
+})
+.factory('ListTicketService', function($resource, gaConfig,  $rootScope) {
+  return $resource(gaConfig.urls.weblistticket, {}, { list: {
+        method: 'GET',
+        params: { nocache: function(){return new Date().getTime()}}
+    }});
+})
+.factory('SatelliteService', function($resource, gaConfig) {
+  return $resource(gaConfig.urls.satellite, {}, { userdata: {
+        method: 'GET',
+        params: {
+        	pagename: 'Service/Userdata', 
+        	nocache: function(){return new Date().getTime()}
+        }
+    }});
+})
+.factory('CrmService', function($resource, gaConfig) {
+  return $resource(gaConfig.urls.crm, { bpid:'@bpid', cf:'@cf'}, { contacts: {
+        method: 'GET'
+    }});
+})
+.service('dcs', function($rootScope){
+	
+	this.track = function(step) {
+		if(step == 6) {
+			window.dataLayer = {
+				'funnel':{
+					'scenario_name': 'Prenota Ticket',
+					'scenario_step': step,
+					'conversion_type': 'Ticket Web Prenotato'
+				}
+			}
+		} else {
+			window.dataLayer = {
+				'funnel':{
+					'scenario_name': 'Prenota Ticket',
+					'scenario_step': step
+				}
+			}
+		}
+		if(typeof _satellite !== "undefined") {
+			_satellite.track('prenota_ticket');
+		}
+	}
+
+	this.pageView = function(){
+		doAnalitycs('WT.si_n','prenota_ticket','WT.si_x',1, 'WT.dl', 2016);
+		console.log('pageView');
+	};
+	
+	this.tipologiaTicket = function(tipoTicket){
+		doAnalitycs('DCSext.pren_tck_tipo_ticket',tipoTicket, 'WT.si_n','prenota_ticket','WT.si_x' , 2, 'WT.dl', 2016);
+		console.log('tipologiaTicket');
+	};
+	
+	this.orario = function(orario){
+		doAnalitycs('DCSext.pren_tck_orario', orario, 'WT.si_n','prenota_ticket','WT.si_x' , 3, 'WT.dl', 2016);
+		console.log('orario');
+	};
+	
+	this.email = function(){
+		doAnalitycs('WT.si_n','prenota_ticket','WT.si_x' , 4, 'WT.dl', 2016);
+		console.log('email');
+	};
+	
+	this.captcha = function(){
+		doAnalitycs('WT.si_n','prenota_ticket','WT.si_x' , 5, 'WT.dl', 2016);
+		console.log('captcha');
+	};
+	
+	this.ticketPrenotato = function(){
+		doAnalitycs('WT.si_n','prenota_ticket','WT.si_x', 6, 'WT.si_cs', 1);
+		console.log('ticketPrenotato');
+	};
+	
+	this.ticketScaricato = function(){
+		doAnalitycs('DCSext.pren_tck_scarica_tck', 1, 'WT.dl', 2016);
+		console.log('ticketScaricato');
+	};
+	
+	this.ticketDisdetto = function(){
+		doAnalitycs('DCSext.pren_tck_disdici_tck', 1, 'WT.dl', 2016);
+		console.log('ticketDisdetto');
+	};
+
+	
+})
+.service('authService', ['$q', '$timeout', '$rootScope', '$http','$state', 'LocalStorageService', 'gaConfig',
+	function ($q, $timeout, $rootScope, $http,$state, LocalStorageService, gaConfig) {
+		var service = this;
+		
+		service.promptLogin = function(redirectUrl, cancelRedirectUrl) {
+            $rootScope.rootShowLoading = true;
+            
+            var data = {
+                "prompt": "login",
+                "redirectUrl": redirectUrl,
+                "cancelRedirectUrl": cancelRedirectUrl
+            };
+            
+            $http({
+                method: 'POST',
+                url: gaConfig.urls.v2_sp_url + '/create-az-request',
+                headers: {
+                    'Content-Type': 'application/json;charset=UTF-8'
+                },
+                data: data
+            }).then(function(response) {
+                var $form = $('<form action="' + response.data.risultato.idpaz + '" method="POST"></form>');
+                $form.append('<input type="hidden" name="request" value="' + response.data.risultato.client_assertion + '">');
+                $form.append('<input type="hidden" name="state" value="' + response.data.risultato.state + '">');
+                $form.append('<input type="hidden" name="response_type" value="code">');
+                $form.append('<input type="hidden" name="code_challenge_method" value="S256">');
+                $form.append('<input type="hidden" name="code_challenge" value="' + response.data.risultato.code_challenge + '">');
+                $form.appendTo('body');
+                $form.submit();
+            },
+            function(err) {
+                $rootScope.rootShowLoading = false;
+            });
+        }
+        
+        service.checkSession = function(){
+        	
+        	console.log('checksession');
+        	var deferred = $q.defer();
+        	
+        	if($rootScope.userClaims){
+        		console.log('userClaims = already present');
+        		$timeout(function () {
+					deferred.resolve();
+				})
+        	}
+        	else if (window.__loa2session && window.__loa2session == true) {
+				console.log('checksession = true');
+				$http({
+					method: 'GET',
+					url: gaConfig.urls.v2_sp_url + '/check-session?nocache='+new Date().getTime(),
+				}).then(function (response) {
+					if (response.status == 200 && response.data && response.data.risultato && response.data.risultato.access_token) {
+						$rootScope.userClaims = response.data.risultato.claims;
+						$timeout(function () {
+							deferred.resolve();
+						})
+					}
+					else {
+						service.promptLogin(window.location.href, window.location.href);
+						$timeout(function () {
+							deferred.reject();
+						})
+					}
+
+				}, function(){
+					$timeout(function () {
+						deferred.reject();
+					})
+				});
+			}
+			else {
+				console.log('checksession = false');
+				$timeout(function () {
+					deferred.resolve();
+				})
+			}
+			return deferred.promise;
+        }
+
+
+		/*dimatteoma petraliada aggiunta*/
+		service.checkSessionGestoreAttese = function(str,str,path,frazionario,terms){
+			console.log('checksessionGestoreAttese');
+			var deferred = $q.defer();
+			if($rootScope.userClaims){
+				console.log('userClaims = already present');
+				$timeout(function () {
+					deferred.resolve();
+				})
+			}else  if (window.__loa2session && window.__loa2session == true) {
+				console.log('checksession = true');
+				/*cambiato urls service provider per nuovo servizio*/
+				$http({
+					method: 'GET',
+					url: gaConfig.urls.v2_sp_url_new + '/check-session?nocache='+new Date().getTime(),
+					//url: gaConfig.urls.v2_sp_url_new
+				}).then(function (response) {
+
+
+					if (response.status == 200 && response.data && response.data.risultato && response.data.risultato.access_token) {
+						$rootScope.userClaims = response.data.risultato.claims;
+						$rootScope.access_token = response.data.risultato.access_token;
+						console.log('access_token checksession', $rootScope.access_token)
+						$timeout(function () {
+							deferred.resolve();
+						})
+						var paths= '/'+path;
+						$state.go(paths, {frazionario : frazionario, terms :terms});
+					}
+					else {
+						var redirect = str!== '' ? str: window.location.href;
+						service.promptLoginGestoreAttese(redirect, redirect);
+						$timeout(function () {
+							deferred.reject();
+						})
+					}
+
+				}, function(){
+
+					$timeout(function () {
+						deferred.reject();
+					})
+				});
+			}
+			else {
+				//aggiunta//
+				var redirect = str!== '' ? str: window.location.href;
+				service.promptLoginGestoreAttese(redirect, redirect);
+				console.log('checksession = false');
+				$timeout(function () {
+					deferred.resolve();
+				})
+			}
+			return deferred.promise;
+		};
+		/*dimatteoma petraliada  fine aggiunta*/
+		/*dimatteoma petraliada aggiunta*/
+		service.promptLoginGestoreAttese = function(redirectUrl, cancelRedirectUrl) {
+			$rootScope.rootShowLoading = true;
+
+			var data = {
+				"prompt": "login",
+				"redirectUrl": redirectUrl,
+				"cancelRedirectUrl": cancelRedirectUrl
+			};
+			/*cambiata url per il nuovo servise provider*/
+			$http({
+				method: 'POST',
+				url: gaConfig.urls.v2_sp_url_new + '/create-az-request',
+				headers: {
+					'Content-Type': 'application/json;charset=UTF-8'
+				},
+				data: data
+			}).then(function(response) {
+					var $form = $('<form action="' + response.data.risultato.idpaz + '" method="POST"></form>');
+					$form.append('<input type="hidden" name="request" value="' + response.data.risultato.client_assertion + '">');
+					$form.append('<input type="hidden" name="state" value="' + response.data.risultato.state + '">');
+					$form.append('<input type="hidden" name="response_type" value="code">');
+					$form.append('<input type="hidden" name="code_challenge_method" value="S256">');
+					$form.append('<input type="hidden" name="code_challenge" value="' + response.data.risultato.code_challenge + '">');
+					$form.appendTo('body');
+					$form.submit();
+				},
+				function(err) {
+					$rootScope.rootShowLoading = false;
+				});
+		};
+		/*dimatteoma petraliada  fine aggiunta*/
+        
+        service.getTicket = function(tickethash){
+        	var postLoginTickets = LocalStorageService.get('ga-post-login-tickets');
+        	if(!postLoginTickets) return null;
+        	var d = moment().format("YYYY-MM-DD");
+        	for(var i in postLoginTickets){
+        		// se la data e' di ieri lo cancello
+        		if(!postLoginTickets[i].date || d > postLoginTickets[i].date){
+        			delete postLoginTickets[i];
+        		}
+        	}
+        	LocalStorageService.set('ga-post-login-tickets', postLoginTickets);
+        	return postLoginTickets[tickethash];
+        }
+        
+        service.addTicket = function(ticket){
+        	var postLoginTickets = LocalStorageService.get('ga-post-login-tickets');
+        	if(!postLoginTickets) {
+        		postLoginTickets = {};
+        	}
+        	postLoginTickets[ticket.hash] = ticket;
+        	LocalStorageService.set('ga-post-login-tickets', postLoginTickets);
+        }
+	}])
+.filter("giornoEsteso", function () {
+
+    return function (stringDate) {
+    	moment.locale('it');
+        return moment(Date.parse(stringDate)).locale('it').format("dddd DD MMMM YYYY");
+    }
+    
+})
+.run(function ($rootScope, $httpBackend, gaConfig, $state) {
+	
+	$rootScope.hideTitle = function(){
+		return $state.is('/ticket') || $state.is('/ticket-frazionario');
+	}
+})
+;
+

@@ -1,0 +1,784 @@
+
+
+
+if(typeof(myposte_config)=='undefined'){
+	myposte_config = {};
+}
+var pratiche_rpol = {
+	unfinished : {
+		title: "Hai una richiesta in sospeso",
+		subtitle: "Continua a compilare la tua richiesta di acquisto di un Libretto Smart, Offerta Supersmart o Buono.",
+		cta1: "Continua",
+		cta1_href: ( myposte_config.pratica_base_url || 'https://risparmiopostaleonline.poste.it' ) + '/rpol/private/pages/acquisto-buono-e-libretto.html',
+		cta2: "cancella la richiesta.",
+		cta2_href: ( myposte_config.pratica_base_url || 'https://risparmiopostaleonline.poste.it' ) + '/rpol/private/pages/gestione-pratica.html',
+		clazz: 'main-messages-warning'
+	},
+	working : {
+		title: "Hai una richiesta in lavorazione",
+		subtitle: "Abbiamo ricevuto la tua richiesta di acquisto di un Libretto Smart, Offerta Supersmart o Buono. Puoi verificare in ogni momento lo stato della pratica.",
+		cta1: "Verifica",
+		cta1_href: ( myposte_config.pratica_base_url || 'https://risparmiopostaleonline.poste.it' ) + '/rpol/private/pages/index.html',
+		clazz: 'main-messages-info'
+	},
+	error : {
+		title: "Hai una richiesta in sospeso - Errore documenti",
+		subtitle: "Riprendi la tua richiesta di acquisto di un Libretto Smart, Offerta Supersmart o Buono per ricaricare i documenti o modificarne i relativi dati inseriti.",
+		cta1: "Modifica",
+		cta1_href: ( myposte_config.pratica_base_url || 'https://risparmiopostaleonline.poste.it' ) + '/rpol/private/pages/index.html',
+		clazz: 'main-messages-warning'
+	},
+	working_beu : {
+		title: "Hai una richiesta in lavorazione – Bonifico necessario",
+		subtitle: "Abbiamo ricevuto la tua richiesta di acquisto di un Libretto Smart, Offerta Supersmart o Buono. Per completarla devi effettuare un bonifico.",
+		cta1: "Continua",
+		cta1_href: ( myposte_config.pratica_base_url || 'https://risparmiopostaleonline.poste.it' ) + '/rpol/private/pages/index.html',
+		clazz: 'main-messages-warning'
+	},
+	open : {
+		title: "Il tuo Libretto Smart è stato aperto",
+		subtitle: "Ora puoi consultare le informazioni relative ai tuoi Buoni e Libretti e gestire i tuoi risparmi direttamente online.",
+		cta1: "Accedi",
+		cta1_href: ( myposte_config.pratica_base_url || 'https://risparmiopostaleonline.poste.it' ) + '/rpol/private/pages/index.html',
+		clazz: 'main-messages-info'
+	},
+	closed : {
+		title: "Richiesta di acquisto conclusa",
+		subtitle: "La tua richiesta di acquisto di un Libretto Smart, Offerta Supersmart o Buono si è conclusa. Verifica l'esito nella tua area personale dedicata ai tuoi Buoni e Libretti.",
+		cta1: "Accedi",
+		cta1_href: ( myposte_config.pratica_base_url || 'https://risparmiopostaleonline.poste.it' ) + '/rpol/private/pages/index.html',
+		clazz: 'main-messages-info'
+	}
+}
+
+app.constant('config',
+	{
+		'profilo_ws_url': myposte_config.profilo_ws_url || '/posteit-retail-service/rest/',
+		'appuntamento_url': myposte_config.appuntamento_url || 'https://pcrmuappointment.poste.it/api/',//'https://hermodr-sfa-retail.app.svil.gpweb2.openshift.aztestposte',
+		'bacheca_ws_url': (myposte_config.bacheca_ws_url || 'https://bacheca-retail.poste.it/bacheca-web') + '/ws/v2/bacheca/',
+		'bacheca_download_url': (myposte_config.bacheca_ws_url || 'https://bacheca-retail.poste.it/bacheca-web') + '/download/bacheca/attachment/',
+		'sites_ws_url': myposte_config.sites_ws_url || '/sites/Satellite',
+		'geocms_url': (myposte_config.geocms_url || "https://www.geocms.it") + "/server/api/read/object/jsonp?key=geo-posteitalianespa&project=Uffici&query=%5Bfrazionario_ext%5D%3D%5B:frazionario:%5D&frontend=rest&callback=JSON_CALLBACK",
+		'login_url': myposte_config.login_url || 'https://securelogin.poste.it/jod-fcc/fcc-authentication.html',		
+		'v2_sp_url': '/posteit-retail-auth-service/sp-rest/idp-retail',
+		'v2_idp_url': myposte_config.idpv2_url || 'https://idp-poste.poste.it/jod-idp-retail/federation/v2',
+		'registrazioneUp_redirect_url' : '/registrazione-up/index.html',
+		'migrazione_url' : '/myposte/migrazione.html',
+		'certificazioneUrl': myposte_config.certificazione_url || 'https://profilocommercialeprivati.poste.it/private/Strong_Authentication_OTP',
+		'spidLandingUrl': myposte_config.spid_landing_url || 'https://www.poste.it/posteid.html',
+		'spidInformativa': myposte_config.spid_informativa_url || 'https://posteid.poste.it/risorse/condivise/doc/condizioni_generali_di_servizio.pdf',
+		'preferitiSpedisciOnlineUrl': myposte_config.spedisci_online_url || 'http://www.poste.it/postali/online/index.shtml',
+		'preferitiPagaOnlineUrl': myposte_config.paga_online_url || 'https://www.poste.it/landing/pagamenti/index.shtml',
+		'preferitiCercaSpedizioniUrl': myposte_config.cerca_spedizioni_url || '/cerca/index.html',
+		'url_attivazione_bpol': myposte_config.url_attivazione_bpol || 'https://bancoposta.poste.it/SecurizzazioneAPP/rest/attivazioneL1/setContiEstesa',
+		'volAllowedProducts': myposte_config.volAllowedProducts || ['postepaydigital', 'finanziamento', 'contobp', 'librettominori'],
+		'offeringInsuranceEnabled': (myposte_config.offeringInsuranceEnabled!==undefined && (typeof myposte_config.offeringInsuranceEnabled === 'boolean')) ? myposte_config.offeringInsuranceEnabled : true,
+		'trackingStatoPraticheEnabled': (myposte_config.trackingStatoPraticheEnabled!==undefined && (typeof myposte_config.trackingStatoPraticheEnabled === 'boolean')) ? myposte_config.trackingStatoPraticheEnabled : true,
+		'vol':{
+			'accordionText':{
+				'open': "Mostra le richieste",
+				'close': "Nascondi le richieste"
+			},
+			'url': myposte_config.vol_url || '/posteit-retail-service/rest/basicretail/feu'
+		},
+		'biscotti_url' : {
+			bancoposta: myposte_config.bancoposta_url || "https://bancoposta.poste.it/bpol/public/homeBanking.html",
+			bancoposta_click: myposte_config.bancoposta_click_url || "https://bancoposta.poste.it/bpol/public/homeBanking.html",
+			//postepay: myposte_config.postepay_url || "https://postepay.poste.it/portalppay/startBenvenutoAction.do",
+			postepay: myposte_config.postepay_url || "https://postepay.poste.it/ppay/private/pages/index.html",			
+			//postepay_evo: myposte_config.postepay_evo_url || "https://postepay.poste.it/portalppay/startBenvenutoAction.do",
+			postepay_evo: myposte_config.postepay_url || "https://postepay.poste.it/ppay/private/pages/index.html",			
+			rpol: myposte_config.rpol || "https://risparmiopostaleonline.poste.it/",
+			pos_assicurativa: myposte_config.pos_assicurativa_url || "https://postevita.poste.it/online/personale/mypostevita/home.do",
+			spid: myposte_config.spid_url || "https://posteid.poste.it/jod-portal/accedi/splogin/ssorequest?_referer=/private/cruscotto.shtml",
+			inesitate: myposte_config.inesitate_url || "https://ritirodigitale.poste.it/inesitatedigitali-light-web/inesitate/erogazione/home.html",
+			digitalpost: myposte_config.digitalpost || "/puntoposte-da-te/gestione",
+			fibra_url: myposte_config.fibra_url || "https://routerdasretail.poste.it/fibra-poste",
+			patrimonio: myposte_config.patrimonio || 'https://patrimonio.poste.it/wmg/pages/patrimonio.html',
+			private: myposte_config.private ||  'https://premium.poste.it/wmg/pages/patrimonio-private.html',
+      energy: myposte_config.energy ||  'https://energyar.poste.it/ui/',
+			prestiti_online: myposte_config.prestiti_online || 'https://areafinanziamenti.poste.it/posidonia/private/pages/welcome-page.html',
+		},
+		'offering_message_inv' : "Hai una nuova proposta di investimento.",
+		'offering_message_risp' : "Hai un nuovo suggerimento su Buoni e Libretti Postali.",
+		'offering_message' : "Per te ci sono nuovi suggerimenti sui Buoni e Libretti Postali e proposte di investimento.",
+		'typologies_url' : myposte_config.typologies_url || "/posteit-typologies-service/rest/typologies/:action",
+		'annulla' : myposte_config.annulla_url || 'https://www.poste.it',
+		'migraSpid' : 'migrazione.html', //TODO
+		'modaleSpid' : myposte_config.modaleSpid,
+		'migraPosteIt' : myposte_config.migraPosteIt || "migrazione.html#!/migrazione",
+		'countLastMessages': 5,
+        'sizeForPage': 10,
+		'italianPrefix' : '0039',
+		'labelCategoriePreferiti' : {
+			paga : 'FINANZIARI',
+			risparmio : 'BUONI E LIBRETTI',
+			spedisci : 'POSTALI',
+			assicurazione : 'ASSICURATIVI',
+			energetici : 'ENERGIA',
+			altro : 'ALTRO',
+			defaultt : 'DEFAULT'
+		},
+		'categoriePreferiti' : {
+			'PAGA E TRASFERISCI DENARO' : 'paga',
+			'RISPARMIO POSTALE' : 'risparmio',
+			'CORRISPONDENZA E PACCHI' : 'spedisci',
+			'ASSICURAZIONE E PREVIDENZA' : 'assicurazione',
+			'ENERGETICI' : 'energetici',
+			'ALTRO' : 'altro',
+			'DEFAULT' : 'defaultt'
+		},
+		bucketBacheca: {
+			'Contact Center' : {bucket: 'messaggi', sottoBucket: 'Comunicazioni commerciali'}, 
+			'E-commerce' : {bucket: 'messaggi', sottoBucket: 'Comunicazioni commerciali'},
+
+			'Estratto conto': {bucket: 'messaggi', sottoBucket: 'Comunicazioni di servizio'},
+			'Servizi mobile': {bucket: 'messaggi', sottoBucket: 'Comunicazioni di servizio'},
+			'Comunicazioni PIN utenti': {bucket: 'messaggi', sottoBucket: 'Comunicazioni di servizio'},
+			'Deleghe': {bucket: 'messaggi', sottoBucket: 'Comunicazioni di servizio'},
+			'Buoni fruttiferi': {bucket: 'messaggi', sottoBucket: 'Comunicazioni di servizio'},
+			'Contratto': {bucket: 'messaggi', sottoBucket: 'Comunicazioni di servizio'},
+			'Fattura': {bucket: 'messaggi', sottoBucket: 'Comunicazioni di servizio'},
+			'Nota di credito': {bucket: 'messaggi', sottoBucket: 'Comunicazioni di servizio'},
+			'Banche dati': {bucket: 'messaggi', sottoBucket: 'Comunicazioni di servizio'},
+			'Postemailbox': {bucket: 'messaggi', sottoBucket: 'Comunicazioni di servizio'},
+			'Postemailbox Professional': {bucket: 'messaggi', sottoBucket: 'Comunicazioni di servizio'},
+			'Non categorizzata': {bucket: 'messaggi', sottoBucket: 'Comunicazioni di servizio'},
+
+			'Bonifico': {bucket: 'messaggi', sottoBucket: 'Movimenti'},
+			'Giroconto': {bucket: 'messaggi', sottoBucket: 'Movimenti'},
+			'Ricariche': {bucket: 'messaggi', sottoBucket: 'Movimenti'},
+			'Money transfer': {bucket: 'messaggi', sottoBucket: 'Movimenti'},
+			'Vaglia': {bucket: 'messaggi', sottoBucket: 'Movimenti'},
+			'Bollettino': {bucket: 'messaggi', sottoBucket: 'Movimenti'},
+			'Altro movimento': {bucket: 'messaggi', sottoBucket: 'Movimenti'},
+
+			'Telegramma': {bucket: 'messaggi', sottoBucket: 'Aggiornamenti'},
+			'Raccomandata': {bucket: 'messaggi', sottoBucket: 'Aggiornamenti'},
+			'Seguimi': {bucket: 'messaggi', sottoBucket: 'Aggiornamenti'},
+			'Seguimi a firma': {bucket: 'messaggi', sottoBucket: 'Aggiornamenti'},
+			'Aspettami': {bucket: 'messaggi', sottoBucket: 'Aggiornamenti'},
+			'Dimmiquando': {bucket: 'messaggi', sottoBucket: 'Aggiornamenti'},
+			'Catasto': {bucket: 'messaggi', sottoBucket: 'Aggiornamenti'},
+			'Postaonline': {bucket: 'messaggi', sottoBucket: 'Aggiornamenti'},
+			'Conferma richiesta apertura conto': {bucket: 'messaggi', sottoBucket: 'Aggiornamenti'},
+			'Prenotazione spedizione': {bucket: 'messaggi', sottoBucket: 'Aggiornamenti'},
+			'Acquisto PaccoWeb': {bucket: 'messaggi', sottoBucket: 'Aggiornamenti'},
+			'Acquisto biglietti online': {bucket: 'messaggi', sottoBucket: 'Aggiornamenti'},
+			'Francobolli': {bucket: 'messaggi', sottoBucket: 'Aggiornamenti'}
+		},
+		'maxImageSize': 3145728,
+		'loa3_url' : "https://idp.poste.it/L2",
+		'realmPosteIT' :'poste.it',
+		'pratiche_rpol' : {
+			'E0001' : pratiche_rpol.unfinished, 
+			'E0034' : pratiche_rpol.unfinished, 
+			'E0035' : pratiche_rpol.unfinished, 
+			'E0002' : pratiche_rpol.unfinished,
+			'E0003' : pratiche_rpol.unfinished,
+			'E0004' : pratiche_rpol.unfinished,
+			'E0005' : pratiche_rpol.unfinished, 
+			'E0033' : pratiche_rpol.unfinished, 
+			'E0032' : pratiche_rpol.unfinished,
+			'E0006' : pratiche_rpol.working,
+			'E0007' : pratiche_rpol.working,
+			'E0009' : pratiche_rpol.working,
+			'E0010' : pratiche_rpol.working,
+			'E0012' : pratiche_rpol.working,
+			'E0016' : pratiche_rpol.working,
+			'E0018' : pratiche_rpol.working,
+			'E0019' : pratiche_rpol.working,
+			'E0020' : pratiche_rpol.working,
+			'E0023' : pratiche_rpol.working,
+			'E0027' : pratiche_rpol.working,
+			'E0028' : pratiche_rpol.working,
+			'E0024' : pratiche_rpol.closed,
+			'E0026' : pratiche_rpol.closed,
+			'E0008' : pratiche_rpol.error,
+			'E0036' : pratiche_rpol.error,
+			'E0037' : pratiche_rpol.error,
+			'E0038' : pratiche_rpol.error,
+			'E0015' : pratiche_rpol.working_beu,
+			'E0030' : pratiche_rpol.open
+			/*
+			'E0013' : false,
+			'E0014' : false,
+			'E0017' : false,
+			'E0021' : false,
+			'E0022' : false,
+			'E0025' : false,
+			 */
+		}
+	}
+)
+.constant('errorMessages', {
+
+	"serverError" : {
+		"name": "",
+		"message": "Server momentaneamente non disponibile"
+	},
+	"operationError" : {
+		"name": "",
+		"message": "Siamo spiacenti, ma per motivi tecnici l'operazione non può essere al momento eseguita. Riprovare più tardi."
+	},
+	"dataUnavaiable" : {
+		"name": "",
+		"message": "Alcune informazioni potrebbero essere momentaneamente non disponibili"
+	},
+	"passwordOld": {
+		"name": "",
+		"errorMessages": {
+			"null": {
+				"message": "Vecchia password non inserita"
+			},
+			"not_valid": {
+				"message": "Vecchia password non corretta"
+			}
+		}
+	},
+	"password": {
+		"name": "",
+		"errorMessages": {
+			"null": {
+				"message": "Nuova password non inserita"
+			},
+			"match_with_old": {
+				"message": "Nuova password uguale alla precedente"
+			},
+			"min_max_length": {
+				"message": "Lunghezza password non valida",
+			},
+			"not_valid": {
+				"message": "Nuova password valida"
+			},
+			"change_password": {
+				"message": "",
+				"parameters": 
+					{ "error_generic": "Errore generico durante il salvataggio della nuova password" }
+				
+			}
+		}
+	},
+	"passwordCheck": {
+		"name": "",
+		"errorMessages": {
+			"null": {
+				"message": "Password di conferma non inserita"
+			},
+			"not_valid": {
+				"message": "Password di conferma non valida"
+			}
+		}
+	},
+	"PF1": {
+		"name": "",
+		"errorMessages": {
+			"null": {
+				"message": "Consenso 1 non valorizzato"
+			},
+			"not_valid": {
+				"message": "Consenso 1 non valorizzato correttamente"
+			}
+		}
+	},
+	"PF2": {
+		"name": "",
+		"errorMessages": {
+			"null": {
+				"message": "Consenso 2 non valorizzato"
+			},
+			"not_valid": {
+				"message": "Consenso 2 non valorizzato correttamente"
+			}
+		}
+	},
+	"PF3": {
+		"name": "",
+		"errorMessages": {
+			"null": {
+				"message": "Consenso 3 non valorizzato"
+			},
+			"not_valid": {
+				"message": "Consenso 3 non valorizzato correttamente"
+			}
+		}
+	},
+	"PF4": {
+		"name": "",
+		"errorMessages": {
+			"null": {
+				"message": "Consenso 4 non valorizzato"
+			},
+			"not_valid": {
+				"message": "Consenso 4 non valorizzato correttamente"
+			}
+		}
+	},
+	"privacy": {
+		"name": "",
+		"errorMessages": {
+			"save_privacy": {
+				"message": "",
+				"parameters": {
+					"error_generic": "Errore generico del server durante il salvataggio dei consensi"
+				}
+				
+			},
+			"user_foreign": {
+				"message": "Utente straniero: non è possibile salvare i consensi"
+			},
+			"user_deceased": {
+				"message": "Utente deceduto: non è possibile salvare i consensi"
+			}
+		}
+	},
+	
+	/*residence*/
+
+	"residence.nationCode": {
+		"name": "Codice Nazione",
+		"errorMessages": {
+			"not_found": {
+				"message": "Codice nazione non valido"
+			},
+			"not_valid": {
+				"message": "Codice nazione non valido"
+			},
+			"null": {
+				"message": "Codice nazione non inserito"
+			},
+			"length": {
+				"message": "Lunghezza codice nazione non valida"
+			},
+		}
+	},
+	"residence.dug": {
+		"name": "",
+		"errorMessages": {
+			
+		}
+	},
+	"residence.streetNumber": {
+		"name": "",
+		"errorMessages": {
+			"null": { "message": "numero civico non inserito" },
+			"min_max_length": { "message": "Lunghezza numero civico non valida" },
+			"not_valid": { "message": "Numero civico non valido" }
+		}
+	},
+
+	"residence.toponym": {
+		"name": "",
+		"errorMessages": {
+			"null": { "message": "Indirizzo incompleto" },
+			"min_max_length": { "message": "Lunghezza indirizzo non valida" },
+			"not_valid": { "message": "Indirizzo non valido" }
+		}
+	},
+	"residence.townDescription": {
+		"name": "",
+		"errorMessages": {
+			"null": { "message": "Comune non inserito" },
+			"min_max_length": { "message": "Lunghezza comune non valida" },
+			"not_valid": { "message": "Comune non valido" }
+		}
+	},
+	"residence.zipCode": {
+		"name": "",
+		"errorMessages": {
+			"null": { "message": "CAP non inserito" },
+			"min_max_length": { "message": "Lunghezza CAP non valida" },
+			"not_valid": { "message": "CAP non valido" }
+		}
+	},
+	"residence.provinceCode": {
+		"name": "",
+		"errorMessages": {
+			"null" : { "message": "Sigla provincia non inserita" },
+			"not_found": { "message": "Sigla provincia non valida" },
+			"min_max_length": { "message": "Sigla provincia non valida" }
+		}
+	},
+	
+	/*domicile.*/
+	
+	"domicile.nationCode": {
+		"name": "Codice Nazione",
+		"errorMessages": {
+			"not_found": {
+				"message": "Codice nazione non valido"
+			},
+			"not_valid": {
+				"message": "Codice nazione non valido"
+			},
+			"null": {
+				"message": "Codice nazione non inserito"
+			},
+			"length": {
+				"message": "Lunghezza codice nazione non valida"
+			},
+		}
+	},
+	"domicile.dug": {
+		"name": "",
+		"errorMessages": {
+			
+		}
+	},
+	"domicile.streetNumber": {
+		"name": "",
+		"errorMessages": {
+			"null": { "message": "numero civico non inserito" },
+			"min_max_length": { "message": "Lunghezza numero civico non valida" },
+			"not_valid": { "message": "Numero civico non valido" }
+		}
+	},
+
+	"domicile.toponym": {
+		"name": "",
+		"errorMessages": {
+			"null": { "message": "Indirizzo incompleto" },
+			"min_max_length": { "message": "Lunghezza indirizzo non valida" },
+			"not_valid": { "message": "Indirizzo non valido" }
+		}
+	},
+	"domicile.townDescription": {
+		"name": "",
+		"errorMessages": {
+			"null": { "message": "Comune non inserito" },
+			"min_max_length": { "message": "Lunghezza comune non valida" },
+			"not_valid": { "message": "Comune non valido" }
+		}
+	},
+	"domicile.zipCode": {
+		"name": "",
+		"errorMessages": {
+			"null": { "message": "CAP non inserito" },
+			"min_max_length": { "message": "Lunghezza CAP non valida" },
+			"not_valid": { "message": "CAP non valido" }
+		}
+	},
+	"domicile.provinceCode": {
+		"name": "",
+		"errorMessages": {
+			"null" : { "message": "Sigla provincia non inserita" },
+			"not_found": { "message": "Sigla provincia non valida" },
+			"min_max_length": { "message": "Sigla provincia non valida" }
+		}
+	},
+
+	
+	
+	/*delivery.*/
+	
+	"delivery.nationCode": {
+		"name": "Codice Nazione",
+		"errorMessages": {
+			"not_found": {
+				"message": "Codice nazione non valido"
+			},
+			"not_valid": {
+				"message": "Codice nazione non valido"
+			},
+			"null": {
+				"message": "Codice nazione non inserito"
+			},
+			"length": {
+				"message": "Lunghezza codice nazione non valida"
+			},
+		}
+	},
+	"delivery.dug": {
+		"name": "",
+		"errorMessages": {
+			
+		}
+	},
+	"delivery.streetNumber": {
+		"name": "",
+		"errorMessages": {
+			"null": { "message": "numero civico non inserito" },
+			"min_max_length": { "message": "Lunghezza numero civico non valida" },
+			"not_valid": { "message": "Numero civico non valido" }
+		}
+	},
+
+	"delivery.toponym": {
+		"name": "",
+		"errorMessages": {
+			"null": { "message": "Indirizzo incompleto" },
+			"min_max_length": { "message": "Lunghezza indirizzo non valida" },
+			"not_valid": { "message": "Indirizzo non valido" }
+		}
+	},
+	"delivery.townDescription": {
+		"name": "",
+		"errorMessages": {
+			"null": { "message": "Comune non inserito" },
+			"min_max_length": { "message": "Lunghezza comune non valida" },
+			"not_valid": { "message": "Comune non valido" }
+		}
+	},
+	"delivery.zipCode": {
+		"name": "",
+		"errorMessages": {
+			"null": { "message": "CAP non inserito" },
+			"min_max_length": { "message": "Lunghezza CAP non valida" },
+			"not_valid": { "message": "CAP non valido" }
+		}
+	},
+	"delivery.provinceCode": {
+		"name": "",
+		"errorMessages": {
+			"null" : { "message": "Sigla provincia non inserita" },
+			"not_found": { "message": "Sigla provincia non valida" },
+			"min_max_length": { "message": "Sigla provincia non valida" }
+		}
+	},
+
+
+	
+	
+	"residence":{
+		"name": "",
+		"errorMessages": {
+			"normalization_error" : { "message": "Errore di normalizzazione nell'indirizzo di residenza, se l'indirizzo è corretto invia nuovamente i dati selezionando la checkbox" },
+			"normalization_ambiguous": { "message": "Normalizzazione ambigua per l'indirizzo di residenza, scegli un indirizzo tra quelli proposti" },
+			"italian_nation_for_foreign_user": { "message": "Nazione italiana per utente straniero" },
+			"foreign_nation_for_italian_user": { "message": "Nazione straniera per utente italiano" }
+		}
+	},
+	
+	"domicile":{
+		"name": "",
+		"errorMessages": {
+			"normalization_error" : { "message": "Errore di normalizzazione nell'indirizzo di domicilio, se l'indirizzo è corretto invia nuovamente i dati selezionando la checkbox" },
+			"normalization_ambiguous": { "message": "Normalizzazione ambigua per l'indirizzo di domicilio, scegli un indirizzo tra quelli proposti" },
+			"italian_nation_for_foreign_user": { "message": "Nazione italiana per utente straniero" },
+			"foreign_nation_for_italian_user": { "message": "Nazione straniera per utente italiano" }
+		}		
+	},
+	
+	"delivery":{
+		"name": "",
+		"errorMessages": {
+			"normalization_error" : { "message": "Errore di normalizzazione nell'indirizzo di consegna, se l'indirizzo è corretto invia nuovamente i dati selezionando la checkbox" },
+			"normalization_ambiguous": { "message": "Normalizzazione ambigua per l'indirizzo di consegna, scegli un indirizzo tra quelli proposti" },
+			"italian_nation_for_foreign_user": { "message": "Nazione italiana per utente consegna" },
+			"foreign_nation_for_italian_user": { "message": "Nazione straniera per utente consegna" }
+		}
+	},
+	
+	"addresses":{
+		"name": "",
+		"errorMessages": {
+			"modify_user_address" : { 
+				"message": "Errore durante il salvataggio degli indirizzi",
+				"parameters": { 
+					"error_generic": " - Errore generico",
+				    "nothing_to_modify": " - La richiesta di modifica contiene gli stessi dati di quelli gi&agrave; memorizzati"
+				}
+			}
+		}
+	},
+	
+	
+
+	"emailCheck": {
+		"name": "",
+		"errorMessages": {
+			"not_valid": { "message": "L'email di conferma inserita non &egrave; valida" },
+			"null": { "message": "Non hai inserito nessuna email di conferma" }
+		}
+	},
+
+	"deviceid": {
+		"name": "",
+		"errorMessages": {
+			"suspend_device": { 
+				"message": "", 
+				"parameters": { 
+					"generic": "Errore generico", 
+					"device_not_found": "Device non trovato", 
+					"user_foreign": "Non è possibile cambiare stato ad un device di un utente straniero", 
+					"error_generic": "Errore generico" 
+				} 
+			}
+		}
+	},
+
+	"email": {
+		"name": "",
+		"errorMessages": {
+			"min_length": { "message": "Lunghezza minima non valida", "parameters": { "min_length": 4 } },
+			"null" : { "message": "Non hai inserito nessun indirizzo email" },
+			"not_valid": { "message": "L'indirizzo email inserito non è valido" },
+			"new_alias_mail": { 
+				"message": "", 
+				"parameters": { 
+					"user_with_email_to_verify": "Non è possibile cambiare l'email, ne hai già una in fase di verifica", 
+					"user_dirty": "Utente corrotto", 
+					"email_already_used": "Email già utilizzata", 
+					"error_generic": "Errore Generico", 
+					"database_error": "Errore Generico del server" 
+				}
+			}
+		}
+	},
+	"phoneNumber": {
+		"name": "",
+		"errorMessages": {
+			"null" : { "message": "Non hai inserito nessun numero di telefono fisso" },
+			"not_valid": { "message": "Il numero di telefono fisso inserito non &egrave; valido" },
+			"min_max_length": { "message": "La lunghezza del numero di telefono fisso inserito non &egrave; valida", "parameters": { "min_length": 4, "max_length": 9 } }
+		}
+	},
+	"faxNumber": {
+		"name": "",
+		"errorMessages": {
+			"not_valid": { "message": "Fax non valido" },
+			"min_max_length": { "message": "Lunghezza fax non valida", "parameters": { "min_length": 4, "max_length": 9 } }
+		}
+	},
+	"mobileNumber": {
+		"name": "",
+		"errorMessages": {
+			"null" : { "message": "Non hai inserito nessun numero di telefono cellulare" },
+			"not_valid": { "message": "Il numero di cellulare inserito non &egrave; valido" },
+			"min_max_length": { "message": "La lunghezza del numero di cellulare inserito non &egrave; valida", "parameters": { "min_length": 4, "max_length": 9 } },
+			"no_prefix_allowed": { "message": "Prefisso non valido" },
+			"mobile_occurrences_validation_failed":{"message":"Impossibile verificare la validazione del numero di cellulare" },
+	        "max_mobile_occurrences_exceeded":{"message":"Il numero di telefono inserito è già associato a N account. Puoi associare lo stesso numero fino a un massimo di 5 account." }
+		}
+	},
+	"mobilePrefix": {
+		"name": "",
+		"errorMessages": {
+			"null" : { "message": "Non hai inserito nessun prefisso del numero di telefono cellulare" },
+			"not_valid": { "message": "Il prefisso del numero di cellulare inserito non &egrave; valido" }
+		}
+	},
+
+	"contacts": {
+		"name": "",
+		"errorMessages": {
+			"modify_user_contact": { 
+				"message": "Si è verificato un errore durante il salvataggio dei dati",
+				"parameters": {
+				    "mobile_occurrences_validation_failed": " - Validazione numero cellulare fallita troppe volte",
+				    "user_not_found": " - Utente non trovato",
+				    "service_not_available": " - Servizio non disponibile",
+				    "error_generic": " - Errore generico",
+				    "nothing_to_modify": " - La richiesta di modifica contiene gli stessi dati di quelli gi&agrave; memorizzati"
+				}
+			}
+		}
+	},
+	
+	
+	"favouriteServicesUser" : {
+		"name" : "",
+		"errorMessage" : {
+			"modify_favourite_services" : {
+				"message" : "" ,
+				"parameters" : {
+					"database_error" : "Si è verificato un errore durante la modifica dei servizi preferiti",
+					"error_generic" : "Si è verificato un errore durante la modifica dei servizi preferiti"
+				}
+			}
+		}
+		
+	},
+	"favouriteservices" : {
+		"name": "",
+		"errorMessages": {
+			"null": { "message": "Devi scegliere almeno un servizio preferito" },
+			"not_valid": { "message": "Servizio preferito non valido" }
+		}
+		
+	},
+	"favouriteservices.name" : {
+		"name": "",
+		"errorMessages": {
+			"null": { "message": "Devi scegliere almeno un servizio preferito" },
+			"not_valid": { "message": "Servizio preferito non valido" },
+			"duplicate" : { "message": "Nome servizio duplicato" },
+		}
+	},
+	"favouriteservices.position" : {
+		"name": "",
+		"errorMessages": {
+			"null": { "message": "Posizione servizio preverito nulla" },
+			"not_valid": { "message": "Posizione servizio preverito non valida" }
+		}
+		
+	},
+	"favourite_services_list" : {
+		"name": "",
+		"errorMessages": {
+			"null": { "message": "Lista servizi preferiti vuota" },
+			"list_max_size_exceeded": { "message": "Superato limite massimo elementi lista" }
+		}
+	},
+	
+	"image_format": {
+		"name": "",
+		"errorMessages": {
+			"null": { "message": "Formato immagine profilo non valorizzato" },
+			"format_not_supported": { "message": "Formato immagine profilo non supportato" }
+		}
+	},
+	"image_data": {
+		"name": "",
+		"errorMessages": {
+			"null": { "message": "Immagine profilo non valorizzata" },
+			"too_big": { "message": "Immagine profilo troppo grande" }
+		}
+	},
+	"error": {
+		"name": "",
+		"errorMessages": {
+			"profile_image_creation": { "message": "Errore durante il salvataggio dell'immagine di profilo" },
+			"profile_image_size_max_exceeded": { "message": "L'immagine di profilo scelta è troppo grande" }
+		}
+	},
+	"educational_qualification_code": {
+		"name": "",
+		"errorMessages": {
+			"null": { "message": "Titolo di studio non valorizzato" },
+			"not_found": { "message": "Titolo di studio non valido" },
+			"modify_user_educationalqualification": { 
+				"message": "Si è verificato un errore durante il salvataggio del titolo di studio",
+				"parameters": {
+				    "error_generic": " - Errore generico",
+				    "nothing_to_modify": " - La richiesta di modifica contiene gli stessi dati di quelli gi&agrave; memorizzati"
+				}
+			},
+			"modify_user_educational_qualification": { 
+				"message": "Si è verificato un errore durante il salvataggio del titolo di studio",
+				"parameters": {
+				    "error_generic": " - Errore generico",
+				    "nothing_to_modify": " - La richiesta di modifica contiene gli stessi dati di quelli gi&agrave; memorizzati"
+				}
+			}
+		}
+	},
+	"occupation_code": {
+		"name": "",
+		"errorMessages": {
+			"null": { "message": "Professione non valorizzata" },
+			"not_found": { "message": "Professione non valida" },
+			"modify_user_occupation": { 
+				"message": "Si è verificato un errore durante il salvataggio della professione",
+				"parameters": {
+				    "error_generic": " - Errore generico",
+				    "nothing_to_modify": " - La richiesta di modifica contiene gli stessi dati di quelli gi&agrave; memorizzati"
+				}
+			}
+		}
+	}
+	
+
+});
+
+

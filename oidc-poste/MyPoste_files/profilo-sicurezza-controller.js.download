@@ -1,0 +1,78 @@
+
+
+
+app.controller('ProfiloSicurezzaController', ['$scope', '$state', '$rootScope', '$timeout', 'mockProfiloService', 'config','dcsMultiTrackService', function ($scope, $state, $rootScope, $timeout, mockProfiloService, config, dcsMultiTrackService) {
+
+	$scope.spidLandingUrl = config.spidLandingUrl;
+	$scope.spidInformativa = config.spidInformativa;
+	$scope.spidUrl = config.biscotti_url.spid;
+	var viewModelService = $scope.$parent.viewModelService;
+    var profiloService = $scope.$parent.profiloService;
+    //$scope.isSimplePopup = false;
+    
+	$scope.init = function (){
+		profiloService.getsecureddevices(function(data){
+	        $rootScope.securedDevices = data.responseObject.securedDevices;
+	    },function(err){
+	        console.log(err);
+	    });
+	};
+	
+	$scope.$on('myposte-forged', function(event, args) {
+		if(!$rootScope.myposteForged){
+			console.log('myposte-forged');
+			$scope.init();
+		}
+	});
+	
+	if($rootScope.myposteForged){
+		$scope.init();
+	}
+
+    $scope.closeFormPassword = function () {
+        $scope.Model.profilo.passwordProfilo = {};
+        $scope.showChangePasswordForm = false;
+    };
+
+    $scope.showFormPassword = function () {
+        $scope.$parent.Model.profilo.passwordProfilo = {};
+        $scope.showChangePasswordForm = true;
+    };
+
+
+    $scope.openPopup = function (event, id) {
+        console.log(id);
+        console.log(event.target.id);
+        viewModelService.Model.device.deviceId = id;
+        if (event.target.id === 'activeButton') {
+            $scope.isSimplePopup = true;
+            $scope.messagePopup = "Attenzione: la riabilitazione del dispositivo può essere effettuata solo tramite APP";
+            $('#popupDevice').modal('show');
+        }
+        else {
+            $scope.isSimplePopup = false;
+            $scope.messagePopup = "Attenzione: sei sicuro di voler disabilitare il dispositivo? Per riattivarlo dovrai inserire il codice PUK che hai ricevuto in fase di registrazione.";
+            $('#popupDevice').modal('show');
+        }
+        $timeout(function(){
+        	$(window).resize();
+        });
+    };
+
+    $scope.changeDeviceStatus = function(){
+        profiloService.suspenddevice({ 
+        	deviceid: viewModelService.Model.device.deviceId
+        }, function (data) {
+    		profiloService.getsecureddevices( 
+    		function (data) {
+                $scope.securedDevices = data;
+                $scope.statusChanged = true;
+    		}, function (err) {
+                console.log(err);
+            });
+        }, function (err) {
+        	console.log(err);
+        });
+    };
+
+}]);

@@ -1,0 +1,34 @@
+
+
+
+angular.module('directive.loading', [])
+
+    .directive('loading',   ['$http','$timeout' ,function ($http, $timeout)
+    {
+        return {
+            restrict: 'AR',
+            replace: true, // Replace with the template below
+            transclude: true,
+            templateUrl : '/app-resources/theme/loading.html',
+            link: function (scope, elm, attrs)
+            {
+            	scope.isLoading = function () {
+            		for(var i in $http.pendingRequests){
+            			if(!$http.pendingRequests[i].headers || !$http.pendingRequests[i].headers['X-NO-LOADING']){
+            				return true;
+            			}
+            		}
+            		return false;
+                };
+
+                scope.$watch(scope.isLoading, function (v)
+                {
+                	scope.showLoading = v;
+                });
+            }
+        };
+
+    }]);
+
+
+

@@ -1,0 +1,140 @@
+
+
+
+var mappaCTRL = appuntamento.controller("MappaCTRL",['$scope','$http','hostService','$timeout', '$rootScope', 'configLauncher', 'retinaDensityCheck', 'togglePopover','mySharedService',function ($scope,$http,hostService,$timeout, $rootScope, configLauncher, retinaDensityCheck, togglePopover,mySharedService) {
+	var serverHost,urlValue;
+	hostService.getHost().then(function(response) {
+	    urlValue = response.data; // -- success logic
+	    serverHost = urlValue["HOST_SVILUPPO"];
+	    
+	    var GEOCMS_PROJECT = 'Uffici';
+	    var GEOCMS_LICENSE = 'geo-posteitalianespa';
+	    var GEOCMS_HOST = 'www.geocms.it';
+	    var GEOCMS_CLIENT = 'gme-postecomspa';
+	    
+//	    var GEOCMS_PROJECT = 'Demo-Geodata';
+//	    var GEOCMS_LICENSE = 'geo-noovle';
+//	    var GEOCMS_HOST = 'www.geocms.it';
+	    
+	    var googleMaps, geocmsProject;
+	    
+	    $scope.scripts = {
+			    'asyncMap': "https://maps.googleapis.com/maps/api/js?language=it&libraries=places,geometry&v=3&"+(window.globalMapUrlKeyParam || 'client=gme-postecomspa')+"&channel=valore&callback=mapCallback",
+			    'asyncGeo': "https://www.geocms.it/API/geocms/js?v=3&license=geo-posteitalianespa&project=Uffici&modules=infobubble|markerclustererplus&callback=geoCallback"
+		};
+	    
+		function addScriptToDom(url) {
+			
+			var script = document.createElement('script');
+			script.type = 'text/javascript';
+			script.src = url;
+			$('body').append(script);
+			//console.info("URL DIR2: "+url);
+		}
+		
+		mapCallback = function() { 
+			var googleMapsOptions = {
+				zoom : 8,
+				//center : new google.maps.LatLng(37.5999938, 14.015355699999986),
+				center: new google.maps.LatLng(41.893056, 12.482778),
+				mapTypeId : google.maps.MapTypeId.ROADMAP
+			};
+				
+			googleMaps = new google.maps.Map(document.getElementById('mapCerca'), googleMapsOptions);
+				
+			addScriptToDom($scope.scripts['asyncGeo']);
+		};
+		
+		geoCallback = function() { 
+			var geoCMSMap = new scube.geocms.GeoMap(googleMaps, null);
+			
+			markerClusterer = new MarkerClusterer(googleMaps, null, null);
+			
+			var projectOptions = {
+				id : GEOCMS_PROJECT,
+				name : GEOCMS_PROJECT,
+				license : GEOCMS_LICENSE,
+				//client : GEOCMS_CLIENT,
+				frontend: 'apiv3',
+//				infoWindowProcess: infoWindowProcess,
+//				infoWindowOptions: {
+//	                infoClass: InfoBubble,
+//	                appendToMapDiv: true,
+//              	},
+              	markerCluster: window.markerClusterer['mapCerca'],
+              	styleProcess: function(obj2beProcess) { 
+                    return {
+                          'styleID': 'default'
+                   };
+                }
+			};
+
+			geocmsProject = geoCMSMap.addProject(projectOptions);
+			//setto immagine per il marker
+			geocmsProject.loadMarkerStyle('default', {
+                defaultState: {
+                    	icon: { url: '/app-resources/angular-map-application/up.png', scaledSize: { width: 32, height: 40 } }
+					  //icon: { url: 'risorse/applicazioni/gestore-appuntamento/immagini/up.png', scaledSize: { width: 32, height: 40 } }
+                }
+            });
+
+			//window.geoProject['map'] = geocmsProject;
+			doSearch();
+		};
+
+		
+		function doSearch() {
+//			alert('doSearch()');
+			
+			geocmsProject.clear();
+			geocmsProject.searchData({
+//				query : '[DESC_CAT_MERC]=[BEAUTY SHOPS & BARBER SHOPS]',
+                idObject : mySharedService.message.frazionario
+			}, function(geoCMSResponse) {
+				var results = geoCMSResponse.results;
+				var size = results.size();			
+//				alert('size: ' + size + ' msg: '+ mySharedService.message.frazionario + " " + mySharedService.message.indirizzo);
+			});
+			
+		};
+		
+		var isGoogle = false;
+		try {
+		    if(google){
+		    	google = null;
+		    }
+		}
+		catch(err) {
+
+		}
+		
+		addScriptToDom($scope.scripts['asyncMap']);
+	});
+	
+	function infoWindowProcess(obj) {
+//    	console.log("infoWindowProcess");
+    	console.log(obj.getAllUserdata());
+        var infoWindowHTML = [];
+        
+        var userdata = obj.getAllUserdata(); //dati dell'esercizio
+
+        infoWindowHTML.push('<div class="infowindow">');
+        infoWindowHTML.push('<p class="nome">Ufficio: ' + userdata['descrizione'] + '</p>');
+        infoWindowHTML.push('<p class="indirizzo">Indirizzo: ' + userdata['indirizzo'] + '</p>');
+        infoWindowHTML.push('<p class="frazionario">Frazionario: ' + userdata['frazionario_ext'] + '</p>');
+        infoWindowHTML.push('<p class="distanza"><a target="_blank" href= "http://www.google.com/maps/place/'+ userdata['y_gradi'] +','+ userdata['x_gradi'] +'">Come Raggiungerlo</a></p>');
+        infoWindowHTML.push('</div>');
+
+        var compiled = infoWindowHTML.join('');
+        
+        $rootScope.$broadcast('upSelected', { loc: userdata});
+        
+        return compiled;
+
+    }
+    
+    function styleProcess(obj){
+    	console.log(obj);
+    	return {title:obj.description};
+    }
+}]);

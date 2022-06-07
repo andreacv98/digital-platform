@@ -1,0 +1,644 @@
+
+
+
+	app.controller('bachecaController', ['$scope', '$rootScope', '$state', '$stateParams', 'SessionStorageService', '$sessionStorage','config', 'errorMessages','$timeout','dcsMultiTrackService', 'authInterceptor','$filter',
+    	function ($scope, $rootScope, $state, $stateParams, SessionStorageService, $sessionStorage,config,errorMessages,$timeout,dcsMultiTrackService, authInterceptor,$filter) {
+    
+    var bachecaService = $scope.$parent.bachecaService;
+    var viewModelService = $scope.$parent.viewModelService;
+    $scope.checkFiltro = false;
+    
+    $scope.bacheca_ws_url = config.bacheca_ws_url;
+    
+    $scope.isLoa3 = ($rootScope.userClaims && $rootScope.userClaims.loa == config.loa3_url && $rootScope.userClaims.realm == config.realmPosteIT);
+
+    $scope.messageSelected = {
+    	messaggi : [],
+    	notifiche : []
+    };
+    $scope.messageSelectedStrong = {
+    	messaggi : [],
+    	notifiche : []
+    };
+    $scope.maxMessages = {
+    	messaggi : true,
+    	notifiche : true
+    };
+    $scope.$state = $state;
+    $scope.isSelectedMessage = {
+    	messaggi : false,
+    	notifiche : false
+    };
+    $scope.messages = {
+    	messaggi : [],
+    	notifiche : []
+    }
+    $scope.hiddenSimpleSearch = {
+    	messaggi : false,
+    	notifiche : false
+    }
+    $scope.selectedAll = {
+    	messaggi : false,
+    	notifiche : false
+    }
+    
+    $scope.filtri = {
+		messaggi : {
+			subject : '',
+			selectServices : { id: "" },
+			selectCategories : { id: "" },
+			dataDal : '',
+			dataAl : ''
+		},
+        notifiche : {
+        	subject : '',
+			selectServices : { id: "" },
+			selectCategories : { id: "" },
+			dataDal : '',
+			dataAl : ''
+        }
+    }
+    
+    $scope.toggleHideSimpleSearch = function(){
+		document.getElementById("button-filtra").style.backgroundColor=document.getElementById("button-filtra").style.backgroundColor=="rgb(238, 220, 0)" ?
+		"white" : "rgb(238, 220, 0)";
+		 $scope.checkFiltro=!$scope.checkFiltro; 
+    	$scope.hiddenSimpleSearch[$scope.bucket] = !$scope.hiddenSimpleSearch[$scope.bucket]; 
+    }
+    
+    $scope.setActiveBucket = function(bucket){
+    	$scope.bucket = bucket;
+    	if(!($scope.maxMessages[$scope.bucket] || $scope.messages[$scope.bucket].length)){
+    		$scope.loadMessages(false);
+    	}
+    	reloadCheckbox();
+    }
+    
+    $scope.loadMoreMessages = function(){
+    	$scope.loadMessages(true);
+    }
+    
+    $scope.loadMessages = function(more){
+
+		if(more){
+    		viewModelService.Model.bacheca.searchParams[$scope.bucket].paged.pageSize += config.sizeForPage;
+    	}
+		
+		if(!viewModelService.Model.bacheca.searchParams[$scope.bucket].criteria.category && viewModelService.Model.bacheca.searchParams[$scope.bucket].criteria.category !== 0){
+			viewModelService.Model.bacheca.searchParams[$scope.bucket].criteria.category = ''; //$scope.categories[$scope.bucket+"Ids"];
+		}
+
+        bachecaService.search(viewModelService.Model.bacheca.searchParams[$scope.bucket], function (data) {
+        	if(data.valid){
+	            $scope.messages[$scope.bucket] = data.returnedObject.list;
+	            $scope.maxMessages[$scope.bucket] =
+									data.returnedObject.total == 0 || ($scope.messages[$scope.bucket].length == data.returnedObject.total);
+	            reloadCheckbox();
+        	}
+        	else{
+        		$rootScope.serverErrorSingolo = true;
+        		$rootScope.serverError = errorMessages.dataUnavaiable.message;
+        	}
+        },function () {
+        	$rootScope.serverErrorSingolo = true;
+        	$rootScope.serverError = errorMessages.dataUnavaiable.message;
+        });
+    }
+
+    $scope.$on('bacheca-services', function(event, args) {
+    	if($scope.categories && $scope.services){
+    		$scope.loadMessages(false);
+    	}
+    });
+    
+    $scope.$on('bacheca-categories', function(event, args) {
+    	if($scope.categories && $scope.services){
+    		$scope.loadMessages(false);
+    	}
+    });
+
+    $scope.removeSelection = function () {
+			/** START - 2021/03/31 - A-8[Produzione] Poste.it – Bacheca */
+			$scope.selectedAll = {
+				messaggi : false,
+				notifiche : false
+			};
+			$scope.toggleSelectAll();
+			/** END - 2021/03/31 - A-8[Produzione] Poste.it – Bacheca */
+		};
+    
+    // TODO CHECK and FIX front-end
+    $scope.findByTextSearch = function () {
+        viewModelService.Model.bacheca.searchParams[$scope.bucket].criteria = {
+        	startDate : "",
+        	stopDate : "",
+        	service : "",
+        	category : "", //$scope.categories[$scope.bucket+"Ids"],
+        	subject : $scope.filtri[$scope.bucket].subject
+        }
+
+        $scope.loadMessages(false);
+        $scope.removeSelection();
+    };
+
+    // TODO CHECK
+    $scope.findByFilters = function () {
+    	viewModelService.Model.bacheca.searchParams[$scope.bucket].criteria = {
+        	startDate : "",
+        	stopDate : "",
+        	service: ($scope.filtri[$scope.bucket].selectServices?$scope.filtri[$scope.bucket].selectServices.id:''),
+            category: ($scope.filtri[$scope.bucket].selectCategories?$scope.filtri[$scope.bucket].selectCategories.id:''),
+            subject: $scope.filtri[$scope.bucket].subject
+        }
+        if($('#campo-calendar-dal-'+$scope.bucket).val()!==""){
+            viewModelService.Model.bacheca.searchParams[$scope.bucket].criteria.startDate = $('#campo-calendar-dal-'+$scope.bucket).val();
+        }
+        if($('#campo-calendar-al-'+$scope.bucket).val()!==""){
+            viewModelService.Model.bacheca.searchParams[$scope.bucket].criteria.stopDate = $('#campo-calendar-al-'+$scope.bucket).val();
+        }
+
+        $scope.loadMessages(false);
+				$scope.removeSelection();
+    }
+
+		$scope.removeFilters = function() {
+			$scope.filtri = {
+				messaggi : {
+					subject : $scope.filtri[$scope.bucket].subject,
+					selectServices : { id: "" },
+					selectCategories : { id: "" },
+					dataDal : '',
+					dataAl : ''
+				},
+				notifiche : {
+					subject : $scope.filtri[$scope.bucket].subject,
+					selectServices : { id: "" },
+					selectCategories : { id: "" },
+					dataDal : '',
+					dataAl : ''
+				}
+			};
+
+			$scope.loadMessages(false);
+			$scope.removeSelection();
+		};
+
+    $scope.sortByColumn = function (column) {
+      if(column != viewModelService.Model.bacheca.searchParams[$scope.bucket].paged.sort) {
+    		viewModelService.Model.bacheca.searchParams[$scope.bucket].paged.order = (column == 'data' ? 'DESC' : 'ASC')
+    		viewModelService.Model.bacheca.searchParams[$scope.bucket].paged.sort = column;
+    	} else {
+    		viewModelService.Model.bacheca.searchParams[$scope.bucket].paged.order = (viewModelService.Model.bacheca.searchParams[$scope.bucket].paged.order == 'DESC' ? 'ASC' : 'DESC');
+    	}
+    	
+        $scope.loadMessages(false);
+				$scope.removeSelection();
+    };
+    
+    $scope.deleteMessages = function () {
+    	if($scope.messageSelectedStrong[$scope.bucket].length > 0 && window.__loa3session){
+    		SessionStorageService.set('bacheca-post-loa3-op', {
+				op: 'deleteMessagesCall',
+				params: [
+					$scope.messageSelected[$scope.bucket],
+		        	viewModelService.Model.bacheca.searchParams,
+		        	$scope.bucket
+				]
+			});
+    		$scope.returnUrl = window.location.href;
+    		$scope.cancelReturnUrl = window.location.href;
+    		authInterceptor.promptLogin(true, "login", $scope.returnUrl, $scope.cancelReturnUrl);
+    	}
+    	else{
+	        angular.element('#deleteMessages').modal('hide');
+	
+	        $timeout(function(){
+	        	$scope.deleteMessagesCall(
+			        $scope.messageSelected[$scope.bucket],
+		        	viewModelService.Model.bacheca.searchParams,
+		        	$scope.bucket
+		        );
+	        },200);    
+    	}
+    }
+    
+    $scope.deleteMessagesCall = function(selectedMessages, savedParams, bucket) {
+    	var paramsForDelete = { 
+        	context: "poste", 
+        	list: selectedMessages
+        };
+        bachecaService.deleteMessages(paramsForDelete, function (data) {
+        	$rootScope.bachecaContorno();
+            $state.go('bacheca', { 
+            	savedParams: savedParams,
+            	bucket: bucket
+            }, { 
+        		reload: true 
+            });
+        });
+    }
+
+    $scope.openDeleteModal = function () {
+    	if($scope.messageSelectedStrong[$scope.bucket].length > 0 && !window.__loa3session){
+    		SessionStorageService.set('bacheca-post-loa3-op', {
+				op: 'deleteMessagesCall',
+				params: [
+					$scope.messageSelected[$scope.bucket],
+		        	viewModelService.Model.bacheca.searchParams,
+		        	$scope.bucket
+				]
+			});
+    		$scope.returnUrl = window.location.href;
+    		$scope.cancelReturnUrl = window.location.href;
+    		$scope.showAuthLoa3Modal();
+    		return
+    	}
+        if ($scope.messageSelected[$scope.bucket].length === 0) {
+            $scope.modalMessage = "Seleziona almeno un messaggio";
+            $scope.isSelectedMessage[$scope.bucket] = false;
+            angular.element('#deleteMessages').modal('show');
+        }
+        else if ($scope.messageSelected[$scope.bucket].length === 1) {
+            $scope.modalMessage = "Sei sicuro di voler eliminare il messaggio selezionato?";
+            $scope.isSelectedMessage[$scope.bucket] = true;
+            angular.element('#deleteMessages').modal('show');
+        }
+        else if ($scope.messageSelected[$scope.bucket].length > 0) {
+            $scope.modalMessage = "Sei sicuro di voler eliminare i messaggi selezionati?";
+            $scope.isSelectedMessage[$scope.bucket] = true;
+            angular.element('#deleteMessages').modal('show');
+        }
+        $timeout(function(){
+        	$(window).resize();
+        });
+    }
+    
+    $scope.showAuthLoa3Modal = function(){
+    	if(window.__loa3session){
+    		authInterceptor.promptLogin(true, "login", $scope.returnUrl, $scope.cancelReturnUrl);
+    	}
+    	else{
+    		angular.element('#messageNeedsLoa3').modal('show');
+    	}
+    }
+    
+    $scope.authLoa3 = function(){
+		authInterceptor.promptLogin(true, "login", $scope.returnUrl, $scope.cancelReturnUrl);
+    }
+
+    $scope.toggleSelection = function (message) {
+    	var idMessage = message.idMessage;
+        var idSelected = $scope.messageSelected[$scope.bucket].indexOf(idMessage);
+        if (idSelected > -1) {
+            $scope.messageSelected[$scope.bucket].splice(idSelected, 1);
+           	var idSelectedStrong = $scope.messageSelectedStrong[$scope.bucket].indexOf(idMessage);
+           	if (idSelectedStrong > -1) {
+            	$scope.messageSelectedStrong[$scope.bucket].splice(idSelectedStrong, 1);
+            }
+        }
+        else {
+            $scope.messageSelected[$scope.bucket].push(idMessage);
+            if($scope.isLocked(message)){
+            	$scope.messageSelectedStrong[$scope.bucket].push(idMessage);
+            }
+        }
+    }
+    
+    $scope.openDeleteSingleMessage = function(){
+    	if ($stateParams.idMessage !== undefined) {
+            $scope.singleModalMessage = "Sei sicuro di voler eliminare il messaggio selezionato?";
+            $scope.singleIsSelectedMessage = true;
+            angular.element('#deleteSingleMessage').modal('show');
+    	}
+        $timeout(function(){
+        	$(window).resize();
+        });
+    }
+    
+    $scope.deleteSingleMessage = function () {
+    	if ($stateParams.idMessage !== undefined) {
+	        angular.element('#deleteSingleMessage').modal('hide');
+	        $timeout(function(){
+	        	var paramsForDelete = { 
+	        		context: "poste", 
+	        		list: [$stateParams.idMessage] 
+	        	};
+		        bachecaService.deleteMessages(paramsForDelete, function (data) {
+		        	$rootScope.bachecaContorno();
+		        	$state.go('bacheca', { 
+		            	savedParams: viewModelService.Model.bacheca.searchParams,
+		            	bucket: $scope.bucket
+		            }, { 
+	            		reload: true 
+		            });
+		        });
+	        },200);
+    	}
+    }
+
+    $scope.toggleSelectAll = function () {
+        var messages = $scope.messages[$scope.bucket];
+        if(!$scope.selectedAll[$scope.bucket]){
+        	$scope.messageSelected[$scope.bucket] = [];
+        	$scope.messageSelectedStrong[$scope.bucket] = [];
+        }
+        for (var i = 0; i < messages.length; i++) {
+            messages[i].selected = $scope.selectedAll[$scope.bucket];
+            if ($scope.selectedAll[$scope.bucket]){
+                $scope.messageSelected[$scope.bucket].push(messages[i].idMessage);
+                if($scope.isLocked(messages[i])){
+                	$scope.messageSelectedStrong[$scope.bucket].push(messages[i].idMessage);
+                }
+            }
+        }
+        reloadCheckbox();
+
+    };
+    
+	$scope.stampaMessaggio = function() {
+		var mywindow;
+		var css='';
+		mywindow = window.open('', '', '');
+		mywindow.document.write('<html><head>');
+		mywindow.document.write('<title>Stampa Messaggio</title>');
+		mywindow.document.write('<link type="text/css" rel="stylesheet" href="/risorse_dt/bootstrap/css/bootstrap.min.css">');
+		mywindow.document.write('<link type="text/css" rel="stylesheet" href="/risorse_dt/condivise/stili/trasversali/base.css">');
+		mywindow.document.write('<link type="text/css" rel="stylesheet" href="/risorse_dt/applicazioni/trasversali/stili/custom-form-element.css">');
+		mywindow.document.write('<link type="text/css" rel="stylesheet" href="/risorse_dt/applicazioni/myposte/css/myposte.css">');
+		mywindow.document.write('<link type="text/css" rel="stylesheet" href="/myposte-app/css/myposte.css">');
+		mywindow.document.write('<style type="text/css">.hidden-print{display:none;} body{background-color: white;height: auto;}</style>');
+		mywindow.document.write('</head><title>Messaggio - '+$scope.message.subject+'</title><body>');
+		mywindow.document.write(document.querySelector("#bacheca-message").outerHTML);
+		mywindow.document.write('</body></html>');
+		mywindow.document.close();
+		mywindow.focus();
+		$timeout(function(){
+			mywindow.print();
+			$timeout(function(){
+				mywindow.close();
+			},100);
+		},200);
+		
+		return null;
+	};
+
+    $scope.isLocked = function(message){
+    	return message.headers && message.headers.acr == config.loa3_url && !$scope.isLoa3;
+    }
+    
+    $scope.showLock = function(message){
+    	return message.headers && message.headers.acr == config.loa3_url;
+    }
+    
+    $scope.downloadAttachment = function(attachmentId, messageId){
+    	bachecaService.attachment({ context: 'poste', attachmentId: attachmentId, idMessage: messageId }, function (data) {
+    		if(data.valid){
+			   openUrlInsideIframe(config.bacheca_download_url + data.returnedObject['download_url']);
+			}
+    	});
+    }
+    
+    $scope.goToMessage = function(message){
+    	if($scope.isLocked(message)){
+    		$scope.returnUrl = window.location.protocol + "//" + window.location.hostname + window.location.pathname + $state.href('bacheca.message', {idMessage: message.idMessage});
+    		$scope.cancelReturnUrl  = window.location.protocol + "//" + window.location.hostname + window.location.pathname + $state.href('bacheca');
+    		$scope.showAuthLoa3Modal();
+    	}
+    	else{
+    		$state.go("bacheca.message", {idMessage : message.idMessage});
+    	}
+    }
+    
+    $scope.$on('bacheca-message-read', function(event, args) {
+    	var checkSpalla = true;
+		for(var i=0; i<$scope.messages[$scope.bucket].length; i++){
+			if($scope.messages[$scope.bucket][i].idMessage == args.idMessage){
+				if($scope.messages[$scope.bucket][i].readed == 'false'){
+					$rootScope.unreadMessageCount--;
+					checkSpalla = false;
+				}				
+				$scope.messages[$scope.bucket][i].readed = 'true';
+			}
+		}
+		for(var i=0; i<$rootScope.lastMessages.length; i++){
+			if($rootScope.lastMessages[i].idMessage == args.idMessage){
+				if(checkSpalla && $rootScope.lastMessages[i].readed == 'false'){
+					$rootScope.unreadMessageCount--;
+				}
+				$rootScope.lastMessages[i].readed = 'true';
+			}
+		}
+    });
+    
+    /////////////////////////////////////
+    // actual controller run on startup
+    /////////////////////////////////////
+    
+    if ($state.params.savedParams !== null) {
+        viewModelService.Model.bacheca.searchParams = $state.params.savedParams;
+    }
+
+    if ($stateParams.idMessage !== undefined) {
+        $scope.idMessage = $stateParams.idMessage;
+        bachecaService.detailMessage({ context: 'poste', idMessage: $stateParams.idMessage}, function (data) {
+        	if(data.valid){
+        		$scope.message = data.returnedObject;
+        		$rootScope.$broadcast('bacheca-message-read', { idMessage: $stateParams.idMessage });
+        		autoscroll();
+        	}
+        	else{
+        		if(data.errorMessages && data.errorMessages.length == 1 && data.errorMessages[0].name == "message.acr" && data.errorMessages[0].message == "not_valid"){
+            		$scope.returnUrl = window.location.href;
+            		$scope.cancelReturnUrl = window.location.href;
+            		$scope.showAuthLoa3Modal();
+        		}
+        	}
+            // dcsMultiTrackService.callDcsMultiTrackTwoParameters('DCS.dcsuri','alias_myposte_bacheca_messaggio', 'DCSext.MYPOSTE-BACHECA_apertura_messaggio', $scope.message.serviceName);
+        });
+    }
+    else {
+    	// post loa3 operations
+    	var postLoa3op = SessionStorageService.get('bacheca-post-loa3-op')
+    	
+    	if(postLoa3op && $scope.isLoa3){
+			$scope[postLoa3op.op].apply($scope, postLoa3op.params);
+			SessionStorageService.remove('bacheca-post-loa3-op');
+		}
+    	else{
+        	if(postLoa3op){
+    			SessionStorageService.remove('bacheca-post-loa3-op');
+    		}
+
+    		// now it is possible to make else because the only post-loa3-op avaiable reloads the state
+    		// so avoid making unnecessary work
+    		
+	    	if ($state.params.bucket !== null) {
+	        	$scope.bucket = $state.params.bucket 
+	        }
+	        else{
+	        	$scope.bucket = 'messaggi';
+	        }
+	        
+	        if ($sessionStorage.servicesStored === undefined || $sessionStorage.servicesStored.length == 0) {
+	            bachecaService.getServices({ context: 'poste'}, function (data) {
+	            	if(data.valid){
+		            	$sessionStorage.servicesStored = data.returnedObject;
+		                $scope.services = $sessionStorage.servicesStored;
+		                $rootScope.$broadcast('bacheca-services');
+	            	}
+	            	else{
+		        		$rootScope.serverErrorSingolo = true;
+		        		$rootScope.serverError = errorMessages.dataUnavaiable.message;
+		        	}
+	            },function () {
+	            	$rootScope.serverErrorSingolo = true;
+		        	$rootScope.serverError = errorMessages.dataUnavaiable.message;
+	            });
+	        }
+	        else{
+	        	$scope.services = $sessionStorage.servicesStored;
+	        	$rootScope.$broadcast('bacheca-services');
+	        }
+	        if ($sessionStorage.categoriesStored === undefined || $sessionStorage.categoriesStored.length == 0) {
+	            bachecaService.getCategories({ context: 'poste'}, function (data) {
+	            	if(data.valid){
+	            		var categorie = {messaggi:[], notifiche: [], map : {}, messaggiIds:"", notificheIds: "" };
+
+						var tempdata =  $filter('orderBy')(data.returnedObject, "descrizione", false);
+	            		for(var i = 0; i < data.returnedObject.length; i++){
+	            			var elem = tempdata[i];
+	            			if(config.bucketBacheca[elem.codice]){
+	            				elem.bucket = config.bucketBacheca[elem.codice];
+	            			}
+	            			else{
+	            				elem.bucket = {bucket: 'messaggi', sottoBucket: 'Movimenti'};
+	            			}
+	        				categorie[elem.bucket.bucket].push(elem);
+	        				categorie[elem.bucket.bucket+"Ids"] += elem.id + "|";
+	        				categorie.map[elem.id] = elem;
+		                	
+	            		}
+	            		//modifica per ordinamento categorie
+						//categorie.map = $filter('orderBy')(categorie.map, "descrizione", false);
+						//categorie.map = orderObjectBy(categorie.map,"Descrizione", false);
+	            		if(categorie.messaggiIds.length > 0){
+	            			categorie.messaggiIds = categorie.messaggiIds.slice(0, -1);
+	            		}
+	            		if(categorie.notificheIds.length > 0){
+	            			categorie.notificheIds = categorie.notificheIds.slice(0, -1);
+	            		}
+		                $sessionStorage.categoriesStored = categorie;
+		                $scope.categories = $sessionStorage.categoriesStored;
+		                $rootScope.$broadcast('bacheca-categories');
+	            	}
+	            	else{
+		        		$rootScope.serverErrorSingolo = true;
+		        		$rootScope.serverError = errorMessages.dataUnavaiable.message;
+		        	}
+	            },function () {
+	            	$rootScope.serverErrorSingolo = true;
+		        	$rootScope.serverError = errorMessages.dataUnavaiable.message;
+	            });
+	        }
+	        else{
+	        	$scope.categories = $sessionStorage.categoriesStored;
+	        	$rootScope.$broadcast('bacheca-categories');
+	        }
+
+	        $timeout(function(){
+		        $.extend( $.fn.datepicker.defaults, {format: 'dd-mm-yyyy', language: 'it'} );   
+		
+		        $('.campo-calendar-dal').datepicker({
+		            startDate : "",
+		            endDate: new Date(),
+		            autoclose: true,
+		            orientation: "top"
+		        }).on('changeDate',function(selected){
+		            startDate = new Date(selected.date.valueOf());
+		            startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
+		            var id = $(this).attr('id').replace('-dal-','-al-');
+		            $('#'+id).datepicker('setStartDate', startDate);
+		        });
+		
+		        $('.campo-calendar-al').datepicker({
+		            startDate: "",
+		            endDate: new Date(),
+		            autoclose: true,
+		            orientation: "top"
+		        }).on('changeDate', function(selected){
+		            fromEndDate = new Date(selected.date.valueOf());
+		            fromEndDate.setDate(fromEndDate.getDate(new Date(selected.date.valueOf())));
+		            var id = $(this).attr('id').replace('-al-','-dal-');
+		            $('#'+id).datepicker('setEndDate', fromEndDate);
+		        });
+		        
+		        $('.icon-calendar').click(function(event){
+		            event.preventDefault();
+		            var id = $(this).attr('id').replace('icon','campo-calendar');
+		            $('#'+id).focus();
+		        });
+	        });
+    	}
+    }
+    
+    function reloadCheckbox(){
+       	
+        $timeout(function(){
+            customCheckbox();
+        });
+
+    }
+    
+    function createDownloadIframe() {
+        var iframe = document.querySelector('#boxdownloadiframe');
+        if (!iframe) {
+            // if no existing iframe create a new one
+            iframe = document.createElement('iframe');
+            iframe.setAttribute('id', 'boxdownloadiframe');
+            iframe.style.display = 'none';
+            if (document.body) {
+                document.body.appendChild(iframe);
+            }
+        }
+        // Clean the iframe up
+        iframe.contentDocument.write('<head></head><body></body>');
+        return iframe;
+    }
+
+    function openUrlInsideIframe(url) {
+        var iframe = createDownloadIframe();
+        iframe.src = url;
+        return iframe;
+    }
+	function orderByDescription(data){
+		let ordered = {};
+		Object.keys(data).sort().forEach(function(key) {
+			ordered[key] = data[key];
+		});
+
+		return ordered;
+	}
+
+	function autoscroll(cts) {
+		if(!cts){
+			cts = '.myposte-header';
+		}
+		$('body,html').animate({
+			scrollTop: ($(cts).height() + 80)
+		}, 800);
+	}
+
+	// let containerToScroll = $(cts);
+	// containerToScroll.animate({
+	// 	scrollTop: containerToScroll.prop('scrollHeight')
+	// }, 1000);
+	// $('#bacheca-message').animate({
+	// 	scrollTop: $('#bacheca-message').prop('scrollHeight')
+	// }, 1000);
+
+	// $(document).ready(function(){
+	// 	$('body,html').animate({scrollTop: ($('.myposte-header').height() + 80)}, 800);
+	// });
+	}
+]);
+

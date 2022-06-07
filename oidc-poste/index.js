@@ -92,7 +92,7 @@ app.get("/",(req,res) =>{
 })
 
 app.get ("/home", (req,res) =>{
-  res.sendFile(path.join(__dirname+'/Poste.html'))
+  res.sendFile(path.join(__dirname+'/MyPoste.html'))
 })
 
 
