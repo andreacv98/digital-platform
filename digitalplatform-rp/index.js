@@ -63,9 +63,21 @@ Issuer.discover(provider.site)
       
     });
 
+    const params = {
+        /*client_id: process.env.GOOGLE_ID,
+        response_type: 'code token id_token',
+        scope: 'openid profile email',
+        nonce: generators.nonce(),
+        redirect_uri: 'URI here',
+        state: generators.state(),*/
+        prompt: 'login',
+        /*display: 'popup',
+        login_hint: 'sub',*/
+    };
+
     passport.use(
       'oidc',
-      new Strategy({ client,passReqToCallback: true}, (req, tokenSet, userinfo, done) => {
+      new Strategy({ client,params,passReqToCallback: true}, (req, tokenSet, userinfo, done) => {
         console.log("tokenSet",tokenSet);
         console.log("userinfo",userinfo);
         req.session.tokenSet = tokenSet;
@@ -93,6 +105,7 @@ function (req, res, next) {
     console.log('/Start login handler');
     next();
 },
+notLoggedIn,
 passport.authenticate('oidc',{scope:"openid"}));
 
 function loggedIn(req, res, next) {
@@ -103,6 +116,21 @@ function loggedIn(req, res, next) {
   }
 }
 
+function notLoggedIn(req, res, next) {
+  if (req.user) {
+    res.redirect('/services');      
+  } else {
+    next();
+  }
+}
+
+app.post ('/logout', loggedIn, (req, res) => {
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    res.redirect('/');
+  });
+});
+
 app.get('/login/callback',(req,res,next) =>{
 
   passport.authenticate('oidc',{ successRedirect: '/services',
@@ -111,7 +139,7 @@ app.get('/login/callback',(req,res,next) =>{
   
 )
 
-app.get("/",(req,res) =>{
+app.get("/",notLoggedIn,(req,res) =>{
   res.sendFile(path.join(__dirname+'/views/index.html'));
    //res.send(" <a href='/login'>Log In with OAuth 2.0 Provider </a>")
 })

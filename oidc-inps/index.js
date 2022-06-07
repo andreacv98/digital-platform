@@ -56,9 +56,22 @@ Issuer.discover(provider.site)
       
     });
 
+    const params = {
+        /*client_id: process.env.GOOGLE_ID,
+        response_type: 'code token id_token',
+        scope: 'openid profile email',
+        nonce: generators.nonce(),
+        redirect_uri: 'URI here',
+        state: generators.state(),*/
+        prompt: 'consent',
+        /*display: 'popup',
+        login_hint: 'sub',*/
+    };
+    
+
     passport.use(
       'oidc',
-      new Strategy({ client,passReqToCallback: true}, (req, tokenSet, userinfo, done) => {
+      new Strategy({ client,params,passReqToCallback: true}, (req, tokenSet, userinfo, done) => {
         console.log("tokenSet",tokenSet);
         console.log("userinfo",userinfo);
         req.session.tokenSet = tokenSet;
