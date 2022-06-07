@@ -95,7 +95,7 @@ app.get("/",(req,res) =>{
 
 app.get ("/home", (req,res) =>{
   let userinfo = req.session.passport.user;
-  res.render(path.join(__dirname+'/views/MyInps'),{
+  res.render(path.join(__dirname+'/views/MyPoste'),{
     user: userinfo
   }
   )
